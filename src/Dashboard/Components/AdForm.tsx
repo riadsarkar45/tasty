@@ -26,7 +26,11 @@ interface AdFormProps {
     setOnlyText: (prev: AdOrPoll[]) => void;
 }
 
-const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, setCreatedPolls, isVisible, setOnlyText }) => {
+const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime }) => {
+
+    // check the every type of incoming ad
+    const [incomingAdType, setIncomingAdType] = useState([]);
+
     // Ad Form State
     const [adDuration, setAdDuration] = useState<string>('');
     const [adImageUrl, setAdImageUrl] = useState<string>('');
@@ -86,9 +90,10 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
             question: questionTrimmed,
             options: trimmedOptions,
             startTime: crnTime,
-            duration: dur
+            duration: dur,
+            adType: 'poll'
         };
-        setCreatedPolls((prev = []) => [...prev, pollData]);
+        setUpcomingUpAd((prev = []) => [...prev, pollData]);
 
         // setPollQuestion('');
         // setPollOptions(['', '']);
@@ -100,14 +105,15 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
         e.preventDefault();
         const duration = Number(adDuration)
         const startTime = Number(currentTime)
-        
+
         const onlyTextAd = {
             textTitle,
             textDesc,
             duration: duration,
-            startTime: startTime
+            startTime: startTime,
+            adType: 'onlyText'
         }
-        setOnlyText((prev = []) => [...prev, onlyTextAd])
+        setUpcomingUpAd((prev = []) => [...prev, onlyTextAd])
 
         // setImageAds((prev = []) => [...prev, newAd]);
 
@@ -136,20 +142,20 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
             imageUrl: imageUrlTrimmed,
             startTime: currentTime,
             duration: durationNum,
+            adType: 'image'
         };
 
-        setImageAds((prev = []) => [...prev, newAd]);
+        setUpcomingUpAd((prev = []) => [...prev, newAd]);
 
         // Reset form
         setAdDuration('');
         setAdImageUrl('');
     };
-
     return (
         <div className="space-y-6">
             {/* === Ad Form === */}
             {
-                isVisible === 'ad' && (
+                formType === 'ad' && (
                     <div>
                         <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Ad Form</h2>
                         <form onSubmit={handleAdSubmit} className="space-y-3">
@@ -190,7 +196,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
 
             {/* === Poll Form === */}
             {
-                isVisible === 'poll' && (
+                formType === 'poll' && (
                     <div>
                         <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Create Poll Form</h2>
                         <form onSubmit={handlePollSubmit} className="space-y-4">
@@ -264,7 +270,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
             }
 
             {
-                isVisible === 'desc' && (
+                formType === 'desc' && (
                     <div>
                         <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Only Text</h2>
                         <form onSubmit={handleOnlyTextSubmission} className="space-y-4">

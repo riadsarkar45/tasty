@@ -1,6 +1,6 @@
 import YouTube, { type YouTubeProps } from 'react-youtube';
 
-const Video = ({ videoId, opts, createdPolls, onlyTexts, hoverTime, formatTime, onPlayerReady, onPlayerStateChange, currentTime, imageAds, duration, hoverPercent, progressBarRef, handleMouseMove, setHoverTime, handleProgressBarClick }) => {
+const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime, formatTime, onPlayerReady, onPlayerStateChange, currentTime, imageAds, duration, hoverPercent, progressBarRef, handleMouseMove, setHoverTime, handleProgressBarClick }) => {
     return (
         <div className="h-[27rem] bg-white p-2">
             {/* Video Player */}
@@ -39,45 +39,13 @@ const Video = ({ videoId, opts, createdPolls, onlyTexts, hoverTime, formatTime, 
                         />
 
                         {/* Red Ad Markers */}
-                        {imageAds.map((ad) => {
+                        {upcomingUpAd?.map((ad) => {
                             const startPercent = (ad.startTime / duration) * 100;
                             const widthPercent = (ad.duration / duration) * 100;
                             return (
                                 <div
                                     key={ad.id}
-                                    className="absolute top-0 h-full bg-red-500 opacity-70 pointer-events-none rounded"
-                                    style={{
-                                        left: `${startPercent}%`,
-                                        width: `${widthPercent}%`,
-                                        zIndex: 1,
-                                    }}
-                                />
-                            );
-                        })}
-
-                        {createdPolls.map((poll) => {
-                            const startPercent = (poll.startTime / duration) * 100;
-                            const widthPercent = (poll.duration / duration) * 100;
-                            return (
-                                <div
-                                    key={poll.id}
-                                    className="absolute top-0 h-full bg-yellow-500 opacity-70 pointer-events-none rounded"
-                                    style={{
-                                        left: `${startPercent}%`,
-                                        width: `${widthPercent}%`,
-                                        zIndex: 1,
-                                    }}
-                                />
-                            );
-                        })}
-
-                        {onlyTexts.map((text) => {
-                            const startPercent = (text.startTime / duration) * 100;
-                            const widthPercent = (text.duration / duration) * 100;
-                            return (
-                                <div
-                                    key={text.duration}
-                                    className="absolute top-0 h-full bg-red-900 opacity-70 pointer-events-none rounded"
+                                    className={`absolute top-0 h-full ${ad.adType === 'poll' && 'bg-yellow-500'} ${ad.adType === 'onlyText' && 'bg-red-500'} ${ad.adType === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
                                     style={{
                                         left: `${startPercent}%`,
                                         width: `${widthPercent}%`,

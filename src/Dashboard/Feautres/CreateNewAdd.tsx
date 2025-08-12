@@ -10,33 +10,39 @@ type ImageAd = {
   imageUrl: string;
   startTime: number;
   duration: number;
+  find: (params: object) => object;
 };
 
-type Poll = {
-  id: string;
-  question: string;
-  options: string[];
-  startTime: number;
-  duration: number;
-};
+// type showingAdType = {
+//   adType: 'image' | 'poll' | 'onlyText';
+//   startTime: number;
+//   duration: number;
+// };
+
+// type Poll = {
+//   id: string;
+//   question: string;
+//   options: string[];
+//   startTime: number;
+//   duration: number;
+// };
 
 // === Component ===
 const CreateNewAdd = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [activeAd, setActiveAd] = useState<ImageAd | null>(null);
   const [hoverTime, setHoverTime] = useState<number | null>(null);
   const [hoverPercent, setHoverPercent] = useState<number>(0);
-  const [seekTime, setSeekTime] = useState<number>(0);
-  const [imageAds, setImageAds] = useState<ImageAd[]>([]);
-  const [createdPolls, setCreatedPolls] = useState<Poll[]>([]);
-  const [visiblePoll, setVisiblePoll] = useState<Poll | null>(null); // Renamed: was setPollVisible
-  const [isVisible, setIsVisible] = useState(null);
-  const [onlyTexts, setOnlyTexts] = useState([])
-  const [activeOnlyTextAd, setActiveOnlyTextAd] = useState([])
-  const [incomingAdType, setIncomingAdType] = useState('')
+  const [formType, setFormType] = useState<'image' | 'poll' | 'onlyText' | null>(null);
+  const [inComingAd, setIncomingAdType] = useState({});
 
-  const playerRef = useRef<any>(null); // Will hold YouTube player instance
+  // checking new style of code to run ads
+
+  const [upComingUpAd, setUpcomingUpAd] = useState([]);
+
+  const [adPreview, setAdPreview] = useState({});
+
+  const playerRef = useRef(null); // Will hold YouTube player instance
   const intervalRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -64,48 +70,23 @@ const CreateNewAdd = () => {
         const time = player.getCurrentTime();
         setCurrentTime(time);
 
-        const showingAd = imageAds.find((ad) => {
-          return time >= ad.startTime && time < ad.startTime + ad.duration;
-        });
 
-        const showingPoll = createdPolls.find((poll) => {
-          return time >= poll.startTime && time < poll.startTime + poll.duration;
-        });
-
-        const onlyTextBasedAd = onlyTexts?.find((txt) => {
-          return time >= txt.startTime && time < txt.startTime + txt.duration;
+        const showingAdType = upComingUpAd?.find((ads) => {
+          return time >= ads.startTime && time < ads.startTime + ads.duration;
         })
 
-        const onlyImageAds = imageAds?.find((ad) => {
+        setAdPreview(showingAdType);
+
+        const incomingAd = upComingUpAd?.find((ad) => {
           return ad.startTime - time > 0 && ad.startTime - time <= 7;
         });
 
-        const onlyPolls = createdPolls?.find((poll) => {
-          return poll.startTime - time > 0 && poll.startTime - time <= 7;
-        })
-
-        const onlyTextBased = onlyTexts?.find((txt) => {
-          return txt.startTime - time > 0 && txt.startTime - time <= 7;
-        })
-
-        // Set incomingAdType only if something is upcoming
-        if (onlyImageAds) {
-          setIncomingAdType('ad');
-        } else if (onlyPolls) {
-          setIncomingAdType('poll');
-        } else if (onlyTextBased) {
-          setIncomingAdType('onlyText');
-        } else {
-          setIncomingAdType(null); // 🔴 Reset when nothing is upcoming
+        if (incomingAd) {
+          setIncomingAdType(incomingAd);
         }
 
 
 
-
-
-        setActiveOnlyTextAd(onlyTextBasedAd)
-        setActiveAd(showingAd || null);
-        setVisiblePoll(showingPoll || null);
       }, 100);
     } else {
       if (intervalRef.current) {
@@ -140,7 +121,6 @@ const CreateNewAdd = () => {
     playerRef.current.seekTo(seekTime);
     playerRef.current.pauseVideo();
     setCurrentTime(seekTime);
-    setSeekTime(seekTime);
   };
 
   useEffect(() => {
@@ -150,7 +130,7 @@ const CreateNewAdd = () => {
   }, []);
 
   const hidePollAd = (type) => {
-    setIsVisible(type)
+    setFormType(type)
   }
 
   const opts = {
@@ -173,8 +153,6 @@ const CreateNewAdd = () => {
           onPlayerStateChange={onPlayerStateChange}
           currentTime={currentTime}
           duration={duration}
-          imageAds={imageAds}
-          createdPolls={createdPolls}
           hoverTime={hoverTime}
           hoverPercent={hoverPercent}
           progressBarRef={progressBarRef}
@@ -182,31 +160,26 @@ const CreateNewAdd = () => {
           setHoverTime={setHoverTime}
           handleProgressBarClick={handleProgressBarClick}
           formatTime={formatTime}
-          onlyTexts={onlyTexts}
+          upcomingUpAd={upComingUpAd}
         />
 
         {/* Preview Pane */}
         <div>
           <AddPreview
-            activeAd={activeAd}
-            seekTime={seekTime}
-            visiblePoll={visiblePoll}
             hidePollAd={hidePollAd}
-            setIsVisible={setIsVisible}
-            isVisible={isVisible}
-            activeOnlyTextAd={activeOnlyTextAd}
-            incomingAdType={incomingAdType}
+            formType={formType}
+            adPreview={adPreview}
+            currentTime={currentTime}
+
           />
 
           <div className="mt-2">
             <div className="w-[24rem] bg-white p-4 rounded-lg shadow">
               <AdForm
                 formatTime={formatTime}
-                setImageAds={setImageAds}
                 currentTime={currentTime}
-                setCreatedPolls={setCreatedPolls}
-                isVisible={isVisible}
-                setOnlyText={setOnlyTexts}
+                setUpcomingUpAd={setUpcomingUpAd}
+                formType={formType}
               />
             </div>
           </div>
