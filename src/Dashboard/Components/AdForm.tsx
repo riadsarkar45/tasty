@@ -1,0 +1,324 @@
+import React, { useState } from 'react';
+
+// Define types
+interface Ad {
+    id: string;
+    imageUrl: string;
+    startTime: Date;
+    duration: number;
+}
+
+interface Poll {
+    id: string;
+    question: string;
+    options: string[];
+    startTime: Date;
+}
+
+type AdOrPoll = Ad | Poll;
+
+interface AdFormProps {
+    formatTime: (date: Date) => string;
+    setImageAds: (prev: AdOrPoll[]) => void;
+    currentTime: Date;
+    isVisible: string;
+    setCreatedPolls: (prev: AdOrPoll[]) => void;
+    setOnlyText: (prev: AdOrPoll[]) => void;
+}
+
+const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, setCreatedPolls, isVisible, setOnlyText }) => {
+    // Ad Form State
+    const [adDuration, setAdDuration] = useState<string>('');
+    const [adImageUrl, setAdImageUrl] = useState<string>('');
+
+    // add only text
+    const [textTitle, setTextTitle] = useState<string>('');
+    const [textDesc, setDesc] = useState<string>('');
+
+    // Poll Form State
+    const [pollQuestion, setPollQuestion] = useState<string>('');
+    const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+
+    // Add option
+    const addOption = () => {
+        setPollOptions([...pollOptions, '']);
+    };
+
+    // Remove option
+    const removeOption = (index: number) => {
+        if (pollOptions.length <= 2) return;
+        setPollOptions(pollOptions.filter((_, i) => i !== index));
+    };
+
+    // Handle option change
+    const handleOptionChange = (index: number, value: string) => {
+        const newOptions = [...pollOptions];
+        newOptions[index] = value;
+        setPollOptions(newOptions);
+    };
+
+
+
+    // Handle Poll Submit
+    const handlePollSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const questionTrimmed = pollQuestion.trim();
+        if (!questionTrimmed) {
+            alert('Please enter a question.');
+            return;
+        }
+
+        const trimmedOptions = pollOptions
+            .map(opt => opt.trim())
+            .filter(opt => opt !== '');
+
+        if (trimmedOptions.length < 2) {
+            alert('Please provide at least two valid options.');
+            return;
+        }
+
+        const crnTime = Number(currentTime);
+        const dur = Number(adDuration);
+
+        const pollData: Poll = {
+            id: `poll-${Date.now()}`,
+            question: questionTrimmed,
+            options: trimmedOptions,
+            startTime: crnTime,
+            duration: dur
+        };
+        setCreatedPolls((prev = []) => [...prev, pollData]);
+
+        // setPollQuestion('');
+        // setPollOptions(['', '']);
+    };
+
+    // handle only text submit
+
+    const handleOnlyTextSubmission = (e: React.FormEvent) => {
+        e.preventDefault();
+        const duration = Number(adDuration)
+        const startTime = Number(currentTime)
+        
+        const onlyTextAd = {
+            textTitle,
+            textDesc,
+            duration: duration,
+            startTime: startTime
+        }
+        setOnlyText((prev = []) => [...prev, onlyTextAd])
+
+        // setImageAds((prev = []) => [...prev, newAd]);
+
+    }
+
+
+    // Handle Ad Submit
+    const handleAdSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const durationNum = Number(adDuration);
+        const imageUrlTrimmed = adImageUrl.trim();
+
+        if (!imageUrlTrimmed) {
+            alert('Please enter a valid image URL.');
+            return;
+        }
+
+        if (isNaN(durationNum) || durationNum <= 0) {
+            alert('Please enter a valid duration (positive number).');
+            return;
+        }
+
+        const newAd: Ad = {
+            id: `ad-${Date.now()}`,
+            imageUrl: imageUrlTrimmed,
+            startTime: currentTime,
+            duration: durationNum,
+        };
+
+        setImageAds((prev = []) => [...prev, newAd]);
+
+        // Reset form
+        setAdDuration('');
+        setAdImageUrl('');
+    };
+
+    return (
+        <div className="space-y-6">
+            {/* === Ad Form === */}
+            {
+                isVisible === 'ad' && (
+                    <div>
+                        <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Ad Form</h2>
+                        <form onSubmit={handleAdSubmit} className="space-y-3">
+                            <div>
+                                <input
+                                    placeholder="Ad duration (seconds)"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    type="number"
+                                    min="1"
+                                    value={adDuration}
+                                    onChange={(e) => setAdDuration(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    placeholder="Image URL"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    type="url"
+                                    value={adImageUrl}
+                                    onChange={(e) => setAdImageUrl(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <small>Ad start time: {formatTime(currentTime)}</small>
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="w-full mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                                >
+                                    ✔️
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )
+            }
+
+            {/* === Poll Form === */}
+            {
+                isVisible === 'poll' && (
+                    <div>
+                        <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Create Poll Form</h2>
+                        <form onSubmit={handlePollSubmit} className="space-y-4">
+                            <div>
+                                <input
+                                    placeholder="Enter your question?"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    value={pollQuestion}
+                                    onChange={(e) => setPollQuestion(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    placeholder="Ad duration (seconds)"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    type="number"
+                                    min="1"
+                                    value={adDuration}
+                                    onChange={(e) => setAdDuration(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Options</label>
+                                {pollOptions.map((option, index) => (
+                                    <div key={index} className="flex items-center gap-2 mb-2">
+                                        <input
+                                            type="text"
+                                            placeholder={`Option ${index + 1}`}
+                                            className="border-b flex-1 hover:border-b-blue-500 outline-none p-2"
+                                            value={option}
+                                            onChange={(e) => handleOptionChange(index, e.target.value)}
+                                            required
+                                        />
+                                        {pollOptions.length > 2 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => removeOption(index)}
+                                                className="text-red-500 hover:text-red-700 font-bold w-6 h-6 flex items-center justify-center"
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+
+                                <button
+                                    type="button"
+                                    onClick={addOption}
+                                    className="text-sm text-blue-500 hover:underline flex items-center gap-1"
+                                >
+                                    ➕ Add Option
+                                </button>
+                            </div>
+
+                            <small>Ad start time: {formatTime(currentTime)}</small>
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="w-full mt-2 bg-green-500 text-white p-2 rounded hover:bg-green-600"
+                                >
+                                    Create Poll
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )
+            }
+
+            {
+                isVisible === 'desc' && (
+                    <div>
+                        <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Only Text</h2>
+                        <form onSubmit={handleOnlyTextSubmission} className="space-y-4">
+                            <div>
+                                <input
+                                    placeholder="Enter your question?"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    value={textTitle}
+                                    onChange={(e) => setTextTitle(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    placeholder="Detail"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    value={textDesc}
+                                    onChange={(e) => setDesc(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    placeholder="Ad duration (seconds)"
+                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
+                                    type="number"
+                                    min="1"
+                                    value={adDuration}
+                                    onChange={(e) => setAdDuration(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+
+
+                            <small>Ad start time: {formatTime(currentTime)}</small>
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="w-full mt-2 bg-green-500 text-white p-2 rounded hover:bg-green-600"
+                                >
+                                    Create Poll
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )
+            }
+        </div>
+    );
+};
+
+// Optional: Default props with TypeScript-safe fallbacks
+
+
+export default AdForm;
