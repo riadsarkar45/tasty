@@ -14,12 +14,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Videos {
-  id         Int      @id @default(autoincrement())
-  title      String
-  videoUrl   String   @unique
-  addedBy    String
-  isApproved String
-  isRecycled String
-  createdAt  DateTime @default(now())
+model videos {
+  id        Int      @id @default(autoincrement())
+  videoId   String   @unique
+  videoUrl  String
+  createdBy String
+  createdAt DateTime @default(now())
+}
+
+model poll {
+  id        Int          @id @default(autoincrement())
+  createdBy String
+  createdAT DateTime     @default(now())
+  question  String
+  startTime String
+  duration  String
+  options   pollOption[]
+  type      String       @default("poll")
+}
+
+model pollOption {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  options   String
+  pollId    Int
+  poll      poll     @relation(fields: [pollId], references: [id])
 }

@@ -3,6 +3,7 @@ import { type YouTubeProps } from 'react-youtube';
 import Video from '../Components/Video';
 import AdForm from '../Components/AdForm';
 import AddPreview from '../Components/AddPreview';
+import useAxiosPublic from '../../hooks/AxiosPublic';
 
 // === Types ===
 type ImageAd = {
@@ -34,7 +35,7 @@ const CreateNewAdd = () => {
   const [hoverTime, setHoverTime] = useState<number | null>(null);
   const [hoverPercent, setHoverPercent] = useState<number>(0);
   const [formType, setFormType] = useState<'image' | 'poll' | 'onlyText' | null>(null);
-  const [inComingAd, setIncomingAdType] = useState({});
+  const [inComingAdType, setIncomingAdType] = useState({});
 
   // checking new style of code to run ads
 
@@ -45,6 +46,8 @@ const CreateNewAdd = () => {
   const playerRef = useRef(null); // Will hold YouTube player instance
   const intervalRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+
+  const axiosPublic = useAxiosPublic();
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -81,10 +84,8 @@ const CreateNewAdd = () => {
           return ad.startTime - time > 0 && ad.startTime - time <= 7;
         });
 
-        if (incomingAd) {
           setIncomingAdType(incomingAd);
-        }
-
+        // console.log(incomingAd, 'incomingAd in CreateNewAdd');
 
 
       }, 100);
@@ -133,6 +134,11 @@ const CreateNewAdd = () => {
     setFormType(type)
   }
 
+  const handleSubmitAd = (ad) => {
+    // axiosPublic.post('/newPoll', upComingUpAd)
+    console.log(upComingUpAd);
+  }
+
   const opts = {
     height: '100%',
     width: '100%',
@@ -170,6 +176,8 @@ const CreateNewAdd = () => {
             formType={formType}
             adPreview={adPreview}
             currentTime={currentTime}
+            inComingAdType={inComingAdType}
+            formatTime={formatTime}
 
           />
 
@@ -180,6 +188,7 @@ const CreateNewAdd = () => {
                 currentTime={currentTime}
                 setUpcomingUpAd={setUpcomingUpAd}
                 formType={formType}
+                upComingAd={upComingUpAd}
               />
             </div>
           </div>

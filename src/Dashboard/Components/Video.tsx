@@ -31,7 +31,7 @@ const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime
                     >
                         {/* Blue Progress Fill */}
                         <div
-                            className="absolute top-0 left-0 h-full bg-blue-500 rounded"
+                            className="absolute top-0 left-0 h-full bg-blue-500 bg-opacity-50 rounded"
                             style={{
                                 width: `${(currentTime / duration) * 100}%`,
                                 zIndex: 2,
@@ -39,21 +39,23 @@ const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime
                         />
 
                         {/* Red Ad Markers */}
-                        {upcomingUpAd?.map((ad) => {
-                            const startPercent = (ad.startTime / duration) * 100;
-                            const widthPercent = (ad.duration / duration) * 100;
-                            return (
-                                <div
-                                    key={ad.id}
-                                    className={`absolute top-0 h-full ${ad.adType === 'poll' && 'bg-yellow-500'} ${ad.adType === 'onlyText' && 'bg-red-500'} ${ad.adType === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
-                                    style={{
-                                        left: `${startPercent}%`,
-                                        width: `${widthPercent}%`,
-                                        zIndex: 1,
-                                    }}
-                                />
-                            );
-                        })}
+                        {
+                            upcomingUpAd?.map((ad) => {
+                                const startPercent = (ad.startTime / duration) * 100;
+                                const widthPercent = (ad.duration / duration) * 100;
+                                return (
+                                    <div
+                                        key={ad.id}
+                                        className={`absolute top-0 h-full ${ad.adType === 'poll' && 'bg-yellow-500'} ${ad.adType === 'onlyText' && 'bg-red-500'} ${ad.adType === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
+                                        style={{
+                                            left: `${startPercent}%`,
+                                            width: `${widthPercent}%`,
+                                            zIndex: 1,
+                                        }}
+                                    />
+                                );
+                            })
+                        }
 
                         {/* Hover Tooltip & Marker */}
                         {hoverTime !== null && (

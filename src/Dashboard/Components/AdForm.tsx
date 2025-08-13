@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useAxiosPublic from '../../hooks/AxiosPublic';
 
 // Define types
 interface Ad {
@@ -26,10 +27,8 @@ interface AdFormProps {
     setOnlyText: (prev: AdOrPoll[]) => void;
 }
 
-const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime }) => {
+const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime, upComingAd }) => {
 
-    // check the every type of incoming ad
-    const [incomingAdType, setIncomingAdType] = useState([]);
 
     // Ad Form State
     const [adDuration, setAdDuration] = useState<string>('');
@@ -42,6 +41,10 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
     // Poll Form State
     const [pollQuestion, setPollQuestion] = useState<string>('');
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+
+    // axios requests
+
+    const axiosPublic = useAxiosPublic();
 
     // Add option
     const addOption = () => {
@@ -64,7 +67,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
 
 
     // Handle Poll Submit
-    const handlePollSubmit = (e: React.FormEvent) => {
+    const handlePollSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
 
         const questionTrimmed = pollQuestion.trim();
@@ -93,10 +96,14 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             duration: dur,
             adType: 'poll'
         };
-        setUpcomingUpAd((prev = []) => [...prev, pollData]);
+        setUpcomingUpAd((prev = []) => [...prev, pollData]); // add new poll only for preview
 
         // setPollQuestion('');
         // setPollOptions(['', '']);
+        const insert = await axiosPublic.post('/newpoll', pollData)
+        console.log(insert?.data);
+
+
     };
 
     // handle only text submit

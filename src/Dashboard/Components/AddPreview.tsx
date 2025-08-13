@@ -1,11 +1,6 @@
 
 
-const AddPreview = ({ adPreview, formType, hidePollAd, incomingAdType }) => {
-    const formatTime = (seconds: number): string => {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-    };
+const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, inComingAdType }) => {
 
     return (
         <div>
@@ -49,20 +44,23 @@ const AddPreview = ({ adPreview, formType, hidePollAd, incomingAdType }) => {
 
                 <div>
                     {
-                        incomingAdType === 'ad' && (
-                            <h2>Only image will show up</h2>
+                        inComingAdType?.adType === 'image' && (
+                            // <h2>Ad in {formatTime(inComingAdType?.startTime - currentTime)}</h2>
+                            <span className="font-mono text-6xl">
+                                {formatTime(inComingAdType?.startTime - currentTime)}
+                            </span>
                         )
 
                     }
                     {
-                        incomingAdType === 'poll' && (
-                            <h2>Poll Loading...</h2>
+                        inComingAdType?.adType === 'poll' && (
+                            <h2>Poll in {formatTime(inComingAdType?.startTime - currentTime)}</h2>
                         )
 
                     }
                     {
-                        incomingAdType === 'onlyText' && (
-                            <h2>Questions Loading...</h2>
+                        inComingAdType?.adType === 'onlyText' && (
+                            <h2>Qestion in {formatTime(inComingAdType?.startTime - currentTime)}</h2>
                         )
 
                     }

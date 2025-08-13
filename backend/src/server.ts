@@ -1,5 +1,7 @@
 import fastify from 'fastify';
 import databaseCon from './database/database';
+import polls from './pages/services/addNewVideo';
+import cors from '@fastify/cors';
 
 const app = fastify({
   logger: {
@@ -14,10 +16,15 @@ const app = fastify({
     },
   },
 });
+app.register(cors, {
+  origin: 'http://localhost:5173',  // ✅ Your React frontend
+  credentials: true,                // ✅ Allow sending cookies
+});
+app.register(polls)
 databaseCon(app)
-app.get('/', async (request, reply) => {
+app.get('/', async () => {
   app.log.info('Handled /hello request');
-  return { message: 'Hello!' };
+  return { message: 'Hello! fastify server is running' };
 });
 
 try {
