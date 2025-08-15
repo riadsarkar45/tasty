@@ -37,6 +37,10 @@ const CreateNewAdd = () => {
   const [formType, setFormType] = useState<'image' | 'poll' | 'onlyText' | null>(null);
   const [inComingAdType, setIncomingAdType] = useState({});
 
+  // this state is used to insert all data to database 
+
+  const [finalAds, setFinalAds] = useState([])
+
   // checking new style of code to run ads
 
   const [upComingUpAd, setUpcomingUpAd] = useState([]);
@@ -46,8 +50,9 @@ const CreateNewAdd = () => {
   const playerRef = useRef(null); // Will hold YouTube player instance
   const intervalRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
-
   const axiosPublic = useAxiosPublic();
+
+
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -63,6 +68,17 @@ const CreateNewAdd = () => {
     }
   };
 
+  useEffect(() => {
+    axiosPublic.get('/polls')
+      .then((res) => {
+        // setUpcomingUpAd(res?.data?.polls);
+        // setUpcomingUpAd(res?.data?.imageQuestions);
+        setUpcomingUpAd(res?.data);
+      })
+  }, [axiosPublic])
+
+  // console.log(adPreview, 'adPreview in CreateNewAdd');
+
   const onPlayerStateChange: YouTubeProps['onStateChange'] = (event) => {
     const player = event.target;
 
@@ -74,17 +90,26 @@ const CreateNewAdd = () => {
         setCurrentTime(time);
 
 
-        const showingAdType = upComingUpAd?.find((ads) => {
-          return time >= ads.startTime && time < ads.startTime + ads.duration;
-        })
+        const gettingAdPreview = upComingUpAd?.find((ad) => {
+          const start = Number(ad.startTime);
+          const duration = Number(ad.duration);
 
-        setAdPreview(showingAdType);
+          if (isNaN(start) || isNaN(duration)) {
+            console.warn("Invalid ad time or duration:", ad);
+            return false;
+          }
 
-        const incomingAd = upComingUpAd?.find((ad) => {
-          return ad.startTime - time > 0 && ad.startTime - time <= 7;
+          return time >= start && time < start + duration;
         });
 
-          setIncomingAdType(incomingAd);
+        setAdPreview(gettingAdPreview);
+
+        const incomingAd = upComingUpAd?.find((ad) => {
+          return Number(ad.startTime) - time > 0 && Number(ad.startTime) - time <= 7;
+        });
+
+
+        setIncomingAdType(incomingAd);
         // console.log(incomingAd, 'incomingAd in CreateNewAdd');
 
 
@@ -134,10 +159,18 @@ const CreateNewAdd = () => {
     setFormType(type)
   }
 
-  const handleSubmitAd = (ad) => {
-    // axiosPublic.post('/newPoll', upComingUpAd)
-    console.log(upComingUpAd);
-  }
+const handleSetPolls = () => {
+  console.log(finalAds, 'finalAds in CreateNewAdd');
+  axiosPublic.post('/newpoll', finalAds)
+    .then((res) => {
+      console.log(res?.data, 'Polls created successfully');
+      // // Optionally, you can reset the finalAds state or handle success feedback
+      // setFinalAds([]);
+    })
+    .catch((error) => {
+      console.error('Error creating polls:', error);
+    });
+}
 
   const opts = {
     height: '100%',
@@ -178,6 +211,7 @@ const CreateNewAdd = () => {
             currentTime={currentTime}
             inComingAdType={inComingAdType}
             formatTime={formatTime}
+            handleSetPolls={handleSetPolls}
 
           />
 
@@ -189,6 +223,8 @@ const CreateNewAdd = () => {
                 setUpcomingUpAd={setUpcomingUpAd}
                 formType={formType}
                 upComingAd={upComingUpAd}
+                videoId="CScddWNqwOI"
+                setFinalAds={setFinalAds}
               />
             </div>
           </div>

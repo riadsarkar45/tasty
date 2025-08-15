@@ -7,6 +7,7 @@ interface Ad {
     imageUrl: string;
     startTime: Date;
     duration: number;
+    type: 'image' | 'poll' | 'onlyText';
 }
 
 interface Poll {
@@ -27,7 +28,7 @@ interface AdFormProps {
     setOnlyText: (prev: AdOrPoll[]) => void;
 }
 
-const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime, upComingAd }) => {
+const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime, videoId, setFinalAds }) => {
 
 
     // Ad Form State
@@ -67,7 +68,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
 
 
     // Handle Poll Submit
-    const handlePollSubmit = async(e: React.FormEvent) => {
+    const handlePollSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const questionTrimmed = pollQuestion.trim();
@@ -94,14 +95,16 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             options: trimmedOptions,
             startTime: crnTime,
             duration: dur,
-            adType: 'poll'
+            type: 'poll',
+            videoId: videoId //it's static for now
         };
         setUpcomingUpAd((prev = []) => [...prev, pollData]); // add new poll only for preview
+        setFinalAds((prev = []) => [...prev, pollData]); // add new poll only for store to database
 
         // setPollQuestion('');
         // setPollOptions(['', '']);
-        const insert = await axiosPublic.post('/newpoll', pollData)
-        console.log(insert?.data);
+        // const insert = await axiosPublic.post('/newpoll', pollData)
+        // console.log(insert?.data);
 
 
     };
@@ -118,9 +121,10 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             textDesc,
             duration: duration,
             startTime: startTime,
-            adType: 'onlyText'
+            type: 'onlyText'
         }
         setUpcomingUpAd((prev = []) => [...prev, onlyTextAd])
+        setFinalAds((prev = []) => [...prev, onlyTextAd])
 
         // setImageAds((prev = []) => [...prev, newAd]);
 
@@ -128,7 +132,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
 
 
     // Handle Ad Submit
-    const handleAdSubmit = (e: React.FormEvent) => {
+    const handleAdSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const durationNum = Number(adDuration);
@@ -149,11 +153,13 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             imageUrl: imageUrlTrimmed,
             startTime: currentTime,
             duration: durationNum,
-            adType: 'image'
+            type: 'image'
         };
 
         setUpcomingUpAd((prev = []) => [...prev, newAd]);
-
+        setFinalAds((prev = []) => [...prev, newAd]);
+        // const insert = await axiosPublic.post('/newpoll', newAd)
+        // console.log(insert?.data);
         // Reset form
         setAdDuration('');
         setAdImageUrl('');

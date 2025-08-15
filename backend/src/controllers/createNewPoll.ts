@@ -1,48 +1,102 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../Prisma/prisma";
 
-interface NewPollBody {
+interface PollItem {
     question: string;
     startTime: number;
     duration: number;
-    adType: string;
+    type: "poll" | "image" | "onlyText";
     options: string[];
+    videoId: string;
+    imageUrl?: string;
 }
+
+type NewPollBody = PollItem[];
 
 export async function addNewPoll(
     req: FastifyRequest<{ Body: NewPollBody }>,
     reply: FastifyReply
 ) {
-    const { question, startTime, duration, adType, options } = req.body;
 
-    if (!options || !startTime || !duration || !adType || options.length === 0) {
+    const polls = req.body;
 
-        return reply.status(400).send({ error: "All fields are required" });
-
-    }
+    console.log(polls);
 
     try {
-        const createPoll = await prisma.poll.create({
+        const results = {
+            created: [] as unknown[],
+            errors: [] as string[],
+        };
+        await Promise.all(
+            polls.map(async (poll) => {
 
-            data: {
-                createdBy: "Riad",
+                const { question, startTime, duration, type, options, videoId, imageUrl } = poll;
 
-                question,
+                if (type === 'poll') {
 
-                startTime: startTime.toString(),
+                    if (!options|| !duration || !type || !videoId || options.length === 0) return results.errors.push(`Poll at ${startTime}s: missing required fields`);;
 
-                duration: duration.toString(),
+                    const poll = await prisma.poll.create({
 
-                type: adType,
 
-                options: { create: options.map(opt => ({ options: opt })) }
-            },
+                        data: {
+                            createdBy: "Riad",
 
-            include: { options: true }
+                            question,
 
+                            startTime: startTime.toString(),
+
+                            duration: duration.toString(),
+
+                            type: type,
+
+                            options: { create: options.map(opt => ({ options: opt })) },
+
+                            // videoId: videoId
+                        },
+
+                        include: { options: true }
+
+                    });
+                    results.created.push(poll);
+                } else if (type === 'image') {
+
+                    if (!imageUrl || !duration) {
+                        return results.errors.push("imageUrl is required for image ads")
+                    }
+
+                    const createPoll = await prisma.questions.create({
+
+                        data: {
+                            createdBy: "Riad",
+
+                            imageUrl: imageUrl,
+
+                            startTime: startTime.toString(),
+
+                            duration: duration.toString(),
+
+
+                        },
+
+                    });
+
+                    results.created.push(createPoll);
+                }
+
+            }))
+
+        if (results.errors.length > 0) {
+            return reply.send({
+                message: "Some items failed to create",
+                ...results,
+            });
+        }
+
+        return reply.send({
+            message: "All items created successfully",
+            created: results.created,
         });
-
-        return reply.status(201).send({ message: "Poll created successfully", poll: createPoll });
 
     } catch (error) {
         req.log.error(error);
@@ -52,20 +106,31 @@ export async function addNewPoll(
 
 export async function getPolls(req: FastifyRequest, reply: FastifyReply) {
     try {
-        const getPolls = await prisma.poll.findMany({
+        const [polls, imageQuestions] = await Promise.all([
+            prisma.poll.findMany({
+                include: { options: true },
+                orderBy: { createdAT: "desc" },
+            }),
+            prisma.questions.findMany({
+                orderBy: { createdAt: "desc" },
+            }),
+        ]);
 
-            include: { options: true },
 
-            orderBy: { createdAT: 'desc' },
+        const ads = [
+            ...polls.map(p => ({
+                ...p,
+                type: "poll",
+                options: p.options
+            })),
+            ...imageQuestions.map(q => ({ ...q, type: "image" }))
+        ];
 
-        })
 
-        if (getPolls.length === 0) return reply.status(404).send({ message: "No polls found" });
-
-        return reply.status(200).send(getPolls);
-
-    } catch (error) {
-        req.log.error(error);
+        return reply.send(ads);
+    } catch {
         return reply.status(500).send({ error: "Internal Server Error" });
     }
 }
+
+

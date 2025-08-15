@@ -1,4 +1,4 @@
-import YouTube, { type YouTubeProps } from 'react-youtube';
+import YouTube from 'react-youtube';
 
 const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime, formatTime, onPlayerReady, onPlayerStateChange, currentTime, imageAds, duration, hoverPercent, progressBarRef, handleMouseMove, setHoverTime, handleProgressBarClick }) => {
     return (
@@ -41,12 +41,12 @@ const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime
                         {/* Red Ad Markers */}
                         {
                             upcomingUpAd?.map((ad) => {
-                                const startPercent = (ad.startTime / duration) * 100;
-                                const widthPercent = (ad.duration / duration) * 100;
+                                const startPercent = (Number(ad.startTime) / Number(duration)) * 100;
+                                const widthPercent = (Number(ad.duration) / Number(duration)) * 100;
                                 return (
                                     <div
                                         key={ad.id}
-                                        className={`absolute top-0 h-full ${ad.adType === 'poll' && 'bg-yellow-500'} ${ad.adType === 'onlyText' && 'bg-red-500'} ${ad.adType === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
+                                        className={`absolute top-0 h-full ${ad.type === 'poll' && 'bg-yellow-500'} ${ad.type === 'onlyText' && 'bg-red-500'} ${ad.type === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
                                         style={{
                                             left: `${startPercent}%`,
                                             width: `${widthPercent}%`,

@@ -1,7 +1,6 @@
 
 
-const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, inComingAdType }) => {
-
+const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, inComingAdType, handleSetPolls }) => {
     return (
         <div>
             <div className="w-[24rem] h-[21rem] bg-white p-4 rounded-lg shadow">
@@ -9,7 +8,7 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
 
                 <div className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center h-64 bg-gray-50">
                     {
-                        adPreview?.adType === 'image' ? (
+                        adPreview?.type === 'image' ? (
                             <img
                                 src={adPreview.imageUrl}
                                 alt="Active Ad"
@@ -19,18 +18,18 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
                                     (e.target as HTMLImageElement).style.opacity = '0.5';
                                 }}
                             />
-                        ) : adPreview?.adType === 'poll' ? (
+                        ) : adPreview?.type === 'poll' ? (
                             <div className="text-center px-2">
                                 <h3 className="font-bold">{adPreview.question}</h3>
                                 <ul className="mt-2 space-y-1 text-sm">
                                     {adPreview.options.map((opt, i) => (
                                         <li key={i} className="p-1 bg-blue-100 rounded">
-                                            {opt}
+                                            {opt?.options}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
-                        ) : adPreview?.adType === 'onlyText' ? (
+                        ) : adPreview?.type === 'onlyText' ? (
                             <div>
                                 <h2>
                                     {adPreview?.textTitle}
@@ -44,7 +43,7 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
 
                 <div>
                     {
-                        inComingAdType?.adType === 'image' && (
+                        inComingAdType?.type === 'image' && (
                             // <h2>Ad in {formatTime(inComingAdType?.startTime - currentTime)}</h2>
                             <span className="font-mono text-6xl">
                                 {formatTime(inComingAdType?.startTime - currentTime)}
@@ -53,13 +52,13 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
 
                     }
                     {
-                        inComingAdType?.adType === 'poll' && (
+                        inComingAdType?.type === 'poll' && (
                             <h2>Poll in {formatTime(inComingAdType?.startTime - currentTime)}</h2>
                         )
 
                     }
                     {
-                        inComingAdType?.adType === 'onlyText' && (
+                        inComingAdType?.type === 'onlyText' && (
                             <h2>Qestion in {formatTime(inComingAdType?.startTime - currentTime)}</h2>
                         )
 
@@ -72,6 +71,7 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
                 <button onClick={() => hidePollAd('poll')} className="bg-gray-200 bg-opacity-20 hover:bg-gray-200 p-1 border rounded-md">🅿️</button>
                 <button onClick={() => hidePollAd('ad')} className="bg-gray-200 bg-opacity-20 hover:bg-gray-200 font-extrabold text-yellow-500 p-1 border rounded-md">AD</button>
                 <button onClick={() => hidePollAd('desc')} className="bg-gray-200 bg-opacity-20 hover:bg-gray-200 p-1 border rounded-md">🗨️</button>
+                <button onClick={() => handleSetPolls()} className="bg-gray-200 bg-opacity-20 hover:bg-gray-200 p-1 border rounded-md">🆗</button>
                 {
                     formType === 'poll' || formType === 'ad' || formType === 'desc' ? (
                         <button className="bg-gray-200 bg-opacity-20 hover:bg-gray-200 p-1 border rounded-md" onClick={() => hidePollAd('hide')}>👁️</button>
