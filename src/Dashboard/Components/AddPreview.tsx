@@ -6,7 +6,7 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
             <div className="w-[24rem] h-[21rem] bg-white p-4 rounded-lg shadow">
                 <h2 className="font-medium text-gray-800 mb-3">Preview</h2>
 
-                <div className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center h-64 bg-gray-50">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg flex  items-center justify-center h-64 bg-gray-50">
                     {
                         adPreview?.type === 'image' ? (
                             <img
@@ -19,11 +19,11 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
                                 }}
                             />
                         ) : adPreview?.type === 'poll' ? (
-                            <div className="text-center px-2">
+                            <div className="text-center gap-6 px-2 flex justify-between">
                                 <h3 className="font-bold">{adPreview.question}</h3>
-                                <ul className="mt-2 space-y-1 text-sm">
+                                <ul className="mt-4 space-y-1 text-sm">
                                     {adPreview.options.map((opt, i) => (
-                                        <li key={i} className="p-1 bg-blue-100 rounded">
+                                        <li key={i} className="p-1 bg-blue-100 w-[10rem] rounded">
                                             {opt?.options}
                                         </li>
                                     ))}

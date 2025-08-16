@@ -1,17 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../Prisma/prisma";
+import { NewVideoBody, NewPollBody, VideoParams } from '../type&interface/interface';
 
-interface PollItem {
-    question: string;
-    startTime: number;
-    duration: number;
-    type: "poll" | "image" | "onlyText";
-    options: string[];
-    videoId: string;
-    imageUrl?: string;
-}
 
-type NewPollBody = PollItem[];
 
 export async function addNewPoll(
     req: FastifyRequest<{ Body: NewPollBody }>,
@@ -20,7 +11,6 @@ export async function addNewPoll(
 
     const polls = req.body;
 
-    console.log(polls);
 
     try {
         const results = {
@@ -34,7 +24,7 @@ export async function addNewPoll(
 
                 if (type === 'poll') {
 
-                    if (!options|| !duration || !type || !videoId || options.length === 0) return results.errors.push(`Poll at ${startTime}s: missing required fields`);;
+                    if (!options || !duration || !type || !videoId || options.length === 0) return results.errors.push(`Poll at ${startTime}s: missing required fields`);;
 
                     const poll = await prisma.poll.create({
 
@@ -52,13 +42,15 @@ export async function addNewPoll(
 
                             options: { create: options.map(opt => ({ options: opt })) },
 
-                            // videoId: videoId
+                            videoId: videoId
                         },
 
                         include: { options: true }
 
                     });
+
                     results.created.push(poll);
+
                 } else if (type === 'image') {
 
                     if (!imageUrl || !duration) {
@@ -76,7 +68,7 @@ export async function addNewPoll(
 
                             duration: duration.toString(),
 
-
+                            videoId: videoId
                         },
 
                     });
@@ -129,6 +121,74 @@ export async function getPolls(req: FastifyRequest, reply: FastifyReply) {
 
         return reply.send(ads);
     } catch {
+        return reply.status(500).send({ error: "Internal Server Error" });
+    }
+}
+
+export async function createNewVideo(req: FastifyRequest<{ Body: NewVideoBody }>, reply: FastifyReply) {
+    console.log("Creating new video with data:", req.body);
+    const { videoId, videoUrl, createdBy } = req.body;
+
+    if (!videoId || !videoUrl || !createdBy) reply.status(400).send({ error: "videoId, videoUrl, and createdBy are required" });
+
+    try {
+        const saveVideo = await prisma.videos.create({
+            data: {
+                videoId,
+                videoUrl,
+                createdBy,
+            }
+        })
+
+        if (saveVideo) {
+            reply.status(201).send({ message: "Video created successfully", video: saveVideo });
+        }
+
+        reply.send({ message: "Something went wrong while creating video" });
+
+    } catch (error) {
+        console.error("Error creating video:", error);
+        return reply.status(500).send({ error: "Internal Server Error" });
+    }
+}
+
+export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams }>, reply: FastifyReply) {
+    try {
+        const { videoId } = req.params;
+
+        const videos = await prisma.videos.findMany({
+            where: videoId ? { videoId } : undefined,
+            include: {
+                polls: {
+                    include: {
+                        options: true,
+                    },
+                },
+                questions: true, 
+            },
+            orderBy: { createdAt: "desc" }, 
+        });
+
+
+
+        if (!videos) {
+            return reply.status(404).send({ message: "No video found" });
+        }
+
+
+        const formattedVideos = videos.map(video => ({
+            videoId: video.videoId,
+            videoUrl: video.videoUrl,
+            createdBy: video.createdBy,
+            createdAt: video.createdAt,
+            items: [...video.polls, ...video.questions].sort(
+                (a, b) => parseFloat(a.startTime) - parseFloat(b.startTime)
+            ),
+        }));
+
+        return reply.send(formattedVideos ?? []);
+    } catch (err) {
+        console.error("Error fetching created videos:", err);
         return reply.status(500).send({ error: "Internal Server Error" });
     }
 }

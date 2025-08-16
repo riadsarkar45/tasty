@@ -4,15 +4,24 @@ import Video from '../Components/Video';
 import AdForm from '../Components/AdForm';
 import AddPreview from '../Components/AddPreview';
 import useAxiosPublic from '../../hooks/AxiosPublic';
+import { useParams } from 'react-router-dom';
 
-// === Types ===
-type ImageAd = {
-  id: string;
-  imageUrl: string;
-  startTime: number;
-  duration: number;
-  find: (params: object) => object;
-};
+interface VideoItem {
+  id: number;
+  createdBy: string;
+  startTime: string;
+  type: string;
+  options?: any[];
+  // add other fields you need
+}
+
+interface Video {
+  id: number;
+  videoId: string;
+  items: VideoItem[];
+}
+
+
 
 // type showingAdType = {
 //   adType: 'image' | 'poll' | 'onlyText';
@@ -36,6 +45,7 @@ const CreateNewAdd = () => {
   const [hoverPercent, setHoverPercent] = useState<number>(0);
   const [formType, setFormType] = useState<'image' | 'poll' | 'onlyText' | null>(null);
   const [inComingAdType, setIncomingAdType] = useState({});
+  const [video, setVideo] = useState([]);
 
   // this state is used to insert all data to database 
 
@@ -53,7 +63,6 @@ const CreateNewAdd = () => {
   const axiosPublic = useAxiosPublic();
 
 
-
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -67,15 +76,20 @@ const CreateNewAdd = () => {
       setDuration(dur);
     }
   };
+  const { videoId } = useParams();
 
   useEffect(() => {
-    axiosPublic.get('/polls')
-      .then((res) => {
-        // setUpcomingUpAd(res?.data?.polls);
-        // setUpcomingUpAd(res?.data?.imageQuestions);
-        setUpcomingUpAd(res?.data);
+    axiosPublic.get(`/videos/${videoId}`)
+      .then(res => {
+        if (res?.data) {
+          const allItems = res.data.flatMap((video: any) => video.items || []);
+          setUpcomingUpAd(allItems);
+          setVideo(res.data);
+        }
       })
-  }, [axiosPublic])
+      .catch(err => console.error(err));
+  }, [axiosPublic, videoId]);
+  console.log(video);
 
   // console.log(adPreview, 'adPreview in CreateNewAdd');
 
@@ -159,18 +173,18 @@ const CreateNewAdd = () => {
     setFormType(type)
   }
 
-const handleSetPolls = () => {
-  console.log(finalAds, 'finalAds in CreateNewAdd');
-  axiosPublic.post('/newpoll', finalAds)
-    .then((res) => {
-      console.log(res?.data, 'Polls created successfully');
-      // // Optionally, you can reset the finalAds state or handle success feedback
-      // setFinalAds([]);
-    })
-    .catch((error) => {
-      console.error('Error creating polls:', error);
-    });
-}
+  const handleSetPolls = () => {
+    console.log(finalAds, 'finalAds in CreateNewAdd');
+    axiosPublic.post('/newpoll', finalAds)
+      .then((res) => {
+        console.log(res?.data, 'Polls created successfully');
+        // // Optionally, you can reset the finalAds state or handle success feedback
+        // setFinalAds([]);
+      })
+      .catch((error) => {
+        console.error('Error creating polls:', error);
+      });
+  }
 
   const opts = {
     height: '100%',
@@ -185,22 +199,30 @@ const handleSetPolls = () => {
     <div className="p-4 bg-gray-50 min-h-screen">
       <div className="flex gap-4 justify-between">
         {/* Video & Progress */}
-        <Video
-          videoId="CScddWNqwOI"
-          opts={opts}
-          onPlayerReady={onPlayerReady}
-          onPlayerStateChange={onPlayerStateChange}
-          currentTime={currentTime}
-          duration={duration}
-          hoverTime={hoverTime}
-          hoverPercent={hoverPercent}
-          progressBarRef={progressBarRef}
-          handleMouseMove={handleMouseMove}
-          setHoverTime={setHoverTime}
-          handleProgressBarClick={handleProgressBarClick}
-          formatTime={formatTime}
-          upcomingUpAd={upComingUpAd}
-        />
+
+        {
+          videoId ? (
+            video?.map((vid, i) =>
+              <Video
+                key={i}
+                videoId={vid.videoId}
+                opts={opts}
+                onPlayerReady={onPlayerReady}
+                onPlayerStateChange={onPlayerStateChange}
+                currentTime={currentTime}
+                duration={duration}
+                hoverTime={hoverTime}
+                hoverPercent={hoverPercent}
+                progressBarRef={progressBarRef}
+                handleMouseMove={handleMouseMove}
+                setHoverTime={setHoverTime}
+                handleProgressBarClick={handleProgressBarClick}
+                formatTime={formatTime}
+                upcomingUpAd={upComingUpAd}
+              />
+            )
+          ) : <h2>Something went wrong.</h2>
+        }
 
         {/* Preview Pane */}
         <div>

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import useAxiosPublic from '../../hooks/AxiosPublic';
+import { useParams } from 'react-router-dom';
 
 // Define types
 interface Ad {
     id: string;
     imageUrl: string;
-    startTime: Date;
+    startTime: number;
     duration: number;
+    videoId: string
     type: 'image' | 'poll' | 'onlyText';
 }
 
@@ -28,7 +29,7 @@ interface AdFormProps {
     setOnlyText: (prev: AdOrPoll[]) => void;
 }
 
-const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime, videoId, setFinalAds }) => {
+const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime, setFinalAds }) => {
 
 
     // Ad Form State
@@ -43,9 +44,8 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
     const [pollQuestion, setPollQuestion] = useState<string>('');
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
 
-    // axios requests
-
-    const axiosPublic = useAxiosPublic();
+    // params getting videoId
+  const {videoId} = useParams();
 
     // Add option
     const addOption = () => {
@@ -96,7 +96,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             startTime: crnTime,
             duration: dur,
             type: 'poll',
-            videoId: videoId //it's static for now
+            videoId: videoId //params videoId used here
         };
         setUpcomingUpAd((prev = []) => [...prev, pollData]); // add new poll only for preview
         setFinalAds((prev = []) => [...prev, pollData]); // add new poll only for store to database
@@ -153,6 +153,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             imageUrl: imageUrlTrimmed,
             startTime: currentTime,
             duration: durationNum,
+            videoId: videoId,
             type: 'image'
         };
 

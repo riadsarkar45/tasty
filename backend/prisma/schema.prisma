@@ -15,12 +15,13 @@ datasource db {
 }
 
 model videos {
-  id        Int      @id @default(autoincrement())
-  videoId   String   @unique
+  id        Int         @id @default(autoincrement())
+  videoId   String      @unique
   videoUrl  String
   createdBy String
-  createdAt DateTime @default(now())
+  createdAt DateTime    @default(now())
   polls     poll[]
+  questions questions[]
 }
 
 model poll {
@@ -44,7 +45,8 @@ model questions {
   startTime String
   videoId   String?
   duration  String
-  type    String @default("image")
+  type      String   @default("image")
+  video     videos?  @relation(fields: [videoId], references: [videoId])
 }
 
 model pollOption {

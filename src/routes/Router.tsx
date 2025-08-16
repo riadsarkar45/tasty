@@ -16,7 +16,7 @@ const Routers = createBrowserRouter([
                 element: <PublicView />
             },
             {
-                path: "/details",
+                path: "/watch",
                 element: <Details />
             }
         ]
@@ -34,7 +34,7 @@ const Routers = createBrowserRouter([
                 element: <AddNewVideo />
             },
             {
-                path: '/dashboard/addnewadd',
+                path: '/dashboard/addnewad/:videoId?',
                 element: <CreateNewAdd />
             }
 
