@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAxiosPublic from "../../hooks/AxiosPublic";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import Loading from "../Components/Loading";
 
 const AddNewVideo = () => {
     const [videoId, setVideoId] = useState<string>('');
@@ -14,6 +15,8 @@ const AddNewVideo = () => {
         axiosPublic.get('/videos')
             .then((res) => {
                 setCreatedVideos(res.data);
+                console.log(res.data);
+                setIsLoading(false);
             }).catch((err) => {
                 console.error("Error fetching videos:", err);
             })
@@ -21,7 +24,7 @@ const AddNewVideo = () => {
 
     const handleAddNewVideo = () => {
         setIsLoading(true);
-        if(isLoading) toast.loading("Wait a moment...");
+        if (isLoading) toast.loading("Wait a moment...");
         const videoData = {
             videoId: videoId,
             videoUrl: videoUrl,
@@ -38,10 +41,16 @@ const AddNewVideo = () => {
                 console.error("Error creating video:", err);
             })
     }
+
+    if (isLoading) {
+        return (
+            <Loading isLoading={isLoading} />
+        )
+    }
     return (
-        <div className="mt-[1rem] w-full p-3">
+        <div className=" w-full p-3">
             <div>
-                <div className="border mb-10 border-gray-200 gap-3 w-[40rem] flex items-center justify-center rounded-md">
+                <div className="border mb-5 border-gray-200 gap-3 w-[40rem] flex items-center justify-center rounded-md">
                     <input value={videoId} onChange={(e) => setVideoId(e.target.value)} type="text" placeholder="Paste youtube video ID here" className="w-[20rem] border-gray-500 outline-none border rounded-md p-2 " />
                     <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} type="text" placeholder="Paste youtube video URL here" className="w-[20rem] border border-gray-500 outline-none rounded-md p-2 " />
                     <button onClick={() => handleAddNewVideo()} className="border-l bg-white p-2 rounded-md border w-[3rem]">+</button>
@@ -85,7 +94,14 @@ const AddNewVideo = () => {
                                         </th>
                                         <td className="px-6 py-4">{video.createdBy}</td>
                                         <td className="px-6 py-4">{video.createdAt}</td>
-                                        <td className="px-6 py-4">No ad created</td>
+                                        <td className="px-6 py-4">
+                                            {
+                                                video?.items.length > 0 ?
+                                                    <small className="bg-green-500 bg-opacity-45 text-green-800 p-1 rounded-md">{video?.items?.length ?? 0} Active ads</small>
+                                                :
+                                                    <small className="bg-red-500 bg-opacity-45 text-red-800 p-1 rounded-md">No ad or poll created</small>
+                                            }
+                                        </td>
                                         <td className="px-6 py-4">
                                             <Link to={`/dashboard/addnewad/${video.videoId}`}>
                                                 <small className="bg-yellow-500 bg-opacity-45 text-yellow-800 p-1 rounded-md">Set Ad</small></Link> |

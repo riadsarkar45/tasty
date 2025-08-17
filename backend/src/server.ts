@@ -2,7 +2,8 @@ import fastify from 'fastify';
 import databaseCon from './database/database';
 import polls from './pages/services/addNewVideo';
 import cors from '@fastify/cors';
-
+import multipart from "@fastify/multipart";
+import uploadNewImage from './pages/services/addNewImage';
 const app = fastify({
   logger: {
     transport: {
@@ -20,7 +21,9 @@ app.register(cors, {
   origin: 'http://localhost:5173',  // ✅ Your React frontend
   credentials: true,                // ✅ Allow sending cookies
 });
+app.register(multipart)
 app.register(polls)
+app.register(uploadNewImage)
 databaseCon(app)
 app.get('/', async () => {
   app.log.info('Handled /hello request');

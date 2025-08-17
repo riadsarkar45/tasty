@@ -15,13 +15,15 @@ datasource db {
 }
 
 model videos {
-  id        Int         @id @default(autoincrement())
-  videoId   String      @unique
-  videoUrl  String
-  createdBy String
-  createdAt DateTime    @default(now())
-  polls     poll[]
-  questions questions[]
+  id         Int         @id @default(autoincrement())
+  videoId    String      @unique
+  videoUrl   String
+  createdBy  String
+  createdAt  DateTime    @default(now())
+  polls      poll[]
+  questions  questions[]
+  categoryId Int?
+  category   categories? @relation("categoryVideos", fields: [categoryId], references: [id])
 }
 
 model poll {
@@ -56,3 +58,12 @@ model pollOption {
   pollId    Int
   poll      poll?    @relation(fields: [pollId], references: [id])
 }
+
+model categories {
+  id        Int      @id @default(autoincrement())
+  category  String   @unique
+  createdAt DateTime @default(now())
+  videos    videos[] @relation("categoryVideos")
+}
+
+

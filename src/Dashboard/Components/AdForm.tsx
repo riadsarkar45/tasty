@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useAxiosPublic from '../../hooks/AxiosPublic';
 
 // Define types
 interface Ad {
@@ -45,7 +46,8 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
 
     // params getting videoId
-  const {videoId} = useParams();
+    const { videoId } = useParams();
+    const axiosPublic = useAxiosPublic();
 
     // Add option
     const addOption = () => {
@@ -135,36 +137,46 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
     const handleAdSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!adImageUrl) {
+            alert("Please select an image file.");
+            return;
+        }
+
         const durationNum = Number(adDuration);
-        const imageUrlTrimmed = adImageUrl.trim();
-
-        if (!imageUrlTrimmed) {
-            alert('Please enter a valid image URL.');
-            return;
-        }
-
         if (isNaN(durationNum) || durationNum <= 0) {
-            alert('Please enter a valid duration (positive number).');
+            alert("Please enter a valid duration (positive number).");
             return;
         }
 
-        const newAd: Ad = {
-            id: `ad-${Date.now()}`,
-            imageUrl: imageUrlTrimmed,
-            startTime: currentTime,
-            duration: durationNum,
-            videoId: videoId,
-            type: 'image'
-        };
+        try {
+            const formData = new FormData();
+            formData.append("file", adImageUrl); // File object
 
-        setUpcomingUpAd((prev = []) => [...prev, newAd]);
-        setFinalAds((prev = []) => [...prev, newAd]);
-        // const insert = await axiosPublic.post('/newpoll', newAd)
-        // console.log(insert?.data);
-        // Reset form
-        setAdDuration('');
-        setAdImageUrl('');
+            const res = await axiosPublic.post("/upload-image", formData);
+
+            const uploadedImageUrl = res.data.url; // Cloudinary URL
+            console.log(uploadedImageUrl);
+            const newAd: Ad = {
+                id: `ad-${Date.now()}`,
+                imageUrl: uploadedImageUrl,
+                startTime: currentTime,
+                duration: durationNum,
+                videoId: videoId,
+                type: "image",
+            };
+
+            setUpcomingUpAd((prev = []) => [...prev, newAd]);
+            setFinalAds((prev = []) => [...prev, newAd]);
+
+            setAdDuration("");
+            setAdImageUrl(null); // reset file input
+        } catch (err) {
+            console.error(err);
+            alert("Failed to upload image. Please try again.");
+        }
     };
+
+
     return (
         <div className="space-y-6">
             {/* === Ad Form === */}
@@ -186,13 +198,17 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
                             </div>
                             <div>
                                 <input
-                                    placeholder="Image URL"
-                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
-                                    type="url"
-                                    value={adImageUrl}
-                                    onChange={(e) => setAdImageUrl(e.target.value)}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setAdImageUrl(e.target.files[0]);
+                                        }
+                                    }}
                                     required
                                 />
+
+
                             </div>
                             <small>Ad start time: {formatTime(currentTime)}</small>
                             <div>

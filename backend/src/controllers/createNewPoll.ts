@@ -176,7 +176,7 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
         }
 
 
-        const formattedVideos = videos.map(video => ({
+        const formattedVideos = videos.map(video => ({ // merged to array questions and polls to one array
             videoId: video.videoId,
             videoUrl: video.videoUrl,
             createdBy: video.createdBy,

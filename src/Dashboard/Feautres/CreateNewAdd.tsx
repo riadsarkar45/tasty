@@ -5,6 +5,7 @@ import AdForm from '../Components/AdForm';
 import AddPreview from '../Components/AddPreview';
 import useAxiosPublic from '../../hooks/AxiosPublic';
 import { useParams } from 'react-router-dom';
+import Loading from '../Components/Loading';
 
 interface VideoItem {
   id: number;
@@ -47,6 +48,8 @@ const CreateNewAdd = () => {
   const [inComingAdType, setIncomingAdType] = useState({});
   const [video, setVideo] = useState([]);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   // this state is used to insert all data to database 
 
   const [finalAds, setFinalAds] = useState([])
@@ -85,6 +88,7 @@ const CreateNewAdd = () => {
           const allItems = res.data.flatMap((video: any) => video.items || []);
           setUpcomingUpAd(allItems);
           setVideo(res.data);
+          setIsLoading(false);
         }
       })
       .catch(err => console.error(err));
@@ -184,6 +188,12 @@ const CreateNewAdd = () => {
       .catch((error) => {
         console.error('Error creating polls:', error);
       });
+  }
+
+  if (isLoading) {
+    return (
+      <Loading isLoading={isLoading} />
+    )
   }
 
   const opts = {
