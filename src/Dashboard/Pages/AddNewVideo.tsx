@@ -1,121 +1,60 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useAxiosPublic from "../../hooks/AxiosPublic";
-import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import Loading from "../Components/Loading";
+import Header from "../shared/Header";
 
 const AddNewVideo = () => {
     const [videoId, setVideoId] = useState<string>('');
     const [videoUrl, setVideoUrl] = useState<string>('');
-    const [createdVideos, setCreatedVideos] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [videoCategory, setVideoCategory] = useState<string>('');
     const axiosPublic = useAxiosPublic();
 
-    useEffect(() => {
-        axiosPublic.get('/videos')
-            .then((res) => {
-                setCreatedVideos(res.data);
-                console.log(res.data);
-                setIsLoading(false);
-            }).catch((err) => {
-                console.error("Error fetching videos:", err);
-            })
-    }, [axiosPublic]);
 
     const handleAddNewVideo = () => {
-        setIsLoading(true);
-        if (isLoading) toast.loading("Wait a moment...");
         const videoData = {
             videoId: videoId,
             videoUrl: videoUrl,
+            videoCategory: videoCategory,
             createdBy: 'static user for now',
         }
-        setCreatedVideos((prev) => [...prev, videoData]);
 
         axiosPublic.post('/create-video', videoData)
             .then((res) => {
                 console.log("Video created successfully:", res.data);
-                setIsLoading(false);
                 toast.success("Video created successfully!");
             }).catch((err) => {
-                console.error("Error creating video:", err);
+                toast.error(err?.response?.data?.error || "Something went wrong while creating video");
+                console.error("Error creating video:", err?.response?.data?.error || err);
             })
     }
 
-    if (isLoading) {
-        return (
-            <Loading isLoading={isLoading} />
-        )
-    }
+
     return (
-        <div className=" w-full p-3">
-            <div>
-                <div className="border mb-5 border-gray-200 gap-3 w-[40rem] flex items-center justify-center rounded-md">
-                    <input value={videoId} onChange={(e) => setVideoId(e.target.value)} type="text" placeholder="Paste youtube video ID here" className="w-[20rem] border-gray-500 outline-none border rounded-md p-2 " />
-                    <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} type="text" placeholder="Paste youtube video URL here" className="w-[20rem] border border-gray-500 outline-none rounded-md p-2 " />
-                    <button onClick={() => handleAddNewVideo()} className="border-l bg-white p-2 rounded-md border w-[3rem]">+</button>
+        <div className="bg-white w-full p-3">
+            <Header heading="Add New Video" />
+            <div className="mb-10 mt-10">
+                <div className=" mb-5  ">
+                    <div className="gap-3 grid grid-cols-2 mb-5">
+                        <div>
+                            <input value={videoId} onChange={(e) => setVideoId(e.target.value)} type="text" placeholder="Paste youtube video ID here" className="w-full  outline-none border rounded-md p-2 " required />
+                        </div>
+                        <div>
+                            <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} type="text" placeholder="Paste youtube video URL here" className="w-full border  outline-none rounded-md p-2 " required />
+
+                        </div>
+                    </div>
+                    <div>
+                        <input value={videoCategory} onChange={(e) => setVideoCategory(e.target.value)} type="text" placeholder="Category" className="w-full border  outline-none rounded-md p-2 " required />
+
+                    </div>
 
                 </div>
+                <button onClick={() => handleAddNewVideo()} className="border-l bg-white p-2 rounded-md border w-full">Submit</button>
+
             </div>
 
 
 
-            <div>
-                <div className="relative overflow-x-auto">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    Video
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Created By
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Created At
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Status
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                createdVideos?.map((video, i) =>
-                                    <tr key={i} className="bg-white border-b   border-gray-200">
-                                        <th
-                                            scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            <img className="w-[8rem] h-[4rem]" src={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt="" />
-                                        </th>
-                                        <td className="px-6 py-4">{video.createdBy}</td>
-                                        <td className="px-6 py-4">{video.createdAt}</td>
-                                        <td className="px-6 py-4">
-                                            {
-                                                video?.items.length > 0 ?
-                                                    <small className="bg-green-500 bg-opacity-45 text-green-800 p-1 rounded-md">{video?.items?.length ?? 0} Active ads</small>
-                                                :
-                                                    <small className="bg-red-500 bg-opacity-45 text-red-800 p-1 rounded-md">No ad or poll created</small>
-                                            }
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <Link to={`/dashboard/addnewad/${video.videoId}`}>
-                                                <small className="bg-yellow-500 bg-opacity-45 text-yellow-800 p-1 rounded-md">Set Ad</small></Link> |
-                                            <small className="bg-red-500 bg-opacity-45 text-red-800 p-1 rounded-md">Delete</small>
-                                        </td>
-                                    </tr>
-                                )
-                            }
-
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
         </div>
     );
 };

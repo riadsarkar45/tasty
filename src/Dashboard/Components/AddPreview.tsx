@@ -12,7 +12,7 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
                             <img
                                 src={adPreview.imageUrl}
                                 alt="Active Ad"
-                                className="max-h-full max-w-full object-contain"
+                                className="h-full w-full object-contain"
                                 onError={(e) => {
                                     console.error('Image failed to load:', adPreview.imageUrl);
                                     (e.target as HTMLImageElement).style.opacity = '0.5';

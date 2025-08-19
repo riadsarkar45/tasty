@@ -4,7 +4,7 @@ import Video from '../Components/Video';
 import AdForm from '../Components/AdForm';
 import AddPreview from '../Components/AddPreview';
 import useAxiosPublic from '../../hooks/AxiosPublic';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Loading from '../Components/Loading';
 
 interface VideoItem {
@@ -207,14 +207,14 @@ const CreateNewAdd = () => {
   };
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
-      <div className="flex gap-4 justify-between">
+      <div className="flex gap-3 justify-between">
         {/* Video & Progress */}
 
         {
           videoId ? (
             video?.map((vid, i) =>
               <Video
-                key={i}
+                key={vid.id - i}
                 videoId={vid.videoId}
                 opts={opts}
                 onPlayerReady={onPlayerReady}
@@ -231,7 +231,10 @@ const CreateNewAdd = () => {
                 upcomingUpAd={upComingUpAd}
               />
             )
-          ) : <h2>Something went wrong.</h2>
+          ) : <div className='bg-red-500 w-full h-10 gap-3 border border-red-800 border-opacity-40 p-2 flex items-center rounded-md bg-opacity-40 text-red-800'>
+            <span>⚠️</span>
+            <h2>Please select a video or upload new video <Link className='underline' to={'/dashboard/AddNewVideo'}>Add New Video</Link> or <Link className='underline' to={'/dashboard/videos'}>Videos</Link></h2>
+          </div>
         }
 
         {/* Preview Pane */}
@@ -248,7 +251,7 @@ const CreateNewAdd = () => {
           />
 
           <div className="mt-2">
-            <div className="w-[24rem] bg-white p-4 rounded-lg shadow">
+            <div className=" bg-white p-4 rounded-lg shadow">
               <AdForm
                 formatTime={formatTime}
                 currentTime={currentTime}

@@ -127,21 +127,38 @@ export async function getPolls(req: FastifyRequest, reply: FastifyReply) {
 
 export async function createNewVideo(req: FastifyRequest<{ Body: NewVideoBody }>, reply: FastifyReply) {
     console.log("Creating new video with data:", req.body);
-    const { videoId, videoUrl, createdBy } = req.body;
+    const { videoId, videoUrl, createdBy, videoCategory } = req.body;
 
-    if (!videoId || !videoUrl || !createdBy) reply.status(400).send({ error: "videoId, videoUrl, and createdBy are required" });
+    if (!videoId || !videoUrl || !createdBy) return reply.status(400).send({ error: "videoId, videoUrl, and createdBy are required" });
 
     try {
+
+        const isVideoExists = await prisma.videos.findUnique({
+            where: { videoId }
+        })
+
+        if (isVideoExists) return reply.status(400).send({ error: "Video with this ID already exists" });
+
         const saveVideo = await prisma.videos.create({
             data: {
                 videoId,
                 videoUrl,
                 createdBy,
-            }
-        })
+                category: videoCategory
+                    ? {
+                        connectOrCreate: {
+                            where: { categoryName: videoCategory },
+                            create: { categoryName: videoCategory },
+                        },
+                    }
+                    : undefined,
+            },
+        });
+
 
         if (saveVideo) {
-            reply.status(201).send({ message: "Video created successfully", video: saveVideo });
+            
+            return reply.status(201).send({ message: "Video created successfully", video: saveVideo });
         }
 
         reply.send({ message: "Something went wrong while creating video" });
@@ -164,9 +181,9 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
                         options: true,
                     },
                 },
-                questions: true, 
+                questions: true,
             },
-            orderBy: { createdAt: "desc" }, 
+            orderBy: { createdAt: "desc" },
         });
 
 

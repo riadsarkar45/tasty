@@ -14,6 +14,7 @@ export interface NewVideoBody {
   videoId: string;
   videoUrl: string;
   createdBy: string;
+  videoCategory?: string; // Optional field for video category
 }
 
 export interface ParamsReq {

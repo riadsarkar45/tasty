@@ -1,95 +1,39 @@
-import YouTube from "react-youtube";
+import { Link } from "react-router-dom";
 
-const CategoryItems = () => {
+const CategoryItems = ({ videos }) => {
     return (
         <div>
-            <div className="bg-white p-3 mt-5 rounded-md mb-4">
-                <div className="border-b p-3 text-2xl">
-                    <h2>Breakfast</h2>
-                </div>
-                <div className="grid grid-cols-4 gap-2">
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
+            {videos.map((video, i) => (
+                <div key={i}>
+                    {/* Show ad after every 2 posts */}
+                    {(i + 1) % 2 === 0 && (
+                        <div className="bg-red-500 bg-opacity-30 h-[15rem] flex items-center justify-center my-5 rounded-md">
+                            <h2 className="text-xl font-bold">Advertisement</h2>
+                        </div>
+                    )}
+
+                    {/* Video Post */}
+                    <div className="bg-white mt-5 rounded-md mb-4">
+                        <div className="border-b mb-5 text-2xl">
+                            <h2>{video.categoryName}</h2>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2">
+                            {video?.videos.map((item, index) => (
+                                <div key={index}>
+                                    <Link to={`/watch/${item.videoId}`}>
+                                        <img
+                                            src={`https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`}
+                                            alt=""
+                                        />
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="bg-white p-3 mt-5 rounded-md mb-4">
-                <div className="border-b p-3 text-2xl">
-                    <h2>Lunch </h2>
-                </div>
-                <div className="grid grid-cols-4 gap-2">
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <YouTube
-                            videoId="pd0ng0ofyio"
-                            opts={{
-                                width: "282.5",
-                                height: "250",
-                            }}
-                        />
-                    </div>
-                </div>
-            </div>
+            ))}
         </div>
+
     );
 };
 

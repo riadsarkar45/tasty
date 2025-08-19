@@ -2,9 +2,9 @@ import YouTube from 'react-youtube';
 
 const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime, formatTime, onPlayerReady, onPlayerStateChange, currentTime, imageAds, duration, hoverPercent, progressBarRef, handleMouseMove, setHoverTime, handleProgressBarClick }) => {
     return (
-        <div className="h-[27rem] bg-white p-2">
+        <div className="h-[27rem] bg-white p-2 shadow-md rounded-md">
             {/* Video Player */}
-            <div className="w-[40rem]  h-[25rem] rounded-lg shadow overflow-hidden">
+            <div className="w-[38rem]  h-[25rem] rounded-lg overflow-hidden">
                 <YouTube
                     videoId={videoId}
                     opts={opts}
@@ -23,7 +23,9 @@ const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime
                     <div
                         ref={progressBarRef}
                         className="relative w-full max-w-xl bg-gray-300 rounded-full h-3 overflow-hidden cursor-pointer"
-                        onMouseMove={handleMouseMove}
+                        onMouseMove={(e) =>
+                            handleMouseMove(e, duration, setHoverTime, progressBarRef)
+                        }
                         onMouseLeave={() => {
                             setHoverTime(null);
                         }}
@@ -40,12 +42,12 @@ const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime
 
                         {/* Red Ad Markers */}
                         {
-                            upcomingUpAd?.map((ad) => {
+                            upcomingUpAd?.map((ad,i) => {
                                 const startPercent = (Number(ad.startTime) / Number(duration)) * 100;
                                 const widthPercent = (Number(ad.duration) / Number(duration)) * 100;
                                 return (
                                     <div
-                                        key={ad.id}
+                                        key={ad.id + i}
                                         className={`absolute top-0 h-full ${ad.type === 'poll' && 'bg-yellow-500'} ${ad.type === 'onlyText' && 'bg-red-500'} ${ad.type === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
                                         style={{
                                             left: `${startPercent}%`,

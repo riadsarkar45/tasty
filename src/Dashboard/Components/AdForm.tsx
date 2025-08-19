@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxiosPublic from '../../hooks/AxiosPublic';
+import toast from 'react-hot-toast';
 
 // Define types
 interface Ad {
@@ -48,6 +49,8 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
     // params getting videoId
     const { videoId } = useParams();
     const axiosPublic = useAxiosPublic();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Add option
     const addOption = () => {
@@ -135,6 +138,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
 
     // Handle Ad Submit
     const handleAdSubmit = async (e: React.FormEvent) => {
+        setIsLoading(true);
         e.preventDefault();
 
         if (!adImageUrl) {
@@ -155,6 +159,8 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             const res = await axiosPublic.post("/upload-image", formData);
 
             const uploadedImageUrl = res.data.url; // Cloudinary URL
+            setIsLoading(false);
+            toast.success("Ad image uploaded successfully!");
             console.log(uploadedImageUrl);
             const newAd: Ad = {
                 id: `ad-${Date.now()}`,
@@ -169,7 +175,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
             setFinalAds((prev = []) => [...prev, newAd]);
 
             setAdDuration("");
-            setAdImageUrl(null); // reset file input
+            setAdImageUrl(''); // reset file input
         } catch (err) {
             console.error(err);
             alert("Failed to upload image. Please try again.");
@@ -216,7 +222,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, 
                                     type="submit"
                                     className="w-full mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
                                 >
-                                    ✔️
+                                    {isLoading ? 'Uploading...' : 'Create Ad'}
                                 </button>
                             </div>
                         </form>
