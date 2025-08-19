@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import useAxiosPublic from '../../hooks/AxiosPublic';
+import toast from 'react-hot-toast';
 
 // Define types
 interface Ad {
     id: string;
     imageUrl: string;
-    startTime: Date;
+    startTime: number;
     duration: number;
+    videoId: string
+    type: 'image' | 'poll' | 'onlyText';
 }
 
 interface Poll {
@@ -26,7 +31,9 @@ interface AdFormProps {
     setOnlyText: (prev: AdOrPoll[]) => void;
 }
 
-const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, setCreatedPolls, isVisible, setOnlyText }) => {
+const AdForm: React.FC<AdFormProps> = ({ formatTime, setUpcomingUpAd, formType, currentTime, setFinalAds }) => {
+
+
     // Ad Form State
     const [adDuration, setAdDuration] = useState<string>('');
     const [adImageUrl, setAdImageUrl] = useState<string>('');
@@ -38,6 +45,12 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
     // Poll Form State
     const [pollQuestion, setPollQuestion] = useState<string>('');
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+
+    // params getting videoId
+    const { videoId } = useParams();
+    const axiosPublic = useAxiosPublic();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Add option
     const addOption = () => {
@@ -60,7 +73,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
 
 
     // Handle Poll Submit
-    const handlePollSubmit = (e: React.FormEvent) => {
+    const handlePollSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const questionTrimmed = pollQuestion.trim();
@@ -86,12 +99,19 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
             question: questionTrimmed,
             options: trimmedOptions,
             startTime: crnTime,
-            duration: dur
+            duration: dur,
+            type: 'poll',
+            videoId: videoId //params videoId used here
         };
-        setCreatedPolls((prev = []) => [...prev, pollData]);
+        setUpcomingUpAd((prev = []) => [...prev, pollData]); // add new poll only for preview
+        setFinalAds((prev = []) => [...prev, pollData]); // add new poll only for store to database
 
         // setPollQuestion('');
         // setPollOptions(['', '']);
+        // const insert = await axiosPublic.post('/newpoll', pollData)
+        // console.log(insert?.data);
+
+
     };
 
     // handle only text submit
@@ -100,14 +120,16 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
         e.preventDefault();
         const duration = Number(adDuration)
         const startTime = Number(currentTime)
-        
+
         const onlyTextAd = {
             textTitle,
             textDesc,
             duration: duration,
-            startTime: startTime
+            startTime: startTime,
+            type: 'onlyText'
         }
-        setOnlyText((prev = []) => [...prev, onlyTextAd])
+        setUpcomingUpAd((prev = []) => [...prev, onlyTextAd])
+        setFinalAds((prev = []) => [...prev, onlyTextAd])
 
         // setImageAds((prev = []) => [...prev, newAd]);
 
@@ -115,41 +137,57 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
 
 
     // Handle Ad Submit
-    const handleAdSubmit = (e: React.FormEvent) => {
+    const handleAdSubmit = async (e: React.FormEvent) => {
+        setIsLoading(true);
         e.preventDefault();
 
+        if (!adImageUrl) {
+            alert("Please select an image file.");
+            return;
+        }
+
         const durationNum = Number(adDuration);
-        const imageUrlTrimmed = adImageUrl.trim();
-
-        if (!imageUrlTrimmed) {
-            alert('Please enter a valid image URL.');
-            return;
-        }
-
         if (isNaN(durationNum) || durationNum <= 0) {
-            alert('Please enter a valid duration (positive number).');
+            alert("Please enter a valid duration (positive number).");
             return;
         }
 
-        const newAd: Ad = {
-            id: `ad-${Date.now()}`,
-            imageUrl: imageUrlTrimmed,
-            startTime: currentTime,
-            duration: durationNum,
-        };
+        try {
+            const formData = new FormData();
+            formData.append("file", adImageUrl); // File object
 
-        setImageAds((prev = []) => [...prev, newAd]);
+            const res = await axiosPublic.post("/upload-image", formData);
 
-        // Reset form
-        setAdDuration('');
-        setAdImageUrl('');
+            const uploadedImageUrl = res.data.url; // Cloudinary URL
+            setIsLoading(false);
+            toast.success("Ad image uploaded successfully!");
+            console.log(uploadedImageUrl);
+            const newAd: Ad = {
+                id: `ad-${Date.now()}`,
+                imageUrl: uploadedImageUrl,
+                startTime: currentTime,
+                duration: durationNum,
+                videoId: videoId,
+                type: "image",
+            };
+
+            setUpcomingUpAd((prev = []) => [...prev, newAd]);
+            setFinalAds((prev = []) => [...prev, newAd]);
+
+            setAdDuration("");
+            setAdImageUrl(''); // reset file input
+        } catch (err) {
+            console.error(err);
+            alert("Failed to upload image. Please try again.");
+        }
     };
+
 
     return (
         <div className="space-y-6">
             {/* === Ad Form === */}
             {
-                isVisible === 'ad' && (
+                formType === 'ad' && (
                     <div>
                         <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Ad Form</h2>
                         <form onSubmit={handleAdSubmit} className="space-y-3">
@@ -166,13 +204,17 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
                             </div>
                             <div>
                                 <input
-                                    placeholder="Image URL"
-                                    className="border-b w-full hover:border-b-blue-500 outline-none p-2"
-                                    type="url"
-                                    value={adImageUrl}
-                                    onChange={(e) => setAdImageUrl(e.target.value)}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setAdImageUrl(e.target.files[0]);
+                                        }
+                                    }}
                                     required
                                 />
+
+
                             </div>
                             <small>Ad start time: {formatTime(currentTime)}</small>
                             <div>
@@ -180,7 +222,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
                                     type="submit"
                                     className="w-full mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
                                 >
-                                    ✔️
+                                    {isLoading ? 'Uploading...' : 'Create Ad'}
                                 </button>
                             </div>
                         </form>
@@ -190,7 +232,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
 
             {/* === Poll Form === */}
             {
-                isVisible === 'poll' && (
+                formType === 'poll' && (
                     <div>
                         <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Create Poll Form</h2>
                         <form onSubmit={handlePollSubmit} className="space-y-4">
@@ -264,7 +306,7 @@ const AdForm: React.FC<AdFormProps> = ({ formatTime, setImageAds, currentTime, s
             }
 
             {
-                isVisible === 'desc' && (
+                formType === 'desc' && (
                     <div>
                         <h2 className="font-medium text-gray-800 mb-3 border-b p-2">Only Text</h2>
                         <form onSubmit={handleOnlyTextSubmission} className="space-y-4">

@@ -1,10 +1,10 @@
-import YouTube, { type YouTubeProps } from 'react-youtube';
+import YouTube from 'react-youtube';
 
-const Video = ({ videoId, opts, createdPolls, onlyTexts, hoverTime, formatTime, onPlayerReady, onPlayerStateChange, currentTime, imageAds, duration, hoverPercent, progressBarRef, handleMouseMove, setHoverTime, handleProgressBarClick }) => {
+const Video = ({ videoId, opts, upcomingUpAd, createdPolls, onlyTexts, hoverTime, formatTime, onPlayerReady, onPlayerStateChange, currentTime, imageAds, duration, hoverPercent, progressBarRef, handleMouseMove, setHoverTime, handleProgressBarClick }) => {
     return (
-        <div className="h-[27rem] bg-white p-2">
+        <div className="h-[27rem] bg-white p-2 shadow-md rounded-md">
             {/* Video Player */}
-            <div className="w-[40rem]  h-[25rem] rounded-lg shadow overflow-hidden">
+            <div className="w-[38rem]  h-[25rem] rounded-lg overflow-hidden">
                 <YouTube
                     videoId={videoId}
                     opts={opts}
@@ -23,7 +23,9 @@ const Video = ({ videoId, opts, createdPolls, onlyTexts, hoverTime, formatTime, 
                     <div
                         ref={progressBarRef}
                         className="relative w-full max-w-xl bg-gray-300 rounded-full h-3 overflow-hidden cursor-pointer"
-                        onMouseMove={handleMouseMove}
+                        onMouseMove={(e) =>
+                            handleMouseMove(e, duration, setHoverTime, progressBarRef)
+                        }
                         onMouseLeave={() => {
                             setHoverTime(null);
                         }}
@@ -31,7 +33,7 @@ const Video = ({ videoId, opts, createdPolls, onlyTexts, hoverTime, formatTime, 
                     >
                         {/* Blue Progress Fill */}
                         <div
-                            className="absolute top-0 left-0 h-full bg-blue-500 rounded"
+                            className="absolute top-0 left-0 h-full bg-blue-500 bg-opacity-50 rounded"
                             style={{
                                 width: `${(currentTime / duration) * 100}%`,
                                 zIndex: 2,
@@ -39,53 +41,23 @@ const Video = ({ videoId, opts, createdPolls, onlyTexts, hoverTime, formatTime, 
                         />
 
                         {/* Red Ad Markers */}
-                        {imageAds.map((ad) => {
-                            const startPercent = (ad.startTime / duration) * 100;
-                            const widthPercent = (ad.duration / duration) * 100;
-                            return (
-                                <div
-                                    key={ad.id}
-                                    className="absolute top-0 h-full bg-red-500 opacity-70 pointer-events-none rounded"
-                                    style={{
-                                        left: `${startPercent}%`,
-                                        width: `${widthPercent}%`,
-                                        zIndex: 1,
-                                    }}
-                                />
-                            );
-                        })}
-
-                        {createdPolls.map((poll) => {
-                            const startPercent = (poll.startTime / duration) * 100;
-                            const widthPercent = (poll.duration / duration) * 100;
-                            return (
-                                <div
-                                    key={poll.id}
-                                    className="absolute top-0 h-full bg-yellow-500 opacity-70 pointer-events-none rounded"
-                                    style={{
-                                        left: `${startPercent}%`,
-                                        width: `${widthPercent}%`,
-                                        zIndex: 1,
-                                    }}
-                                />
-                            );
-                        })}
-
-                        {onlyTexts.map((text) => {
-                            const startPercent = (text.startTime / duration) * 100;
-                            const widthPercent = (text.duration / duration) * 100;
-                            return (
-                                <div
-                                    key={text.duration}
-                                    className="absolute top-0 h-full bg-red-900 opacity-70 pointer-events-none rounded"
-                                    style={{
-                                        left: `${startPercent}%`,
-                                        width: `${widthPercent}%`,
-                                        zIndex: 1,
-                                    }}
-                                />
-                            );
-                        })}
+                        {
+                            upcomingUpAd?.map((ad,i) => {
+                                const startPercent = (Number(ad.startTime) / Number(duration)) * 100;
+                                const widthPercent = (Number(ad.duration) / Number(duration)) * 100;
+                                return (
+                                    <div
+                                        key={ad.id + i}
+                                        className={`absolute top-0 h-full ${ad.type === 'poll' && 'bg-yellow-500'} ${ad.type === 'onlyText' && 'bg-red-500'} ${ad.type === 'image' && 'bg-red-900'} opacity-70 pointer-events-none rounded`}
+                                        style={{
+                                            left: `${startPercent}%`,
+                                            width: `${widthPercent}%`,
+                                            zIndex: 1,
+                                        }}
+                                    />
+                                );
+                            })
+                        }
 
                         {/* Hover Tooltip & Marker */}
                         {hoverTime !== null && (

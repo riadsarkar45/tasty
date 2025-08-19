@@ -1,60 +1,60 @@
+import { useState } from "react";
+import useAxiosPublic from "../../hooks/AxiosPublic";
+import toast from "react-hot-toast";
+import Header from "../shared/Header";
 
 const AddNewVideo = () => {
+    const [videoId, setVideoId] = useState<string>('');
+    const [videoUrl, setVideoUrl] = useState<string>('');
+    const [videoCategory, setVideoCategory] = useState<string>('');
+    const axiosPublic = useAxiosPublic();
+
+
+    const handleAddNewVideo = () => {
+        const videoData = {
+            videoId: videoId,
+            videoUrl: videoUrl,
+            videoCategory: videoCategory,
+            createdBy: 'static user for now',
+        }
+
+        axiosPublic.post('/create-video', videoData)
+            .then((res) => {
+                console.log("Video created successfully:", res.data);
+                toast.success("Video created successfully!");
+            }).catch((err) => {
+                toast.error(err?.response?.data?.error || "Something went wrong while creating video");
+                console.error("Error creating video:", err?.response?.data?.error || err);
+            })
+    }
+
+
     return (
-        <div className="mt-[6rem]">
-            <div>
-                <div className="border mb-10 border-gray-200 flex w-[25rem] rounded-md bg-white">
-                    <input type="text" placeholder="Paste youtube video url here" className="w-[25rem] rounded-md p-2 " />
-                    <button className="border-l border w-[3rem]">+</button>
+        <div className="bg-white w-full p-3">
+            <Header heading="Add New Video" />
+            <div className="mb-10 mt-10">
+                <div className=" mb-5  ">
+                    <div className="gap-3 grid grid-cols-2 mb-5">
+                        <div>
+                            <input value={videoId} onChange={(e) => setVideoId(e.target.value)} type="text" placeholder="Paste youtube video ID here" className="w-full  outline-none border rounded-md p-2 " required />
+                        </div>
+                        <div>
+                            <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} type="text" placeholder="Paste youtube video URL here" className="w-full border  outline-none rounded-md p-2 " required />
+
+                        </div>
+                    </div>
+                    <div>
+                        <input value={videoCategory} onChange={(e) => setVideoCategory(e.target.value)} type="text" placeholder="Category" className="w-full border  outline-none rounded-md p-2 " required />
+
+                    </div>
+
                 </div>
+                <button onClick={() => handleAddNewVideo()} className="border-l bg-white p-2 rounded-md border w-full">Submit</button>
+
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-                <div className="bg-white flex items-center justify-center h-[13rem] w-[20rem] max-w-md aspect-square">
-                    <iframe
-                        src="https://www.youtube.com/embed/USccSZnS8MQ?si=MWHmd7PeAAbFqnSr"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                        className="w-full h-full rounded-lg"
-                    />
-                </div>
-                <div className="bg-white flex items-center justify-center h-[13rem] w-[20rem] max-w-md aspect-square">
-                    <iframe
-                        src="https://www.youtube.com/embed/USccSZnS8MQ?si=MWHmd7PeAAbFqnSr"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                        className="w-full h-full rounded-lg"
-                    />
-                </div>
-                <div className="bg-white flex items-center justify-center h-[13rem] w-[20rem] max-w-md aspect-square">
-                    <iframe
-                        src="https://www.youtube.com/embed/USccSZnS8MQ?si=MWHmd7PeAAbFqnSr"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                        className="w-full h-full rounded-lg"
-                    />
-                </div>
-                <div className="bg-white flex items-center justify-center h-[13rem] w-[20rem] max-w-md aspect-square">
-                    <iframe
-                        src="https://www.youtube.com/embed/USccSZnS8MQ?si=MWHmd7PeAAbFqnSr"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                        className="w-full h-full rounded-lg"
-                    />
-                </div>
-            </div>
+
+
         </div>
     );
 };

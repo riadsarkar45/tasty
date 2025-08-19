@@ -3,42 +3,68 @@ import { type YouTubeProps } from 'react-youtube';
 import Video from '../Components/Video';
 import AdForm from '../Components/AdForm';
 import AddPreview from '../Components/AddPreview';
+import useAxiosPublic from '../../hooks/AxiosPublic';
+import { Link, useParams } from 'react-router-dom';
+import Loading from '../Components/Loading';
 
-// === Types ===
-type ImageAd = {
-  id: string;
-  imageUrl: string;
-  startTime: number;
-  duration: number;
-};
+interface VideoItem {
+  id: number;
+  createdBy: string;
+  startTime: string;
+  type: string;
+  options?: any[];
+  // add other fields you need
+}
 
-type Poll = {
-  id: string;
-  question: string;
-  options: string[];
-  startTime: number;
-  duration: number;
-};
+interface Video {
+  id: number;
+  videoId: string;
+  items: VideoItem[];
+}
+
+
+
+// type showingAdType = {
+//   adType: 'image' | 'poll' | 'onlyText';
+//   startTime: number;
+//   duration: number;
+// };
+
+// type Poll = {
+//   id: string;
+//   question: string;
+//   options: string[];
+//   startTime: number;
+//   duration: number;
+// };
 
 // === Component ===
 const CreateNewAdd = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [activeAd, setActiveAd] = useState<ImageAd | null>(null);
   const [hoverTime, setHoverTime] = useState<number | null>(null);
   const [hoverPercent, setHoverPercent] = useState<number>(0);
-  const [seekTime, setSeekTime] = useState<number>(0);
-  const [imageAds, setImageAds] = useState<ImageAd[]>([]);
-  const [createdPolls, setCreatedPolls] = useState<Poll[]>([]);
-  const [visiblePoll, setVisiblePoll] = useState<Poll | null>(null); // Renamed: was setPollVisible
-  const [isVisible, setIsVisible] = useState(null);
-  const [onlyTexts, setOnlyTexts] = useState([])
-  const [activeOnlyTextAd, setActiveOnlyTextAd] = useState([])
-  const [incomingAdType, setIncomingAdType] = useState('')
+  const [formType, setFormType] = useState<'image' | 'poll' | 'onlyText' | null>(null);
+  const [inComingAdType, setIncomingAdType] = useState({});
+  const [video, setVideo] = useState([]);
 
-  const playerRef = useRef<any>(null); // Will hold YouTube player instance
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // this state is used to insert all data to database 
+
+  const [finalAds, setFinalAds] = useState([])
+
+  // checking new style of code to run ads
+
+  const [upComingUpAd, setUpcomingUpAd] = useState([]);
+
+  const [adPreview, setAdPreview] = useState({});
+
+  const playerRef = useRef(null); // Will hold YouTube player instance
   const intervalRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const axiosPublic = useAxiosPublic();
+
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -53,6 +79,23 @@ const CreateNewAdd = () => {
       setDuration(dur);
     }
   };
+  const { videoId } = useParams();
+
+  useEffect(() => {
+    axiosPublic.get(`/videos/${videoId}`)
+      .then(res => {
+        if (res?.data) {
+          const allItems = res.data.flatMap((video: any) => video.items || []);
+          setUpcomingUpAd(allItems);
+          setVideo(res.data);
+          setIsLoading(false);
+        }
+      })
+      .catch(err => console.error(err));
+  }, [axiosPublic, videoId]);
+  console.log(video);
+
+  // console.log(adPreview, 'adPreview in CreateNewAdd');
 
   const onPlayerStateChange: YouTubeProps['onStateChange'] = (event) => {
     const player = event.target;
@@ -64,48 +107,30 @@ const CreateNewAdd = () => {
         const time = player.getCurrentTime();
         setCurrentTime(time);
 
-        const showingAd = imageAds.find((ad) => {
-          return time >= ad.startTime && time < ad.startTime + ad.duration;
+
+        const gettingAdPreview = upComingUpAd?.find((ad) => {
+          const start = Number(ad.startTime);
+          const duration = Number(ad.duration);
+
+          if (isNaN(start) || isNaN(duration)) {
+            console.warn("Invalid ad time or duration:", ad);
+            return false;
+          }
+
+          return time >= start && time < start + duration;
         });
 
-        const showingPoll = createdPolls.find((poll) => {
-          return time >= poll.startTime && time < poll.startTime + poll.duration;
+        setAdPreview(gettingAdPreview);
+
+        const incomingAd = upComingUpAd?.find((ad) => {
+          return Number(ad.startTime) - time > 0 && Number(ad.startTime) - time <= 7;
         });
 
-        const onlyTextBasedAd = onlyTexts?.find((txt) => {
-          return time >= txt.startTime && time < txt.startTime + txt.duration;
-        })
 
-        const onlyImageAds = imageAds?.find((ad) => {
-          return ad.startTime - time > 0 && ad.startTime - time <= 7;
-        });
-
-        const onlyPolls = createdPolls?.find((poll) => {
-          return poll.startTime - time > 0 && poll.startTime - time <= 7;
-        })
-
-        const onlyTextBased = onlyTexts?.find((txt) => {
-          return txt.startTime - time > 0 && txt.startTime - time <= 7;
-        })
-
-        // Set incomingAdType only if something is upcoming
-        if (onlyImageAds) {
-          setIncomingAdType('ad');
-        } else if (onlyPolls) {
-          setIncomingAdType('poll');
-        } else if (onlyTextBased) {
-          setIncomingAdType('onlyText');
-        } else {
-          setIncomingAdType(null); // 🔴 Reset when nothing is upcoming
-        }
+        setIncomingAdType(incomingAd);
+        // console.log(incomingAd, 'incomingAd in CreateNewAdd');
 
 
-
-
-
-        setActiveOnlyTextAd(onlyTextBasedAd)
-        setActiveAd(showingAd || null);
-        setVisiblePoll(showingPoll || null);
       }, 100);
     } else {
       if (intervalRef.current) {
@@ -140,7 +165,6 @@ const CreateNewAdd = () => {
     playerRef.current.seekTo(seekTime);
     playerRef.current.pauseVideo();
     setCurrentTime(seekTime);
-    setSeekTime(seekTime);
   };
 
   useEffect(() => {
@@ -150,7 +174,26 @@ const CreateNewAdd = () => {
   }, []);
 
   const hidePollAd = (type) => {
-    setIsVisible(type)
+    setFormType(type)
+  }
+
+  const handleSetPolls = () => {
+    console.log(finalAds, 'finalAds in CreateNewAdd');
+    axiosPublic.post('/newpoll', finalAds)
+      .then((res) => {
+        console.log(res?.data, 'Polls created successfully');
+        // // Optionally, you can reset the finalAds state or handle success feedback
+        // setFinalAds([]);
+      })
+      .catch((error) => {
+        console.error('Error creating polls:', error);
+      });
+  }
+
+  if (isLoading) {
+    return (
+      <Loading isLoading={isLoading} />
+    )
   }
 
   const opts = {
@@ -164,49 +207,59 @@ const CreateNewAdd = () => {
   };
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
-      <div className="flex gap-4 justify-between">
+      <div className="flex gap-3 justify-between">
         {/* Video & Progress */}
-        <Video
-          videoId="CScddWNqwOI"
-          opts={opts}
-          onPlayerReady={onPlayerReady}
-          onPlayerStateChange={onPlayerStateChange}
-          currentTime={currentTime}
-          duration={duration}
-          imageAds={imageAds}
-          createdPolls={createdPolls}
-          hoverTime={hoverTime}
-          hoverPercent={hoverPercent}
-          progressBarRef={progressBarRef}
-          handleMouseMove={handleMouseMove}
-          setHoverTime={setHoverTime}
-          handleProgressBarClick={handleProgressBarClick}
-          formatTime={formatTime}
-          onlyTexts={onlyTexts}
-        />
+
+        {
+          videoId ? (
+            video?.map((vid, i) =>
+              <Video
+                key={vid.id - i}
+                videoId={vid.videoId}
+                opts={opts}
+                onPlayerReady={onPlayerReady}
+                onPlayerStateChange={onPlayerStateChange}
+                currentTime={currentTime}
+                duration={duration}
+                hoverTime={hoverTime}
+                hoverPercent={hoverPercent}
+                progressBarRef={progressBarRef}
+                handleMouseMove={handleMouseMove}
+                setHoverTime={setHoverTime}
+                handleProgressBarClick={handleProgressBarClick}
+                formatTime={formatTime}
+                upcomingUpAd={upComingUpAd}
+              />
+            )
+          ) : <div className='bg-red-500 w-full h-10 gap-3 border border-red-800 border-opacity-40 p-2 flex items-center rounded-md bg-opacity-40 text-red-800'>
+            <span>⚠️</span>
+            <h2>Please select a video or upload new video <Link className='underline' to={'/dashboard/AddNewVideo'}>Add New Video</Link> or <Link className='underline' to={'/dashboard/videos'}>Videos</Link></h2>
+          </div>
+        }
 
         {/* Preview Pane */}
         <div>
           <AddPreview
-            activeAd={activeAd}
-            seekTime={seekTime}
-            visiblePoll={visiblePoll}
             hidePollAd={hidePollAd}
-            setIsVisible={setIsVisible}
-            isVisible={isVisible}
-            activeOnlyTextAd={activeOnlyTextAd}
-            incomingAdType={incomingAdType}
+            formType={formType}
+            adPreview={adPreview}
+            currentTime={currentTime}
+            inComingAdType={inComingAdType}
+            formatTime={formatTime}
+            handleSetPolls={handleSetPolls}
+
           />
 
           <div className="mt-2">
-            <div className="w-[24rem] bg-white p-4 rounded-lg shadow">
+            <div className=" bg-white p-4 rounded-lg shadow">
               <AdForm
                 formatTime={formatTime}
-                setImageAds={setImageAds}
                 currentTime={currentTime}
-                setCreatedPolls={setCreatedPolls}
-                isVisible={isVisible}
-                setOnlyText={setOnlyTexts}
+                setUpcomingUpAd={setUpcomingUpAd}
+                formType={formType}
+                upComingAd={upComingUpAd}
+                videoId="CScddWNqwOI"
+                setFinalAds={setFinalAds}
               />
             </div>
           </div>

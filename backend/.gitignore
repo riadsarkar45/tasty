@@ -1,2 +1,7 @@
 .env
 /src/generated/prisma
+
+/src/generated/prisma
+
+.vercel
+node_modules/

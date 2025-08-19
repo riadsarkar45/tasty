@@ -5,6 +5,7 @@ import AddNewVideo from "../Dashboard/Pages/AddNewVideo";
 import CreateNewAdd from "../Dashboard/Feautres/CreateNewAdd";
 import PublicView from "../Public/pages/PublicView";
 import Details from "../Public/pages/Details";
+import Videos from "../Dashboard/Pages/Videos";
 
 const Routers = createBrowserRouter([
     {
@@ -16,7 +17,7 @@ const Routers = createBrowserRouter([
                 element: <PublicView />
             },
             {
-                path: "/details",
+                path: "/watch/:videoId?",
                 element: <Details />
             }
         ]
@@ -34,8 +35,13 @@ const Routers = createBrowserRouter([
                 element: <AddNewVideo />
             },
             {
-                path: '/dashboard/addnewadd',
+                path: '/dashboard/addnewad/:videoId?',
                 element: <CreateNewAdd />
+            },
+            
+            {
+                path: '/dashboard/videos',
+                element: <Videos />
             }
 
         ]

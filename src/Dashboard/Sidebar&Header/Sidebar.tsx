@@ -1,18 +1,28 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
-    return (
+    const linkClass = ({ isActive }: { isActive: boolean }) =>
+        `block rounded-md mb-2 p-2 ${
+            isActive ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+        }`;
 
-        <div className="bg-white gap-5 w-[14rem] p-2 border-r border-gray-300 h-[100vh]">
-            <div className="bg-gray-200 rounded-md mb-2 text-gray-700 p-2">
-                <Link to={'/dashboard'}> <h2>Home</h2></Link>
-            </div>
-            <div className="bg-gray-200 rounded-md mb-2 text-gray-700 p-2">
-                <Link to={'/dashboard/AddNewVideo'}> <h2>Add New Video</h2></Link>
-            </div>
-            <div className="bg-gray-200 rounded-md mb-2 text-gray-700 p-2">
-                <Link to={'/dashboard/addnewadd'}> <h2>Add New Add</h2></Link>
-            </div>
+    return (
+        <div className="fixed top-0 left-0 bg-white gap-5 w-[14rem] p-2 border-r border-gray-300 h-[100vh] overflow-y-auto">
+            
+            <NavLink to="/dashboard" end className={linkClass}>
+                Home
+            </NavLink>
+            
+            <NavLink to="/dashboard/AddNewVideo" className={linkClass}>
+                Add New Video
+            </NavLink>
+            
+            <NavLink to="/dashboard/addnewad" className={linkClass}>
+                Add New Add
+            </NavLink>
+            <NavLink to="/dashboard/videos" className={linkClass}>
+                All Videos
+            </NavLink>
         </div>
     );
 };
