@@ -1,43 +1,42 @@
-import React from "react";
+// src/Dashboard/shared/handleMouseMove.ts
+import { type RefObject, type MouseEvent } from "react";
 
 export const handleMouseMove = (
-  e: React.MouseEvent<HTMLDivElement>,
+  e: MouseEvent<HTMLDivElement>,
   duration: number,
-  setHoverPercent: (value: number) => void,
-  setHoverTime: (value: number) => void,
-  progressBarRef: React.RefObject<HTMLDivElement>
+  setHoverTime: (t: number | null) => void,
+  setHoverPercent: (p: number) => void,
+  setCurrentTime: (p: number) => void,
+  progressBarRef: RefObject<HTMLDivElement>
 ) => {
   const bar = progressBarRef.current;
   if (!bar) return;
 
   const rect = bar.getBoundingClientRect();
-  const pos = e.clientX - rect.left;
-  const percent = Math.max(0, Math.min(1, pos / rect.width));
+  const percent = (e.clientX - rect.left) / rect.width;
   const time = percent * duration;
 
-  setHoverPercent(percent * 100);
   setHoverTime(time);
+  setHoverPercent(percent * 100);
+  setCurrentTime(time)
 };
-
 
 export const handleProgressBarClick = (
-  e: React.MouseEvent<HTMLDivElement>,
+  e: MouseEvent<HTMLDivElement>,
   duration: number,
-  progressBarRef: React.RefObject<HTMLDivElement>,
-  playerRef: React.RefObject<any>,
-  setCurrentTime: (time: number) => void
+  playerRef: RefObject<any>, // YouTube player
+  setCurrentTime: (t: number) => void
 ) => {
-  const bar = progressBarRef.current;
-  const player = playerRef.current;
-  if (!bar || !player) return;
-
+  const bar = e.currentTarget;
   const rect = bar.getBoundingClientRect();
-  const pos = e.clientX - rect.left;
-  const percent = Math.max(0, Math.min(1, pos / rect.width));
-  const seekTime = percent * duration;
+  const percent = (e.clientX - rect.left) / rect.width;
+  const newTime = percent * duration;
 
-  player.seekTo(seekTime);
-  player.pauseVideo();
-  setCurrentTime(seekTime);
+  // ✅ Use YouTube API to seek
+  if (playerRef.current) {
+    playerRef.current.seekTo(newTime, true); // `true` = smooth seek
+  }
+
+  // ✅ Update React state
+  setCurrentTime(newTime);
 };
-

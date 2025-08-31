@@ -38,11 +38,11 @@ const Routers = createBrowserRouter([
                 path: '/dashboard/addnewad/:videoId?',
                 element: <CreateNewAdd />
             },
-            
+
             {
                 path: '/dashboard/videos',
                 element: <Videos />
-            }
+            },
 
         ]
     }

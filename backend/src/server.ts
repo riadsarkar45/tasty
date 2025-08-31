@@ -1,5 +1,4 @@
 import fastify from "fastify";
-import awsLambdaFastify from "@fastify/aws-lambda";
 import databaseCon from "./database/database";
 import polls from "./pages/services/addNewVideo";
 import cors from "@fastify/cors";
@@ -21,42 +20,45 @@ const app = fastify({
   },
 });
 
-// ✅ CORS
+//  CORS
 app.register(cors, {
-  origin: process.env.NODE_ENV === "production" 
-    ? "*"                   // On Vercel allow all (or restrict to your frontend domain)
-    : "http://localhost:5173", // Local React frontend
+  origin: process.env.NODE_ENV === "production"
+    ? "*" // In production, restrict to your domain
+    : "http://localhost:5173",
   credentials: true,
 });
 
-// ✅ Plugins
+// Plugins
 app.register(multipart);
 app.register(polls);
 app.register(uploadNewImage);
 app.register(getVideosForPublic, { prefix: "/api/v1/public" });
 
-// ✅ Database connection
+// Database connection
 databaseCon(app);
 
-// ✅ Example route
+//  Root route
 app.get("/", async () => {
   app.log.info("Handled / request");
   return { message: "Hello! Fastify server is running 🚀" };
 });
 
-// ✅ Local development only
-if (process.env.NODE_ENV !== "production") {
-  const start = async () => {
-    try {
-      const address = await app.listen({ port: 3000, host: "0.0.0.0" });
-      app.log.info(`Server listening at ${address}`);
-    } catch (err) {
-      app.log.error(err);
-      process.exit(1);
-    }
-  };
+// Start server (Render uses this)
+const start = async () => {
+  try {
+    const port = parseInt(process.env.PORT || "10000", 10);
+    const address = await app.listen({ port, host: '0.0.0.0' });
+    app.log.info(`Server listening at ${address}`);
+  } catch (err) {
+    app.log.error(err);
+    process.exit(1);
+  }
+};
+
+// Only start server if not in serverless
+if (require.main === module) {
   start();
 }
 
-// ✅ Export handler for Vercel (serverless)
-export const handler = awsLambdaFastify(app);
+//Export app for testing or serverless reuse
+export default app;
