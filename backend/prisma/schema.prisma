@@ -78,3 +78,10 @@ model pollResponses {
   pollOption     pollOption? @relation(fields: [pollOptionId], references: [id])
   pollOptionId   Int?
 }
+
+model notes {
+  id Int @id @default(autoincrement())
+  videoId String
+  noteText String
+  userId String
+}

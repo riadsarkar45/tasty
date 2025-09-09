@@ -50,6 +50,7 @@ const Details = () => {
           setVideo(res.data);
           const extractAds = res.data.flatMap((video: any) => video.items || []);
           setUpComingAds(extractAds);
+          console.log(res.data);
         }
       })
       .catch((err) => console.log(err));
@@ -140,16 +141,10 @@ const Details = () => {
           <AddPreview ads={ads} videoTitle={videoTitle} />
 
           {/* Stats */}
-          <div className="flex gap-4">
-            <div className="flex items-center gap-2 border border-gray-500 p-1 rounded-lg">
-              👁 <span>1.2k</span>
-            </div>
-            <div className="flex gap-2 items-center border border-gray-500 p-1 rounded-lg">
-              🔒 <span>2.2k</span>
-            </div>
-            <div>
-              <span className="flex items-center border border-gray-500 p-2 rounded-lg">12sec</span>
-            </div>
+          <div className="flex">
+            <input className="w-full outline-none p-2 border-b rounded-l-md" type="text" placeholder="Takes Notes" />
+            {/* <input className="w-full outline-none p-2 border-b rounded" type="text" placeholder="Takes Notes" /> */}
+            <button className="border bg-gray-500 bg-opacity-25 rounded-r-md text-gray-500 w-[4rem]">Save</button>
           </div>
 
           {/* Progress Bar */}
@@ -160,7 +155,7 @@ const Details = () => {
               upcomingUpAd={upComingAds}
               videoTitle={videoTitle}
               playerRef={playerRef}
-              setCurrentTime={setCurrentTime} // ✅ Required
+              setCurrentTime={setCurrentTime}
             />
           </div>
 

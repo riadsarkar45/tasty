@@ -220,13 +220,12 @@ export const submitPollResponse = async (req: FastifyRequest<{ Body: PollSubmiss
 
     if (!pollId && !userId) return reply.status(404).send({ message: "Something went wrong please try again later" });
 
-    const response = await prisma.pollResponses.findFirst({
-        where: {
-            submittedBy: userId,
-        },
-    });
+    // const response = await prisma.pollResponses.findFirst({
+    //     where: {
+    //         submittedBy: userId,
+    //     },
+    // });
 
-    if (response === null || response === undefined) {
         const submit = await prisma.pollResponses.create(
             {
                 data: {
@@ -241,5 +240,5 @@ export const submitPollResponse = async (req: FastifyRequest<{ Body: PollSubmiss
         if (submit) {
             reply.send({ message: 'Response stored' })
         }
-    }
+    
 }
