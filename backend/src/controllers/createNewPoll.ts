@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../Prisma/prisma";
-import { NewVideoBody, NewPollBody, VideoParams } from '../type&interface/interface';
+import { NewVideoBody, NewPollBody, VideoParams, PollSubmission } from '../type&interface/interface';
 
 
 
@@ -157,7 +157,7 @@ export async function createNewVideo(req: FastifyRequest<{ Body: NewVideoBody }>
 
 
         if (saveVideo) {
-            
+
             return reply.status(201).send({ message: "Video created successfully", video: saveVideo });
         }
 
@@ -178,7 +178,11 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
             include: {
                 polls: {
                     include: {
-                        options: true,
+                        options: {
+                            include:{
+                                responses: true
+                            }
+                        },
                     },
                 },
                 questions: true,
@@ -210,4 +214,31 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
     }
 }
 
+export const submitPollResponse = async (req: FastifyRequest<{ Body: PollSubmission }>, reply: FastifyReply) => {
+    const { selectedOption, pollOptionId, pollId, userId } = req.body;
+    console.log(pollId, userId);
 
+    if (!pollId && !userId) return reply.status(404).send({ message: "Something went wrong please try again later" });
+
+    // const response = await prisma.pollResponses.findFirst({
+    //     where: {
+    //         submittedBy: userId,
+    //     },
+    // });
+
+        const submit = await prisma.pollResponses.create(
+            {
+                data: {
+                    submittedBy: ' static userId',
+                    selectedOption: selectedOption,
+                    pollOptionId: pollOptionId,
+                    submittedAt: new Date().toISOString(),
+                }
+            }
+        )
+
+        if (submit) {
+            reply.send({ message: 'Response stored' })
+        }
+    
+}

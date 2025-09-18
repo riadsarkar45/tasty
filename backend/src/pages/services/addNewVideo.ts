@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { addNewPoll, createNewVideo, getCreatedVideos, getPolls } from "../../controllers/createNewPoll";
+import { addNewPoll, createNewVideo, getCreatedVideos, getPolls, submitPollResponse } from "../../controllers/createNewPoll";
 import { VideoParams } from '../../type&interface/interface';
 
 export default async function polls(fastify: FastifyInstance) {
@@ -44,6 +44,22 @@ export default async function polls(fastify: FastifyInstance) {
   }, createNewVideo)
 
   fastify.get("/polls", getPolls)
-  
+
+  fastify.post('/poll-submission', {
+    schema: {
+      body: {
+        type: 'object',
+        // required: ['submittedBy', 'selectedOption', 'pollOptionId', 'pollId'], // ✅ Fixed: likely meant pollId
+        properties: {
+          submittedBy: { type: 'string' },
+          selectedOption: { type: 'string' },
+          pollOptionId: { type: 'integer' }, // or 'number' if float possible
+          pollId: { type: 'integer' }        // Important: used to prevent duplicate votes
+        }
+      }
+    },
+    handler: submitPollResponse
+  });
+
   fastify.get<{ Params: VideoParams }>('/videos/:videoId?', getCreatedVideos);
 }

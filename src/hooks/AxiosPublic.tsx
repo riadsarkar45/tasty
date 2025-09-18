@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosPublic = axios.create({
-    baseURL: "http://localhost:3000",
-    //  baseURL: "https://streetfood-production.up.railway.app",
+    baseURL: "http://127.0.0.1:10000",
+    //  baseURL: "https://tasty-server-12.onrender.com",
   });
 const useAxiosPublic = () => {
     return axiosPublic;

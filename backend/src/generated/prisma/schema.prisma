@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  id           Int      @id @default(autoincrement())
+  categoryName String   @unique
+  createdAt    DateTime @default(now())
+  videos       videos[]
+}
+
+model videos {
+  id        Int      @id @default(autoincrement())
+  videoId   String   @unique
+  videoUrl  String
+  createdBy String
+  createdAt DateTime @default(now())
+
+  categoryName String?
+  category     categories? @relation(fields: [categoryName], references: [categoryName])
+
+  polls     poll[]
+  questions questions[]
+}
+
+model poll {
+  id        Int          @id @default(autoincrement())
+  createdBy String
+  createdAT DateTime     @default(now())
+  question  String
+  startTime String
+  duration  String
+  options   pollOption[]
+  type      String       @default("poll")
+  videoId   String?
+  video     videos?      @relation(fields: [videoId], references: [videoId])
+}
+
+model questions {
+  id        Int      @id @default(autoincrement())
+  createdBy String
+  createdAt DateTime @default(now())
+  imageUrl  String
+  startTime String
+  videoId   String?
+  duration  String
+  type      String   @default("image")
+  video     videos?  @relation(fields: [videoId], references: [videoId])
+}
+
+model pollOption {
+  id        Int             @id @default(autoincrement())
+  createdAt DateTime        @default(now())
+  options   String
+  pollId    Int
+  poll      poll?           @relation(fields: [pollId], references: [id])
+  responses pollResponses[]
+}
+
+model pollResponses {
+  id             Int         @id @default(autoincrement())
+  submittedAt    String
+  submittedBy    String
+  selectedOption String
+  pollOption     pollOption? @relation(fields: [pollOptionId], references: [id])
+  pollOptionId   Int?
+}
+
+model notes {
+  id       Int    @id @default(autoincrement())
+  videoId  String
+  noteText String
+  userId   String
+}

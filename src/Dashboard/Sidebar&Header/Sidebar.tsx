@@ -23,6 +23,9 @@ const Sidebar = () => {
             <NavLink to="/dashboard/videos" className={linkClass}>
                 All Videos
             </NavLink>
+            <NavLink to="/dashboard/edit-image" className={linkClass}>
+                Edit Image
+            </NavLink>
         </div>
     );
 };

@@ -1,11 +1,11 @@
 export interface PollItem {
-    question: string;
-    startTime: number;
-    duration: number;
-    type: "poll" | "image" | "onlyText";
-    options: string[];
-    videoId: string;
-    imageUrl?: string;
+  question: string;
+  startTime: number;
+  duration: number;
+  type: "poll" | "image" | "onlyText";
+  options: string[];
+  videoId: string;
+  imageUrl?: string;
 }
 
 export type NewPollBody = PollItem[];
@@ -22,6 +22,14 @@ export interface ParamsReq {
 }
 
 export interface VideoParams {
-    videoId: string;
+  videoId: string;
+}
+
+export type PollSubmission = {
+  pollId: string;
+  userId: string;
+  subMittedBy: string;
+  selectedOption: string;
+  pollOptionId: number
 }
 
