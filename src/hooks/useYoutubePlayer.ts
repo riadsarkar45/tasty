@@ -65,10 +65,9 @@ export const useYouTubePlayer = (): UseYouTubePlayerResult => {
 
           return time >= start && time < start + duration;
         });
-        if (gettingAdPreview) {
-          setAds(gettingAdPreview);
+        setAds(gettingAdPreview);
 
-        }
+
 
       }, 100);
     } else {

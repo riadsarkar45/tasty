@@ -72,18 +72,18 @@ const AddPreview = ({ ads, videoTitle }: AddPreviewProps) => {
   return (
     <div>
       {/* Video Title */}
-      <div className="bg-white p-2 mb-2 border-b shadow-sm rounded-md">
+      <div className="w-full bg-white p-2 mb-2 border-b shadow-sm rounded-md">
         {videoTitle || "Looking for video title..."}
       </div>
 
       {/* Ad Preview Area */}
-      <div className="bg-gray-50 rounded-md shadow-sm flex h-[16rem] border border-gray-200 items-center justify-center">
+      <div className="bg-gray-50 rounded-md shadow-sm flex lg:h-[23rem] border w-full border-gray-200 items-center justify-center">
         {ads ? (
           ads.type === "image" ? (
             <img
               src={ads.imageUrl || ""}
               alt="Active Ad"
-              className="max-h-full max-w-full object-contain"
+              className="h-full w-full"
               onError={(e) => {
                 console.error("Image failed to load:", ads.imageUrl);
                 (e.target as HTMLImageElement).style.opacity = "0.5";

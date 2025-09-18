@@ -37,7 +37,6 @@ const Video = (
                     <Progressbar
                         duration={duration}
                         currentTime={currentTime}
-                        upcomingUpAd={addPreview}
                         playerRef={playerRef}
                         setCurrentTime={setCurrentTime}
                         videoTitle=''

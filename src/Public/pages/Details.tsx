@@ -7,7 +7,6 @@ import useAxiosPublic from "../../hooks/AxiosPublic";
 import { useParams } from "react-router-dom";
 import AddPreview from "../AddPreview";
 import Progressbar from "../../components/Progressbar";
-import { handleMouseMove, handleProgressBarClick } from "../../Dashboard/shared/handleMouseMove";
 
 // Define Ad Types
 type UpcomingAd = {
@@ -36,7 +35,6 @@ const Details = () => {
   const [videoTitle, setVideoTitle] = useState<string>("");
   const [video, setVideo] = useState<any[]>([]);
 
-  // ✅ Correct ref for YouTube player
   const playerRef = useRef<any>(null);
   const intervalRef = useRef<number | null>(null);
   const axiosPublic = useAxiosPublic();
@@ -109,11 +107,11 @@ const Details = () => {
   };
 
   return (
-    <div className="bg-gray-50 w-[75rem] m-auto p-3">
-      <div className="flex justify-between items-start gap-1">
+    <div className="w-full lg:w-[85%] md:w-[75rem] m-auto p-3">
+      <div className="lg:flex md:flex justify-between m-auto gap-4">
         <div className="w-full">
           {/* YouTube Video */}
-          <div className="h-[25rem] bg-black rounded-lg overflow-hidden relative">
+          <div className="h-[28rem] lg:w-[55rem] w-full bg-black rounded-lg overflow-hidden relative">
             {video.map((video, i) => (
               <YouTube
                 key={i}
@@ -136,8 +134,8 @@ const Details = () => {
           <AddNewComments />
         </div>
 
-        {/* RIGHT: Sidebar */}
-        <div className="w-[45rem] flex flex-col gap-4">
+        {/* RIGHT: Sidebar  add preview*/}
+        <div className="lg:w-full w-[40rem] flex flex-col gap-4">
           <AddPreview ads={ads} videoTitle={videoTitle} />
 
           {/* Stats */}
@@ -160,7 +158,7 @@ const Details = () => {
           </div>
 
           {/* Comments */}
-          <div className="bg-gray-50 border p-3 rounded-md border-gray-200 h-[16rem]">
+          <div className="p-3 rounded-md border-gray-200 h-[16rem]">
             <div className="mt-4 border border-r-1 w-full flex items-center justify-center">
               <input
                 className="outline-none w-full p-2"

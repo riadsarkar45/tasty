@@ -1,6 +1,6 @@
 
 
-const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, inComingAdType, handleSetPolls }) => {
+const AddPreview = ({ formatTime, formType, hidePollAd, currentTime, incomingAd, inComingAdType, handleSetPolls }) => {
     return (
         <div>
             <div className="w-[24rem] h-[21rem] bg-white p-4 rounded-lg shadow">
@@ -8,33 +8,33 @@ const AddPreview = ({ formatTime, adPreview, formType, hidePollAd, currentTime, 
 
                 <div className="border-2 border-dashed border-gray-300 rounded-lg flex  items-center justify-center h-64 bg-gray-50">
                     {
-                        adPreview?.type === 'image' ? (
+                        incomingAd?.type === 'image' ? (
                             <img
-                                src={adPreview.imageUrl}
+                                src={incomingAd.imageUrl}
                                 alt="Active Ad"
                                 className="h-full w-full object-contain"
                                 onError={(e) => {
-                                    console.error('Image failed to load:', adPreview.imageUrl);
+                                    console.error('Image failed to load:', incomingAd.imageUrl);
                                     (e.target as HTMLImageElement).style.opacity = '0.5';
                                 }}
                             />
-                        ) : adPreview?.type === 'poll' ? (
+                        ) : incomingAd?.type === 'poll' ? (
                             <div className="text-center gap-6 px-2 flex justify-between">
-                                <h3 className="font-bold">{adPreview.question}</h3>
+                                <h3 className="font-bold">{incomingAd.question}</h3>
                                 <ul className="mt-4 space-y-1 text-sm">
-                                    {adPreview.options.map((opt, i) => (
+                                    {incomingAd.options.map((opt, i) => (
                                         <li key={i} className="p-1 bg-blue-100 w-[10rem] rounded">
                                             {opt?.options}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
-                        ) : adPreview?.type === 'onlyText' ? (
+                        ) : incomingAd?.type === 'onlyText' ? (
                             <div>
                                 <h2>
-                                    {adPreview?.textTitle}
+                                    {incomingAd?.textTitle}
                                 </h2>
-                                <p>{adPreview?.textDesc}</p>
+                                <p>{incomingAd?.textDesc}</p>
                             </div>
                         ) : null
                     }

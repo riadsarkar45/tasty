@@ -22,7 +22,6 @@ const Progressbar: React.FC<ProgressProps> = ({
   currentTime,
   upcomingUpAd,
   playerRef,
-  videoTitle,
   setCurrentTime,
   
 }) => {

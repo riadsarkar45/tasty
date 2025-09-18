@@ -47,7 +47,7 @@ const CreateNewAdd = () => {
 
   const progressBarRef = useRef<HTMLDivElement>(null);
   const axiosPublic = useAxiosPublic();
-  const { playerRef, duration, ads, currentTime, setAdPreview, onPlayerReady, onPlayerStateChange, setCurrentTime, } = useYouTubePlayer();
+  const { playerRef, duration, ads, adPreview, currentTime, setAdPreview, onPlayerReady, onPlayerStateChange, setCurrentTime, } = useYouTubePlayer();
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -67,7 +67,7 @@ const CreateNewAdd = () => {
         if (res?.data) {
           const videos = Array.isArray(res.data) ? res.data : [res.data];
           setVideo(videos);
-          const adItems = videos?.flatMap((items:any) => items.items || [])
+          const adItems = videos?.flatMap((items: any) => items.items || [])
           setAdPreview(adItems)
           setIncomingAd(adItems)
 
@@ -79,7 +79,6 @@ const CreateNewAdd = () => {
         setIsLoading(false);
       });
   }, [axiosPublic, videoId, setAdPreview]);
-
 
 
 
@@ -109,7 +108,6 @@ const CreateNewAdd = () => {
       <Loading isLoading={isLoading} />
     )
   }
-
   const opts = {
     height: '100%',
     width: '100%',
@@ -156,10 +154,11 @@ const CreateNewAdd = () => {
           <AddPreview
             hidePollAd={hidePollAd}
             formType={formType}
-            adPreview={ads}
+            adPreview={adPreview}
             currentTime={currentTime}
             inComingAdType={inComingAdType}
             formatTime={formatTime}
+            incomingAd={ads}
             handleSetPolls={handleSetPolls}
 
           />
