@@ -57,6 +57,7 @@ const Details = () => {
   // When YouTube player is ready
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     playerRef.current = event.target;
+    console.log(playerRef.current);
     setVideoTitle(event.target.getVideoData().title); // ✅ Get title from API
     const dur = event.target.getDuration();
     setDuration(dur);

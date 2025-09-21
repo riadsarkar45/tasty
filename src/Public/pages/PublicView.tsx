@@ -19,9 +19,6 @@ const PublicView = () => {
       .then((res) => {
         if (res.data) {
           setVideos(res?.data?.videos);
-          // const allItems = res.data.flatMap((video: any) => video.items || []);
-          // setUpcomingUpAd(allItems);
-          // const ads = res?.data.flatMap((video: any) => video.items || []);
 
         }
         console.log(res?.data?.videos);
@@ -29,32 +26,7 @@ const PublicView = () => {
         console.error("Error fetching videos:", err);
       })
   }, [axiosPublic])
-  // const imageAds: ImageAd[] = [
-  //   {
-  //     id: 'ad1',
-  //     imageUrl: 'https://i.ibb.co/8gFhDJ2F/Screenshot-2024-12-08-145159.png',
-  //     startTime: 1,
-  //     duration: 15,
-  //   },
-  //   {
-  //     id: 'ad2',
-  //     imageUrl: 'https://i.ibb.co/8DYv007W/Screenshot-2024-12-08-155816.png',
-  //     startTime: 25,
-  //     duration: 4,
-  //   },
-  //   {
-  //     id: 'ad3',
-  //     imageUrl: 'https://i.ibb.co/nsmjcHX2/Screenshot-2024-12-05-163143.png',
-  //     startTime: 45,
-  //     duration: 6,
-  //   },
-  //   {
-  //     id: 'ad4', // 👈 Fixed duplicate ID
-  //     imageUrl: 'https://i.ibb.co/nsmjcHX2/Screenshot-2024-12-05-163143.png',
-  //     startTime: 60,
-  //     duration: 6,
-  //   },
-  // ];
+
 
   const videoId = "RLzC55ai0eo";
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;

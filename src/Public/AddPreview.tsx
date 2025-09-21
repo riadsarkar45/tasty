@@ -1,32 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosPublic from "../hooks/AxiosPublic";
 import toast from "react-hot-toast";
-
+import { YoutubeTranscript } from 'youtube-transcript';
+import { useParams } from "react-router-dom";
 // Unified ad types
 type UpcomingAd =
   | {
-      id: string;
-      startTime: number;
-      duration: number;
-      type: "image";
-      imageUrl?: string;
-    }
+    id: string;
+    startTime: number;
+    duration: number;
+    type: "image";
+    imageUrl?: string;
+  }
   | {
-      id: string;
-      startTime: number;
-      duration: number;
-      type: "poll";
-      question?: string;
-      options?: PollOption[];
-    }
+    id: string;
+    startTime: number;
+    duration: number;
+    type: "poll";
+    question?: string;
+    options?: PollOption[];
+  }
   | {
-      id: string;
-      startTime: number;
-      duration: number;
-      type: "onlyText";
-      textTitle?: string;
-      textDesc?: string;
-    };
+    id: string;
+    startTime: number;
+    duration: number;
+    type: "onlyText";
+    textTitle?: string;
+    textDesc?: string;
+  };
 
 type AddPreviewProps = {
   ads: UpcomingAd | null;
@@ -41,9 +42,10 @@ type PollOption = {
 };
 
 const AddPreview = ({ ads, videoTitle }: AddPreviewProps) => {
+
   const [result, setResult] = useState<string | null>(null);
   const axiosPublic = useAxiosPublic();
-
+  const { videoId } = useParams();
   // corrected parameters
   const handlePollSubmission = (
     option: string,
@@ -69,12 +71,27 @@ const AddPreview = ({ ads, videoTitle }: AddPreviewProps) => {
       .catch((err) => console.log(err.message));
   };
 
+
+  const fetchTranscript = async () => {
+    try {
+      console.log(videoId);
+      const data = await YoutubeTranscript.fetchTranscript(videoId);
+      console.log(data);
+    } catch (err) {
+      console.error("Error fetching transcript:", err);
+      alert("Transcript not available for this video.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+
   return (
     <div>
       {/* Video Title */}
       <div className="w-full bg-white p-2 mb-2 border-b shadow-sm rounded-md">
         {videoTitle || "Looking for video title..."}
       </div>
+      <button onClick={() => fetchTranscript()}>Fetch Transcript</button>
 
       {/* Ad Preview Area */}
       <div className="bg-gray-50 rounded-md shadow-sm flex lg:h-[23rem] border w-full border-gray-200 items-center justify-center">

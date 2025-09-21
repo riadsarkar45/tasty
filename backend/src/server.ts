@@ -20,13 +20,16 @@ const app = fastify({
   },
 });
 
-//  CORS
+const allowedOrigins = [
+  "http://localhost:5173",          // dev
+  "https://tasty-flax.vercel.app", // prod
+];
+
 app.register(cors, {
-  origin: process.env.NODE_ENV === "production"
-    ? "*" // In production, restrict to your domain
-    : "http://localhost:5173",
+  origin: allowedOrigins, // just an array, simplest way
   credentials: true,
 });
+
 
 // Plugins
 app.register(multipart);
