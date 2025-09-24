@@ -8411,15 +8411,21 @@ export namespace Prisma {
 
   export type NotesAvgAggregateOutputType = {
     id: number | null
+    startTime: number | null
+    duration: number | null
   }
 
   export type NotesSumAggregateOutputType = {
     id: number | null
+    startTime: number | null
+    duration: number | null
   }
 
   export type NotesMinAggregateOutputType = {
     id: number | null
     videoId: string | null
+    startTime: number | null
+    duration: number | null
     noteText: string | null
     userId: string | null
   }
@@ -8427,6 +8433,8 @@ export namespace Prisma {
   export type NotesMaxAggregateOutputType = {
     id: number | null
     videoId: string | null
+    startTime: number | null
+    duration: number | null
     noteText: string | null
     userId: string | null
   }
@@ -8434,6 +8442,8 @@ export namespace Prisma {
   export type NotesCountAggregateOutputType = {
     id: number
     videoId: number
+    startTime: number
+    duration: number
     noteText: number
     userId: number
     _all: number
@@ -8442,15 +8452,21 @@ export namespace Prisma {
 
   export type NotesAvgAggregateInputType = {
     id?: true
+    startTime?: true
+    duration?: true
   }
 
   export type NotesSumAggregateInputType = {
     id?: true
+    startTime?: true
+    duration?: true
   }
 
   export type NotesMinAggregateInputType = {
     id?: true
     videoId?: true
+    startTime?: true
+    duration?: true
     noteText?: true
     userId?: true
   }
@@ -8458,6 +8474,8 @@ export namespace Prisma {
   export type NotesMaxAggregateInputType = {
     id?: true
     videoId?: true
+    startTime?: true
+    duration?: true
     noteText?: true
     userId?: true
   }
@@ -8465,6 +8483,8 @@ export namespace Prisma {
   export type NotesCountAggregateInputType = {
     id?: true
     videoId?: true
+    startTime?: true
+    duration?: true
     noteText?: true
     userId?: true
     _all?: true
@@ -8559,6 +8579,8 @@ export namespace Prisma {
   export type NotesGroupByOutputType = {
     id: number
     videoId: string
+    startTime: number
+    duration: number
     noteText: string
     userId: string
     _count: NotesCountAggregateOutputType | null
@@ -8585,6 +8607,8 @@ export namespace Prisma {
   export type notesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     videoId?: boolean
+    startTime?: boolean
+    duration?: boolean
     noteText?: boolean
     userId?: boolean
   }, ExtArgs["result"]["notes"]>
@@ -8592,6 +8616,8 @@ export namespace Prisma {
   export type notesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     videoId?: boolean
+    startTime?: boolean
+    duration?: boolean
     noteText?: boolean
     userId?: boolean
   }, ExtArgs["result"]["notes"]>
@@ -8599,6 +8625,8 @@ export namespace Prisma {
   export type notesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     videoId?: boolean
+    startTime?: boolean
+    duration?: boolean
     noteText?: boolean
     userId?: boolean
   }, ExtArgs["result"]["notes"]>
@@ -8606,11 +8634,13 @@ export namespace Prisma {
   export type notesSelectScalar = {
     id?: boolean
     videoId?: boolean
+    startTime?: boolean
+    duration?: boolean
     noteText?: boolean
     userId?: boolean
   }
 
-  export type notesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "noteText" | "userId", ExtArgs["result"]["notes"]>
+  export type notesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "startTime" | "duration" | "noteText" | "userId", ExtArgs["result"]["notes"]>
 
   export type $notesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "notes"
@@ -8618,6 +8648,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       videoId: string
+      startTime: number
+      duration: number
       noteText: string
       userId: string
     }, ExtArgs["result"]["notes"]>
@@ -9045,6 +9077,8 @@ export namespace Prisma {
   interface notesFieldRefs {
     readonly id: FieldRef<"notes", 'Int'>
     readonly videoId: FieldRef<"notes", 'String'>
+    readonly startTime: FieldRef<"notes", 'Float'>
+    readonly duration: FieldRef<"notes", 'Float'>
     readonly noteText: FieldRef<"notes", 'String'>
     readonly userId: FieldRef<"notes", 'String'>
   }
@@ -9500,6 +9534,8 @@ export namespace Prisma {
   export const NotesScalarFieldEnum: {
     id: 'id',
     videoId: 'videoId',
+    startTime: 'startTime',
+    duration: 'duration',
     noteText: 'noteText',
     userId: 'userId'
   };
@@ -9975,6 +10011,8 @@ export namespace Prisma {
     NOT?: notesWhereInput | notesWhereInput[]
     id?: IntFilter<"notes"> | number
     videoId?: StringFilter<"notes"> | string
+    startTime?: FloatFilter<"notes"> | number
+    duration?: FloatFilter<"notes"> | number
     noteText?: StringFilter<"notes"> | string
     userId?: StringFilter<"notes"> | string
   }
@@ -9982,6 +10020,8 @@ export namespace Prisma {
   export type notesOrderByWithRelationInput = {
     id?: SortOrder
     videoId?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
     noteText?: SortOrder
     userId?: SortOrder
   }
@@ -9992,6 +10032,8 @@ export namespace Prisma {
     OR?: notesWhereInput[]
     NOT?: notesWhereInput | notesWhereInput[]
     videoId?: StringFilter<"notes"> | string
+    startTime?: FloatFilter<"notes"> | number
+    duration?: FloatFilter<"notes"> | number
     noteText?: StringFilter<"notes"> | string
     userId?: StringFilter<"notes"> | string
   }, "id">
@@ -9999,6 +10041,8 @@ export namespace Prisma {
   export type notesOrderByWithAggregationInput = {
     id?: SortOrder
     videoId?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
     noteText?: SortOrder
     userId?: SortOrder
     _count?: notesCountOrderByAggregateInput
@@ -10014,6 +10058,8 @@ export namespace Prisma {
     NOT?: notesScalarWhereWithAggregatesInput | notesScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"notes"> | number
     videoId?: StringWithAggregatesFilter<"notes"> | string
+    startTime?: FloatWithAggregatesFilter<"notes"> | number
+    duration?: FloatWithAggregatesFilter<"notes"> | number
     noteText?: StringWithAggregatesFilter<"notes"> | string
     userId?: StringWithAggregatesFilter<"notes"> | string
   }
@@ -10381,6 +10427,8 @@ export namespace Prisma {
 
   export type notesCreateInput = {
     videoId: string
+    startTime: number
+    duration: number
     noteText: string
     userId: string
   }
@@ -10388,12 +10436,16 @@ export namespace Prisma {
   export type notesUncheckedCreateInput = {
     id?: number
     videoId: string
+    startTime: number
+    duration: number
     noteText: string
     userId: string
   }
 
   export type notesUpdateInput = {
     videoId?: StringFieldUpdateOperationsInput | string
+    startTime?: FloatFieldUpdateOperationsInput | number
+    duration?: FloatFieldUpdateOperationsInput | number
     noteText?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
   }
@@ -10401,6 +10453,8 @@ export namespace Prisma {
   export type notesUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: StringFieldUpdateOperationsInput | string
+    startTime?: FloatFieldUpdateOperationsInput | number
+    duration?: FloatFieldUpdateOperationsInput | number
     noteText?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
   }
@@ -10408,12 +10462,16 @@ export namespace Prisma {
   export type notesCreateManyInput = {
     id?: number
     videoId: string
+    startTime: number
+    duration: number
     noteText: string
     userId: string
   }
 
   export type notesUpdateManyMutationInput = {
     videoId?: StringFieldUpdateOperationsInput | string
+    startTime?: FloatFieldUpdateOperationsInput | number
+    duration?: FloatFieldUpdateOperationsInput | number
     noteText?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
   }
@@ -10421,6 +10479,8 @@ export namespace Prisma {
   export type notesUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: StringFieldUpdateOperationsInput | string
+    startTime?: FloatFieldUpdateOperationsInput | number
+    duration?: FloatFieldUpdateOperationsInput | number
     noteText?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
   }
@@ -10853,20 +10913,37 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type notesCountOrderByAggregateInput = {
     id?: SortOrder
     videoId?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
     noteText?: SortOrder
     userId?: SortOrder
   }
 
   export type notesAvgOrderByAggregateInput = {
     id?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
   }
 
   export type notesMaxOrderByAggregateInput = {
     id?: SortOrder
     videoId?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
     noteText?: SortOrder
     userId?: SortOrder
   }
@@ -10874,12 +10951,32 @@ export namespace Prisma {
   export type notesMinOrderByAggregateInput = {
     id?: SortOrder
     videoId?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
     noteText?: SortOrder
     userId?: SortOrder
   }
 
   export type notesSumOrderByAggregateInput = {
     id?: SortOrder
+    startTime?: SortOrder
+    duration?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type videosCreateNestedManyWithoutCategoryInput = {
@@ -11200,6 +11297,14 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -11361,6 +11466,22 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type videosCreateWithoutCategoryInput = {

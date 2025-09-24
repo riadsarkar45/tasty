@@ -80,8 +80,10 @@ model pollResponses {
 }
 
 model notes {
-  id       Int    @id @default(autoincrement())
-  videoId  String
-  noteText String
-  userId   String
+  id        Int    @id @default(autoincrement())
+  videoId   String
+  startTime Float
+  duration  Float
+  noteText  String
+  userId    String
 }

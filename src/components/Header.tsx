@@ -7,6 +7,7 @@ const Header = () => {
                 <Link to={`/`}><h1 className="">{'LearnLy'}</h1></Link>
                 <div className="flex gap-2">
                     <h2>Riad Sarkar</h2>
+                    <Link to='/dashboard'><h2>Dashboard</h2></Link>
                     <h2>Logout</h2>
                 </div>
             </div>

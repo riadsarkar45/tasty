@@ -175,6 +175,8 @@ exports.Prisma.PollResponsesScalarFieldEnum = {
 exports.Prisma.NotesScalarFieldEnum = {
   id: 'id',
   videoId: 'videoId',
+  startTime: 'startTime',
+  duration: 'duration',
   noteText: 'noteText',
   userId: 'userId'
 };

@@ -7,6 +7,7 @@ import useAxiosPublic from "../../hooks/AxiosPublic";
 import { useParams } from "react-router-dom";
 import AddPreview from "../AddPreview";
 import Progressbar from "../../components/Progressbar";
+import toast from "react-hot-toast";
 
 // Define Ad Types
 type UpcomingAd = {
@@ -37,6 +38,7 @@ const Details = () => {
 
   const playerRef = useRef<any>(null);
   const intervalRef = useRef<number | null>(null);
+  const [notes, setNotes] = useState("");
   const axiosPublic = useAxiosPublic();
   const { videoId } = useParams();
 
@@ -54,7 +56,6 @@ const Details = () => {
       .catch((err) => console.log(err));
   }, [axiosPublic, videoId]);
 
-  // When YouTube player is ready
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     playerRef.current = event.target;
     console.log(playerRef.current);
@@ -63,19 +64,15 @@ const Details = () => {
     setDuration(dur);
   };
 
-  // On play/pause state change
   const onPlayerStateChange: YouTubeProps["onStateChange"] = (event) => {
     const player = event.target;
 
     if (event.data === 1) {
-      // Playing → start time checker
       if (intervalRef.current) clearInterval(intervalRef.current);
 
       intervalRef.current = window.setInterval(() => {
         const time = player.getCurrentTime();
         setCurrentTime(time);
-
-        // Check if any ad should be shown
         const showingAd = upComingAds.find((ad) => {
           const start = Number(ad.startTime);
           const duration = Number(ad.duration);
@@ -85,12 +82,10 @@ const Details = () => {
         setAds(showingAd);
       }, 100);
     } else {
-      // Not playing → stop interval
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
   };
 
-  // Cleanup interval on unmount
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -106,6 +101,33 @@ const Details = () => {
       enablejsapi: 1,
     },
   };
+
+  const takeNotes = async () => {
+    const wordCount = notes.split(" ").length;
+    const readingSpeed = 200; // words per minute
+    const duration = (wordCount / readingSpeed) * 60; // seconds
+    console.log("Calculated duration:", duration);
+
+    const dataToSend = {
+      videoId: videoId,
+      startTime: currentTime, 
+      duration: duration,       
+      noteText: notes,         
+      userId: "645+432"
+    };
+
+    try {
+      const insertNotes = await axiosPublic.post('/take-notes', dataToSend);
+      if (insertNotes?.status === 200) {
+        toast.success("Notes saved successfully");
+        setNotes("");
+      }
+    } catch (error) {
+      console.error("Error saving note:", error);
+      toast.error("Failed to save note");
+    }
+  };
+
 
   return (
     <div className="w-full lg:w-[85%] md:w-[75rem] m-auto p-3">
@@ -136,14 +158,14 @@ const Details = () => {
         </div>
 
         {/* RIGHT: Sidebar  add preview*/}
-        <div className="lg:w-full w-[40rem] flex flex-col gap-4">
+        <div className="w-full lg:w-[75rem] flex flex-col gap-4">
           <AddPreview ads={ads} videoTitle={videoTitle} />
 
           {/* Stats */}
           <div className="flex">
-            <input className="w-full outline-none p-2 border-b rounded-l-md" type="text" placeholder="Takes Notes" />
+            <input onChange={(e) => setNotes(e.target.value)} className="w-full outline-none p-2 border-b rounded-l-md" type="text" placeholder="Takes Notes" />
             {/* <input className="w-full outline-none p-2 border-b rounded" type="text" placeholder="Takes Notes" /> */}
-            <button className="border bg-gray-500 bg-opacity-25 rounded-r-md text-gray-500 w-[4rem]">Save</button>
+            <button onClick={takeNotes} className="border bg-gray-500 bg-opacity-25 rounded-r-md text-gray-500 w-[4rem]">Save</button>
           </div>
 
           {/* Progress Bar */}
@@ -156,29 +178,6 @@ const Details = () => {
               playerRef={playerRef}
               setCurrentTime={setCurrentTime}
             />
-          </div>
-
-          {/* Comments */}
-          <div className="p-3 rounded-md border-gray-200 h-[16rem]">
-            <div className="mt-4 border border-r-1 w-full flex items-center justify-center">
-              <input
-                className="outline-none w-full p-2"
-                type="text"
-                placeholder="Comment as Riad Sarkar"
-              />
-              ✉️
-            </div>
-            <div className="mb-5">
-              <small>34 Comments</small>
-            </div>
-            <div>
-              <div className="flex items-center mt-2 gap-2">
-                👤 <p>This gallery is awesome</p>
-              </div>
-              <div className="flex items-center mt-2 gap-2">
-                👤 <p>This platform is very user friendly</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

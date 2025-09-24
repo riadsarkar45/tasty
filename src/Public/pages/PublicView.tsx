@@ -32,13 +32,13 @@ const PublicView = () => {
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
   return (
-    <div className="w-[75rem] m-auto p-3">
+    <div className="lg:w-[75rem] w-full m-auto p-3">
       {/* Single Thumbnail Link (Left Side) */}
-      <div className="flex">
+      <div className="lg:flex md:flex">
         <div className="bg-white p-1">
-          <Link to="/details">
+          <Link to="/watch">
             <img
-              className="w-[55rem] cursor-pointer hover:opacity-90"
+              className=" w-full lg:w-[55rem] cursor-pointer hover:opacity-90"
               src={thumbnailUrl}
               alt="YouTube video thumbnail"
             />

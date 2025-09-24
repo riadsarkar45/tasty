@@ -5,6 +5,7 @@ import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import uploadNewImage from "./pages/services/addNewImage";
 import { getVideosForPublic } from "./public/videos";
+import Notes from "./pages/notes";
 
 const app = fastify({
   logger: {
@@ -36,6 +37,7 @@ app.register(multipart);
 app.register(polls);
 app.register(uploadNewImage);
 app.register(getVideosForPublic, { prefix: "/api/v1/public" });
+app.register(Notes);
 
 // Database connection
 databaseCon(app);

@@ -25,6 +25,14 @@ export interface VideoParams {
   videoId: string;
 }
 
+export type Notes = {
+  videoId: string;
+  startTime: number;
+  duration: number;
+  userId: string;
+  noteText: string
+}
+
 export type PollSubmission = {
   pollId: string;
   userId: string;
