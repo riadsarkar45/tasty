@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Notes } from "../type&interface/interface";
+import { Notes, ParamsReq } from "../type&interface/interface";
 import prisma from "../Prisma/prisma";
 
 export const takeNotes = async (req: FastifyRequest<{ Body: Notes }>, reply: FastifyReply) => {
@@ -11,7 +11,7 @@ export const takeNotes = async (req: FastifyRequest<{ Body: Notes }>, reply: Fas
         const createNote = await prisma.notes.create(
             {
                 data: {
-                    videoId: "dQw4w9WgXcQ",
+                    videoId: videoId,
                     startTime: startTime,
                     duration: duration,
                     noteText: noteText,
@@ -30,9 +30,17 @@ export const takeNotes = async (req: FastifyRequest<{ Body: Notes }>, reply: Fas
 
 }
 
-export const getNotes = async (req: FastifyRequest, reply: FastifyReply) => {
+export const getNotes = async (req: FastifyRequest<{ Params: ParamsReq }>, reply: FastifyReply) => {
     try {
-        const notes = await prisma.notes.findMany();
+        const { videoId } = req.params;
+        console.log(videoId);
+        if (!videoId) return reply.status(400).send({ error: "Video ID is required" });
+
+        const notes = await prisma.notes.findMany(
+            {
+                where: { videoId }
+            }
+        );
 
         if (!notes || notes.length === 0) {
             return reply.status(404).send({ error: "No notes found" });

@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { getNotes, takeNotes } from "../controllers/takeNotes";
+import { ParamsReq } from "../type&interface/interface";
 
 export default async function Notes(fastify: FastifyInstance) {
 
@@ -19,7 +20,7 @@ export default async function Notes(fastify: FastifyInstance) {
         }, handler: takeNotes
     })
 
-    fastify.get('/get-notes', {
+    fastify.get<{ Params: ParamsReq }>('/get-notes/:videoId?', {
         handler: getNotes
     })
 }

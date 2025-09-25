@@ -35,7 +35,8 @@ const Details = () => {
   const [upComingAds, setUpComingAds] = useState<UpcomingAd[]>([]);
   const [videoTitle, setVideoTitle] = useState<string>("");
   const [video, setVideo] = useState<any[]>([]);
-
+  const [getNotes, setGetNotes] = useState([]);
+  const [showNote, setShowNote] = useState<object>({});
   const playerRef = useRef<any>(null);
   const intervalRef = useRef<number | null>(null);
   const [notes, setNotes] = useState("");
@@ -52,6 +53,13 @@ const Details = () => {
           setUpComingAds(extractAds);
           console.log(res.data);
         }
+      })
+      .catch((err) => console.log(err));
+
+    axiosPublic.get(`/get-notes/${videoId}`)
+      .then((res) => {
+        setGetNotes(res.data);
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, [axiosPublic, videoId]);
@@ -73,11 +81,26 @@ const Details = () => {
       intervalRef.current = window.setInterval(() => {
         const time = player.getCurrentTime();
         setCurrentTime(time);
+        console.log(getNotes, 'line 84');
         const showingAd = upComingAds.find((ad) => {
           const start = Number(ad.startTime);
           const duration = Number(ad.duration);
           return time >= start && time < start + duration;
         });
+
+        const currentNote = getNotes.find((note: any) => {
+          const start = Number(note.startTime);
+          const duration = Number(note.duration);
+          const end = start + duration;
+
+          // Check if current time is within note's active duration
+          return time >= start && time < end;
+        });
+
+        setShowNote(currentNote);
+        // if {
+        //   console.log("No note currently active");
+        // }
 
         setAds(showingAd);
       }, 100);
@@ -110,22 +133,24 @@ const Details = () => {
 
     const dataToSend = {
       videoId: videoId,
-      startTime: currentTime, 
-      duration: duration,       
-      noteText: notes,         
+      startTime: currentTime,
+      duration: duration,
+      noteText: notes,
       userId: "645+432"
     };
 
+    console.log(dataToSend);
+
     try {
-      const insertNotes = await axiosPublic.post('/take-notes', dataToSend);
-      if (insertNotes?.status === 200) {
-        toast.success("Notes saved successfully");
-        setNotes("");
-      }
+      const res = await axiosPublic.post('/take-notes', dataToSend);
+      console.log(res.data);
+      toast.success("Notes saved successfully");
     } catch (error) {
-      console.error("Error saving note:", error);
-      toast.error("Failed to save note");
+      console.error(error);
+      toast.error("Failed to save notes");
     }
+
+
   };
 
 
@@ -159,7 +184,7 @@ const Details = () => {
 
         {/* RIGHT: Sidebar  add preview*/}
         <div className="w-full lg:w-[75rem] flex flex-col gap-4">
-          <AddPreview ads={ads} videoTitle={videoTitle} />
+          <AddPreview ads={ads} videoTitle={videoTitle} notes={showNote} />
 
           {/* Stats */}
           <div className="flex">
