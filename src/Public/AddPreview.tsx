@@ -79,7 +79,15 @@ const AddPreview = ({ ads, videoTitle, notes }: AddPreviewProps) => {
 
   return (
     <div>
+      <div className="mb-2">
+        {
+          notes && typeof notes === "object" && Object?.keys(notes).length > 0 && (
+            <Notes notes={notes} />
+          )
+        }
+      </div>
       <Draggable disabled={isLarge} nodeRef={nodeRef}>
+
         <div
           ref={nodeRef} // 👈 IMPORTANT
           className={`
@@ -108,7 +116,7 @@ const AddPreview = ({ ads, videoTitle, notes }: AddPreviewProps) => {
                 <img
                   src={ads.imageUrl || ""}
                   alt="Active Ad"
-                  className="h-full w-full object-cover"
+                  className="lg:h-[39rem] w-full"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).style.opacity = "0.5";
                   }}
@@ -157,11 +165,7 @@ const AddPreview = ({ ads, videoTitle, notes }: AddPreviewProps) => {
           </div>
         </div>
       </Draggable>
-      {
-        notes && typeof notes === "object" && Object?.keys(notes).length > 0 && (
-          <Notes notes={notes} />
-        )
-      }
+
     </div>
   );
 };

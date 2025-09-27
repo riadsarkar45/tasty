@@ -3,6 +3,7 @@ import { Notes, ParamsReq } from "../type&interface/interface";
 import prisma from "../Prisma/prisma";
 
 export const takeNotes = async (req: FastifyRequest<{ Body: Notes }>, reply: FastifyReply) => {
+
     const { noteText, videoId, startTime, duration, userId } = req.body;
 
     if (!noteText && !videoId && userId) return reply.status(400).send({ error: "Notes are required" });
@@ -33,7 +34,7 @@ export const takeNotes = async (req: FastifyRequest<{ Body: Notes }>, reply: Fas
 export const getNotes = async (req: FastifyRequest<{ Params: ParamsReq }>, reply: FastifyReply) => {
     try {
         const { videoId } = req.params;
-        console.log(videoId);
+
         if (!videoId) return reply.status(400).send({ error: "Video ID is required" });
 
         const notes = await prisma.notes.findMany(

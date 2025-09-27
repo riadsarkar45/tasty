@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -10,6 +11,8 @@ const Header = () => {
                     <Link to='/dashboard'><h2>Dashboard</h2></Link>
                     <h2>Logout</h2>
                 </div>
+                <Toaster />
+
             </div>
         </div>
     );

@@ -53,6 +53,7 @@ const Details = () => {
           setUpComingAds(extractAds);
           console.log(res.data);
         }
+        
       })
       .catch((err) => console.log(err));
 
@@ -127,7 +128,7 @@ const Details = () => {
 
   const takeNotes = async () => {
     const wordCount = notes.split(" ").length;
-    const readingSpeed = 200; // words per minute
+    const readingSpeed = 150; // words per minute
     const duration = (wordCount / readingSpeed) * 60; // seconds
     console.log("Calculated duration:", duration);
 
@@ -188,7 +189,7 @@ const Details = () => {
 
           {/* Stats */}
           <div className="flex">
-            <input onChange={(e) => setNotes(e.target.value)} className="w-full outline-none p-2 border-b rounded-l-md" type="text" placeholder="Takes Notes" />
+            <input onChange={(e) => setNotes(e.target.value)} value={notes} className="w-full outline-none p-2 border-b rounded-l-md" type="text" placeholder="Takes Notes" />
             {/* <input className="w-full outline-none p-2 border-b rounded" type="text" placeholder="Takes Notes" /> */}
             <button onClick={takeNotes} className="border bg-gray-500 bg-opacity-25 rounded-r-md text-gray-500 w-[4rem]">Save</button>
           </div>
