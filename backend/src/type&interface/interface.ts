@@ -19,12 +19,18 @@ export interface NewVideoBody {
 
 export interface ParamsReq {
   videoId?: string
+  email?: string
 }
 
 export interface VideoParams {
   videoId: string;
 }
-
+export type Users = {
+  name: string;
+  email: string;
+  password: string;
+  profilePic?: string;
+}
 export type Notes = {
   videoId: string;
   startTime: number;

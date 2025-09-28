@@ -87,3 +87,12 @@ model notes {
   noteText  String
   userId    String
 }
+
+model users {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  profilePic String?
+  createdAt  DateTime @default(now())
+}

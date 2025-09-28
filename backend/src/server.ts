@@ -6,6 +6,7 @@ import multipart from "@fastify/multipart";
 import uploadNewImage from "./pages/services/addNewImage";
 import { getVideosForPublic } from "./public/videos";
 import Notes from "./pages/notes";
+import { UserRegistration } from "./pages/Users/userLogin";
 
 const app = fastify({
   logger: {
@@ -38,6 +39,7 @@ app.register(polls);
 app.register(uploadNewImage);
 app.register(getVideosForPublic, { prefix: "/api/v1/public" });
 app.register(Notes);
+app.register(UserRegistration);
 
 // Database connection
 databaseCon(app);

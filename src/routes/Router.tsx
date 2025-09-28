@@ -6,6 +6,7 @@ import CreateNewAdd from "../Dashboard/Feautres/CreateNewAdd";
 import PublicView from "../Public/pages/PublicView";
 import Details from "../Public/pages/Details";
 import Videos from "../Dashboard/Pages/Videos";
+import Register from "../Public/pages/Register";
 
 const Routers = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const Routers = createBrowserRouter([
                 element: <Details />
             }
         ]
+    },
+    {
+        path: "/register",
+        element: <Register />
     },
     {
         path: "/dashboard",
