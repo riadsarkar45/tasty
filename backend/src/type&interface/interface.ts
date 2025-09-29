@@ -47,3 +47,8 @@ export type PollSubmission = {
   pollOptionId: number
 }
 
+export type LoginBody = {
+  email: string;
+  password: string;
+}
+

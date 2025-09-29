@@ -7,6 +7,7 @@ import PublicView from "../Public/pages/PublicView";
 import Details from "../Public/pages/Details";
 import Videos from "../Dashboard/Pages/Videos";
 import Register from "../Public/pages/Register";
+import Login from "../Public/pages/Login";
 
 const Routers = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const Routers = createBrowserRouter([
     {
         path: "/register",
         element: <Register />
+    },
+    {
+        path: "/login",
+        element: <Login />
     },
     {
         path: "/dashboard",

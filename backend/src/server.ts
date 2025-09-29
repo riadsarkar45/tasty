@@ -6,8 +6,10 @@ import multipart from "@fastify/multipart";
 import uploadNewImage from "./pages/services/addNewImage";
 import { getVideosForPublic } from "./public/videos";
 import Notes from "./pages/notes";
-import { UserRegistration } from "./pages/Users/userLogin";
-
+import fastifyCookie from 'fastify-cookie';
+import fastifyJwt from 'fastify-jwt';
+import { UserRegistration } from "./pages/Users/userRegistration";
+import { UserLogin } from "./pages/Users/login";
 const app = fastify({
   logger: {
     transport: {
@@ -32,7 +34,14 @@ app.register(cors, {
   credentials: true,
 });
 
-
+app.register(fastifyCookie);
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  throw new Error("JWT_SECRET environment variable is not set");
+}
+app.register(fastifyJwt, {
+  secret: jwtSecret
+});
 // Plugins
 app.register(multipart);
 app.register(polls);
@@ -40,6 +49,7 @@ app.register(uploadNewImage);
 app.register(getVideosForPublic, { prefix: "/api/v1/public" });
 app.register(Notes);
 app.register(UserRegistration);
+app.register(UserLogin);
 
 // Database connection
 databaseCon(app);

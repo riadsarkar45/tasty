@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Users } from "../../type&interface/interface";
 import prisma from "../../Prisma/prisma";
-
+import bcrypt from "bcrypt";
 export const userRegistration = async (req: FastifyRequest<{ Body: Users }>, reply: FastifyReply) => {
     const { name, email, password } = req.body;
 
@@ -12,12 +12,14 @@ export const userRegistration = async (req: FastifyRequest<{ Body: Users }>, rep
 
         if (isUserExist) return reply.status(400).send({ error: "Email already in use" });
 
+        const hashedPassword: string = await bcrypt.hash(password, 15);
+
         const createUser = await prisma.users.create(
             {
                 data: {
                     name: name,
                     email: email,
-                    password: password
+                    password: hashedPassword
                 }
             }
         )
