@@ -10,4 +10,4 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-"include": ["src", "src/generated"]}
+"include": ["src/**/*.ts", "src/types/**/*.d.ts"]}

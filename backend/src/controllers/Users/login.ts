@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { LoginBody } from "../../type&interface/interface";
+import { LoginBody } from "../../types/interface";
 import prisma from "../../Prisma/prisma";
 import bcrypt from "bcrypt";
 

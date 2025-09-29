@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Notes, ParamsReq } from "../type&interface/interface";
+import { Notes, ParamsReq } from "../types/interface";
 import prisma from "../Prisma/prisma";
 
 export const takeNotes = async (req: FastifyRequest<{ Body: Notes }>, reply: FastifyReply) => {

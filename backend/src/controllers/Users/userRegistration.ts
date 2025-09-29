@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Users } from "../../type&interface/interface";
+import { Users } from "../../types/interface";
 import prisma from "../../Prisma/prisma";
 import bcrypt from "bcrypt";
 export const userRegistration = async (req: FastifyRequest<{ Body: Users }>, reply: FastifyReply) => {

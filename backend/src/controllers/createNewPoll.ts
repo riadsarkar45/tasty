@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../Prisma/prisma";
-import { NewVideoBody, NewPollBody, VideoParams, PollSubmission } from '../type&interface/interface';
+import { NewVideoBody, NewPollBody, VideoParams, PollSubmission } from '../types/interface';
 
 
 
