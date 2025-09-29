@@ -8,6 +8,7 @@ import Details from "../Public/pages/Details";
 import Videos from "../Dashboard/Pages/Videos";
 import Register from "../Public/pages/Register";
 import Login from "../Public/pages/Login";
+import CategoryPost from "../Public/pages/CategoryPost";
 
 const Routers = createBrowserRouter([
     {
@@ -17,6 +18,10 @@ const Routers = createBrowserRouter([
             {
                 path: "/",
                 element: <PublicView />
+            },
+            {
+                path: "/category/:categoryId?",
+                element: <CategoryPost />
             },
             {
                 path: "/watch/:videoId?",
