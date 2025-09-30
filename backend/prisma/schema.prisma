@@ -80,12 +80,12 @@ model pollResponses {
 }
 
 model notes {
-  id Int @id @default(autoincrement())
-  videoId String
-  startTime  Float
-  duration Float
-  noteText String
-  userId String
+  id        Int    @id @default(autoincrement())
+  videoId   String
+  startTime Float
+  duration  Float
+  noteText  String
+  userId    String
 }
 
 model users {
@@ -93,6 +93,7 @@ model users {
   name       String
   email      String   @unique
   password   String
+  role       String   @default("user")
   profilePic String?
   createdAt  DateTime @default(now())
 }

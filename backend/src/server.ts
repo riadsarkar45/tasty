@@ -11,6 +11,7 @@ import fastifyJwt from 'fastify-jwt';
 import { UserRegistration } from "./pages/Users/userRegistration";
 import { UserLogin } from "./pages/Users/login";
 import { getAllUsers } from "./pages/Users/PrivateRoutes/allUsers";
+import { getLoggedInUser } from "./pages/Users/PrivateRoutes/getLoggedInUser";
 
 const app = fastify({
   logger: {
@@ -28,7 +29,7 @@ const app = fastify({
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://tasty-flax.vercel.app", // ⚠️ removed trailing space!
+  "https://tasty-flax.vercel.app",
 ];
 
 app.register(cors, {
@@ -43,10 +44,14 @@ if (!jwtSecret) {
   throw new Error("JWT_SECRET environment variable is not set");
 }
 
-// ✅ Register JWT FIRST
-app.register(fastifyJwt, { secret: jwtSecret });
-
-// ✅ THEN register auth plugin (which uses jwtVerify)
+app.register(fastifyJwt, {
+  secret: jwtSecret,
+  verify: {
+    extractToken: (request) => {
+      return request.cookies?.token; 
+    }
+  }
+});
 
 // Other plugins
 app.register(multipart);
@@ -57,6 +62,7 @@ app.register(Notes);
 app.register(UserRegistration);
 app.register(UserLogin);
 app.register(getAllUsers);
+app.register(getLoggedInUser);
 
 databaseCon(app);
 
@@ -67,8 +73,8 @@ app.get("/", async () => {
 
 const start = async () => {
   try {
-    const port = parseInt(process.env.PORT || "10000", 10);
-    const address = await app.listen({ port, host: '0.0.0.0' });
+    const port = parseInt(process.env.PORT || "3000", 10); // changed to 3000
+    const address = await app.listen({ port, host: '0.0.0.0' }); // '0.0.0.0' listens on all interfaces
     app.log.info(`Server listening at ${address}`);
   } catch (err) {
     app.log.error(err);
@@ -79,5 +85,7 @@ const start = async () => {
 if (require.main === module) {
   start();
 }
+
+
 
 export default app;

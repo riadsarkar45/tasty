@@ -8,6 +8,7 @@ import Details from "../Public/pages/Details";
 import Videos from "../Dashboard/Pages/Videos";
 import Register from "../Public/pages/Register";
 import Login from "../Public/pages/Login";
+import Users from "../Dashboard/Pages/Users";
 
 const Routers = createBrowserRouter([
     {
@@ -53,6 +54,11 @@ const Routers = createBrowserRouter([
                 path: '/dashboard/videos',
                 element: <Videos />
             },
+
+            {
+                path: '/dashboard/users',
+                element: <Users/>
+            }
 
         ]
     }

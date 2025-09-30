@@ -4,7 +4,7 @@ import { authenticate } from "../../../Plugins/Auth/auth";
 
 export const getAllUsers: FastifyPluginAsync = async (fastify) => {
   fastify.get('/all-users', {
-    preHandler: [authenticate], // TS now knows authenticate exists
+    preHandler: [authenticate], 
     handler: allUsers,
   });
 };
