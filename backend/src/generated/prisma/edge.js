@@ -200,7 +200,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\tasty\\backend\\src\\generated\\prisma",
+      "value": "C:\\projects\\tasty\\backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -218,7 +218,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\tasty\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\projects\\tasty\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
