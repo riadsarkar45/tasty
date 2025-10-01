@@ -132,7 +132,9 @@ exports.Prisma.VideosScalarFieldEnum = {
   videoUrl: 'videoUrl',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
-  categoryName: 'categoryName'
+  userId: 'userId',
+  categoryName: 'categoryName',
+  userRole: 'userRole'
 };
 
 exports.Prisma.PollScalarFieldEnum = {

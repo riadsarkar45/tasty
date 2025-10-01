@@ -52,7 +52,13 @@ export type LoginBody = {
   password: string;
 }
 
+export type UserId = {
+  userId: number;
+  role: string
+}
+
 export interface UserPayload {
-  userId: string;
+  userId: number;
   email: string;
+  userRole: string
 }

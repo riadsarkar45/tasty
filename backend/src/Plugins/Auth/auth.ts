@@ -6,6 +6,6 @@ export const authenticate = async (request: FastifyRequest, reply: FastifyReply)
     await request.jwtVerify();
   } catch (err) {
     console.log(err);
-    reply.status(401).send({message:'Unauthorized'});
+    reply.status(401).send({message:'Unauthorized access'});
   }
 };

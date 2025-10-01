@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import useAxiosPublic from "../../hooks/AxiosPublic";
 import { Link } from "react-router-dom";
 import Loading from "../Components/Loading";
+import useAxiosPrivate from "../../hooks/AxiosPrivate";
 
 const Videos = () => {
     const [createdVideos, setCreatedVideos] = useState<any>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const axiosPublic = useAxiosPublic();
+    const axiosPrivate = useAxiosPrivate();
     useEffect(() => {
-        axiosPublic.get('/videos')
+        axiosPrivate.get('/user-video')
             .then((res) => {
                 setCreatedVideos(res.data);
                 console.log(res.data);
@@ -16,12 +16,12 @@ const Videos = () => {
             }).catch((err) => {
                 console.error("Error fetching videos:", err);
             })
-    }, [axiosPublic]);
+    }, [axiosPrivate]);
     if (isLoading) {
-    return (
-      <Loading isLoading={isLoading} />
-    )
-  }
+        return (
+            <Loading isLoading={isLoading} />
+        )
+    }
     return (
         <div>
             <div className="relative overflow-x-auto">

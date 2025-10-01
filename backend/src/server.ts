@@ -12,6 +12,8 @@ import { UserRegistration } from "./pages/Users/userRegistration";
 import { UserLogin } from "./pages/Users/login";
 import { getAllUsers } from "./pages/Users/PrivateRoutes/allUsers";
 import { getLoggedInUser } from "./pages/Users/PrivateRoutes/getLoggedInUser";
+import { userVideo } from "./controllers/Users/usersVideo";
+import { routeUserVideo } from "./pages/Users/PrivateRoutes/route.userVideo";
 
 const app = fastify({
   logger: {
@@ -63,6 +65,7 @@ app.register(UserRegistration);
 app.register(UserLogin);
 app.register(getAllUsers);
 app.register(getLoggedInUser);
+app.register(routeUserVideo);
 
 databaseCon(app);
 

@@ -2743,10 +2743,12 @@ export namespace Prisma {
 
   export type VideosAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type VideosSumAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type VideosMinAggregateOutputType = {
@@ -2755,7 +2757,9 @@ export namespace Prisma {
     videoUrl: string | null
     createdBy: string | null
     createdAt: Date | null
+    userId: number | null
     categoryName: string | null
+    userRole: string | null
   }
 
   export type VideosMaxAggregateOutputType = {
@@ -2764,7 +2768,9 @@ export namespace Prisma {
     videoUrl: string | null
     createdBy: string | null
     createdAt: Date | null
+    userId: number | null
     categoryName: string | null
+    userRole: string | null
   }
 
   export type VideosCountAggregateOutputType = {
@@ -2773,17 +2779,21 @@ export namespace Prisma {
     videoUrl: number
     createdBy: number
     createdAt: number
+    userId: number
     categoryName: number
+    userRole: number
     _all: number
   }
 
 
   export type VideosAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type VideosSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type VideosMinAggregateInputType = {
@@ -2792,7 +2802,9 @@ export namespace Prisma {
     videoUrl?: true
     createdBy?: true
     createdAt?: true
+    userId?: true
     categoryName?: true
+    userRole?: true
   }
 
   export type VideosMaxAggregateInputType = {
@@ -2801,7 +2813,9 @@ export namespace Prisma {
     videoUrl?: true
     createdBy?: true
     createdAt?: true
+    userId?: true
     categoryName?: true
+    userRole?: true
   }
 
   export type VideosCountAggregateInputType = {
@@ -2810,7 +2824,9 @@ export namespace Prisma {
     videoUrl?: true
     createdBy?: true
     createdAt?: true
+    userId?: true
     categoryName?: true
+    userRole?: true
     _all?: true
   }
 
@@ -2906,7 +2922,9 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt: Date
+    userId: number
     categoryName: string | null
+    userRole: string
     _count: VideosCountAggregateOutputType | null
     _avg: VideosAvgAggregateOutputType | null
     _sum: VideosSumAggregateOutputType | null
@@ -2934,7 +2952,9 @@ export namespace Prisma {
     videoUrl?: boolean
     createdBy?: boolean
     createdAt?: boolean
+    userId?: boolean
     categoryName?: boolean
+    userRole?: boolean
     category?: boolean | videos$categoryArgs<ExtArgs>
     polls?: boolean | videos$pollsArgs<ExtArgs>
     questions?: boolean | videos$questionsArgs<ExtArgs>
@@ -2947,7 +2967,9 @@ export namespace Prisma {
     videoUrl?: boolean
     createdBy?: boolean
     createdAt?: boolean
+    userId?: boolean
     categoryName?: boolean
+    userRole?: boolean
     category?: boolean | videos$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["videos"]>
 
@@ -2957,7 +2979,9 @@ export namespace Prisma {
     videoUrl?: boolean
     createdBy?: boolean
     createdAt?: boolean
+    userId?: boolean
     categoryName?: boolean
+    userRole?: boolean
     category?: boolean | videos$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["videos"]>
 
@@ -2967,10 +2991,12 @@ export namespace Prisma {
     videoUrl?: boolean
     createdBy?: boolean
     createdAt?: boolean
+    userId?: boolean
     categoryName?: boolean
+    userRole?: boolean
   }
 
-  export type videosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "videoUrl" | "createdBy" | "createdAt" | "categoryName", ExtArgs["result"]["videos"]>
+  export type videosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "videoUrl" | "createdBy" | "createdAt" | "userId" | "categoryName" | "userRole", ExtArgs["result"]["videos"]>
   export type videosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | videos$categoryArgs<ExtArgs>
     polls?: boolean | videos$pollsArgs<ExtArgs>
@@ -2997,7 +3023,9 @@ export namespace Prisma {
       videoUrl: string
       createdBy: string
       createdAt: Date
+      userId: number
       categoryName: string | null
+      userRole: string
     }, ExtArgs["result"]["videos"]>
     composites: {}
   }
@@ -3429,7 +3457,9 @@ export namespace Prisma {
     readonly videoUrl: FieldRef<"videos", 'String'>
     readonly createdBy: FieldRef<"videos", 'String'>
     readonly createdAt: FieldRef<"videos", 'DateTime'>
+    readonly userId: FieldRef<"videos", 'Int'>
     readonly categoryName: FieldRef<"videos", 'String'>
+    readonly userRole: FieldRef<"videos", 'String'>
   }
     
 
@@ -10622,7 +10652,9 @@ export namespace Prisma {
     videoUrl: 'videoUrl',
     createdBy: 'createdBy',
     createdAt: 'createdAt',
-    categoryName: 'categoryName'
+    userId: 'userId',
+    categoryName: 'categoryName',
+    userRole: 'userRole'
   };
 
   export type VideosScalarFieldEnum = (typeof VideosScalarFieldEnum)[keyof typeof VideosScalarFieldEnum]
@@ -10846,7 +10878,9 @@ export namespace Prisma {
     videoUrl?: StringFilter<"videos"> | string
     createdBy?: StringFilter<"videos"> | string
     createdAt?: DateTimeFilter<"videos"> | Date | string
+    userId?: IntFilter<"videos"> | number
     categoryName?: StringNullableFilter<"videos"> | string | null
+    userRole?: StringFilter<"videos"> | string
     category?: XOR<CategoriesNullableScalarRelationFilter, categoriesWhereInput> | null
     polls?: PollListRelationFilter
     questions?: QuestionsListRelationFilter
@@ -10858,7 +10892,9 @@ export namespace Prisma {
     videoUrl?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     categoryName?: SortOrderInput | SortOrder
+    userRole?: SortOrder
     category?: categoriesOrderByWithRelationInput
     polls?: pollOrderByRelationAggregateInput
     questions?: questionsOrderByRelationAggregateInput
@@ -10873,7 +10909,9 @@ export namespace Prisma {
     videoUrl?: StringFilter<"videos"> | string
     createdBy?: StringFilter<"videos"> | string
     createdAt?: DateTimeFilter<"videos"> | Date | string
+    userId?: IntFilter<"videos"> | number
     categoryName?: StringNullableFilter<"videos"> | string | null
+    userRole?: StringFilter<"videos"> | string
     category?: XOR<CategoriesNullableScalarRelationFilter, categoriesWhereInput> | null
     polls?: PollListRelationFilter
     questions?: QuestionsListRelationFilter
@@ -10885,7 +10923,9 @@ export namespace Prisma {
     videoUrl?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     categoryName?: SortOrderInput | SortOrder
+    userRole?: SortOrder
     _count?: videosCountOrderByAggregateInput
     _avg?: videosAvgOrderByAggregateInput
     _max?: videosMaxOrderByAggregateInput
@@ -10902,7 +10942,9 @@ export namespace Prisma {
     videoUrl?: StringWithAggregatesFilter<"videos"> | string
     createdBy?: StringWithAggregatesFilter<"videos"> | string
     createdAt?: DateTimeWithAggregatesFilter<"videos"> | Date | string
+    userId?: IntWithAggregatesFilter<"videos"> | number
     categoryName?: StringNullableWithAggregatesFilter<"videos"> | string | null
+    userRole?: StringWithAggregatesFilter<"videos"> | string
   }
 
   export type pollWhereInput = {
@@ -11335,6 +11377,8 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
+    userRole?: string
     category?: categoriesCreateNestedOneWithoutVideosInput
     polls?: pollCreateNestedManyWithoutVideoInput
     questions?: questionsCreateNestedManyWithoutVideoInput
@@ -11346,7 +11390,9 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
     categoryName?: string | null
+    userRole?: string
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
   }
@@ -11356,6 +11402,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
     category?: categoriesUpdateOneWithoutVideosNestedInput
     polls?: pollUpdateManyWithoutVideoNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
@@ -11367,7 +11415,9 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
     categoryName?: NullableStringFieldUpdateOperationsInput | string | null
+    userRole?: StringFieldUpdateOperationsInput | string
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
   }
@@ -11378,7 +11428,9 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
     categoryName?: string | null
+    userRole?: string
   }
 
   export type videosUpdateManyMutationInput = {
@@ -11386,6 +11438,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
   }
 
   export type videosUncheckedUpdateManyInput = {
@@ -11394,7 +11448,9 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
     categoryName?: NullableStringFieldUpdateOperationsInput | string | null
+    userRole?: StringFieldUpdateOperationsInput | string
   }
 
   export type pollCreateInput = {
@@ -11947,11 +12003,14 @@ export namespace Prisma {
     videoUrl?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     categoryName?: SortOrder
+    userRole?: SortOrder
   }
 
   export type videosAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type videosMaxOrderByAggregateInput = {
@@ -11960,7 +12019,9 @@ export namespace Prisma {
     videoUrl?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     categoryName?: SortOrder
+    userRole?: SortOrder
   }
 
   export type videosMinOrderByAggregateInput = {
@@ -11969,11 +12030,14 @@ export namespace Prisma {
     videoUrl?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     categoryName?: SortOrder
+    userRole?: SortOrder
   }
 
   export type videosSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -12817,6 +12881,8 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
+    userRole?: string
     polls?: pollCreateNestedManyWithoutVideoInput
     questions?: questionsCreateNestedManyWithoutVideoInput
   }
@@ -12827,6 +12893,8 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
+    userRole?: string
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
   }
@@ -12866,7 +12934,9 @@ export namespace Prisma {
     videoUrl?: StringFilter<"videos"> | string
     createdBy?: StringFilter<"videos"> | string
     createdAt?: DateTimeFilter<"videos"> | Date | string
+    userId?: IntFilter<"videos"> | number
     categoryName?: StringNullableFilter<"videos"> | string | null
+    userRole?: StringFilter<"videos"> | string
   }
 
   export type categoriesCreateWithoutVideosInput = {
@@ -13055,6 +13125,8 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
+    userRole?: string
     category?: categoriesCreateNestedOneWithoutVideosInput
     questions?: questionsCreateNestedManyWithoutVideoInput
   }
@@ -13065,7 +13137,9 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
     categoryName?: string | null
+    userRole?: string
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
   }
 
@@ -13116,6 +13190,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
     category?: categoriesUpdateOneWithoutVideosNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
   }
@@ -13126,7 +13202,9 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
     categoryName?: NullableStringFieldUpdateOperationsInput | string | null
+    userRole?: StringFieldUpdateOperationsInput | string
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
   }
 
@@ -13135,6 +13213,8 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
+    userRole?: string
     category?: categoriesCreateNestedOneWithoutVideosInput
     polls?: pollCreateNestedManyWithoutVideoInput
   }
@@ -13145,7 +13225,9 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
     categoryName?: string | null
+    userRole?: string
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
   }
 
@@ -13170,6 +13252,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
     category?: categoriesUpdateOneWithoutVideosNestedInput
     polls?: pollUpdateManyWithoutVideoNestedInput
   }
@@ -13180,7 +13264,9 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
     categoryName?: NullableStringFieldUpdateOperationsInput | string | null
+    userRole?: StringFieldUpdateOperationsInput | string
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
   }
 
@@ -13340,6 +13426,8 @@ export namespace Prisma {
     videoUrl: string
     createdBy: string
     createdAt?: Date | string
+    userId?: number
+    userRole?: string
   }
 
   export type videosUpdateWithoutCategoryInput = {
@@ -13347,6 +13435,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
     polls?: pollUpdateManyWithoutVideoNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
   }
@@ -13357,6 +13447,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
   }
@@ -13367,6 +13459,8 @@ export namespace Prisma {
     videoUrl?: StringFieldUpdateOperationsInput | string
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
   }
 
   export type pollCreateManyVideoInput = {

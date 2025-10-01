@@ -23,17 +23,17 @@ model categories {
 }
 
 model videos {
-  id        Int      @id @default(autoincrement())
-  videoId   String   @unique
-  videoUrl  String
-  createdBy String
-  createdAt DateTime @default(now())
-
+  id           Int         @id @default(autoincrement())
+  videoId      String      @unique
+  videoUrl     String
+  createdBy    String
+  createdAt    DateTime    @default(now())
+  userId       Int         @default(0)
   categoryName String?
   category     categories? @relation(fields: [categoryName], references: [categoryName])
-
-  polls     poll[]
-  questions questions[]
+  userRole     String      @default("user")
+  polls        poll[]
+  questions    questions[]
 }
 
 model poll {
