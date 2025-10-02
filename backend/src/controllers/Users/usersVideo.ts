@@ -5,7 +5,6 @@ import { UserPayload } from "../../types/interface";
 export const userVideo = async (req: FastifyRequest, reply: FastifyReply) => {
     const { userId, userRole } = req.user as UserPayload;
 
-    console.log(userId, userRole, 'user video inside controller line 7');
     if (!userId && !userRole) return reply.status(401).send({ message: 'Unauthorized access' })
 
     try {
