@@ -23,6 +23,7 @@ export const Login = async (req: FastifyRequest<{ Body: LoginBody }>, reply: Fas
                     userEmail: isEmailExist.email,
                     userName: isEmailExist.name,
                     userRole: isEmailExist.role,
+                    userId: isEmailExist.id
                 },
                 {
                     expiresIn: '1h'

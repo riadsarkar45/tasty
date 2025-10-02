@@ -58,6 +58,8 @@ export type UserId = {
 }
 
 export interface UserPayload {
-  userId: string;
+  userId: number;
   email: string;
+  userRole: string
+  userEmail: string
 }

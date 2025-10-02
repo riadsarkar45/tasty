@@ -1,11 +1,27 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+import { UserPayload } from '../../types/interface';
+import prisma from '../../Prisma/prisma';
 
 export const authenticate = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    console.log(request.cookies, 'cookies in auth middleware');
-    await request.jwtVerify();
+    const token = request.cookies?.token;
+    console.log(token);
+    if (!token) {
+      return reply.status(401).send({ message: 'No token in cookies' });
+    }
+
+    const decode = await request.server.jwt.verify(token);
+
+    (request).user = decode
+
+    const { userId, userEmail } = decode as UserPayload;
+
+    const checkIfUserExist = await prisma.users.findUnique({ where: { email: userEmail, id: userId } })
+
+    if (!checkIfUserExist) return reply.status(401).send({ message: 'Access Denied' })
+
   } catch (err) {
-    console.log(err);
-    reply.status(401).send({message:'Unauthorized'});
+    console.log('JWT verify failed:', err);
+    return reply.status(401).send({ message: 'Unauthorized' });
   }
 };
