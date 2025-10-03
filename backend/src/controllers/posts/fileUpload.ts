@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import cloudinary from "../cloudinary";
+import cloudinary from "../../cloudinary";
 
 interface CloudinaryUploadResult {
     secure_url: string;

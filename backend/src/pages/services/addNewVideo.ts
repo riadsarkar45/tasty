@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { addNewPoll, createNewVideo, getCreatedVideos, getPolls, submitPollResponse } from "../../controllers/createNewPoll";
+import { addNewPoll, createNewVideo, getCreatedVideos, getPolls, submitPollResponse } from "../../controllers/posts/createNewPoll";
 import { VideoParams } from '../../types/interface';
 
 export default async function polls(fastify: FastifyInstance) {

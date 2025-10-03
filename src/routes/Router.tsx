@@ -10,6 +10,7 @@ import Register from "../Public/pages/Register";
 import Login from "../Public/pages/Login";
 import Users from "../Dashboard/Pages/Users";
 import CategoryPost from "../Public/pages/CategoryPost";
+import Dashboard from "../Dashboard/Dashboard";
 
 const Routers = createBrowserRouter([
     {
@@ -44,7 +45,7 @@ const Routers = createBrowserRouter([
         children: [
             {
                 path: "/dashboard",
-                element: 'lets see',
+                element: <Dashboard />,
             },
             {
                 path: '/dashboard/AddNewVideo',
@@ -62,7 +63,7 @@ const Routers = createBrowserRouter([
 
             {
                 path: '/dashboard/users',
-                element: <Users/>
+                element: <Users />
             }
 
         ]

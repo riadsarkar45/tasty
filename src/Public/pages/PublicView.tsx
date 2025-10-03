@@ -21,7 +21,6 @@ const PublicView = () => {
           setVideos(res?.data?.videos);
 
         }
-        console.log(res?.data?.videos);
       }).catch((err) => {
         console.error("Error fetching videos:", err);
       })

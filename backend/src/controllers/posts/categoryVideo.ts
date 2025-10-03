@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import prisma from "../Prisma/prisma";
+import prisma from "../../Prisma/prisma";
 
 export const categoryVideoForPublic = async (req: FastifyRequest, reply: FastifyReply) => {
 

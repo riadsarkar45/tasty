@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import AddPreview from "../AddPreview";
 import Progressbar from "../../components/Progressbar";
 import toast from "react-hot-toast";
+import useAxiosPrivate from "../../hooks/AxiosPrivate";
 
 // Define Ad Types
 type UpcomingAd = {
@@ -41,6 +42,7 @@ const Details = () => {
   const intervalRef = useRef<number | null>(null);
   const [notes, setNotes] = useState("");
   const axiosPublic = useAxiosPublic();
+  const axiosPrivate = useAxiosPrivate();
   const { videoId } = useParams();
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const Details = () => {
           setUpComingAds(extractAds);
           console.log(res.data);
         }
-        
+
       })
       .catch((err) => console.log(err));
 
@@ -75,7 +77,7 @@ const Details = () => {
 
   const onPlayerStateChange: YouTubeProps["onStateChange"] = (event) => {
     const player = event.target;
-
+    console.log('playing');
     if (event.data === 1) {
       if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -128,10 +130,8 @@ const Details = () => {
 
   const takeNotes = async () => {
     const wordCount = notes.split(" ").length;
-    const readingSpeed = 150; // words per minute
-    const duration = (wordCount / readingSpeed) * 60; // seconds
-    console.log("Calculated duration:", duration);
-
+    const readingSpeed = 150;
+    const duration = (wordCount / readingSpeed) * 60;
     const dataToSend = {
       videoId: videoId,
       startTime: currentTime,
@@ -154,13 +154,28 @@ const Details = () => {
 
   };
 
+  const handlePostInteract = (videoId: string, type: string) => {
+    if (!videoId) return toast.error('Something went wrong.');
+
+    axiosPrivate.post(`/post-interact`, { type, videoId })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+
+  }
+
+  const videoIds = "RLzC55ai0eo";
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoIds}/mqdefault.jpg`;
 
   return (
-    <div className="w-full lg:w-[85%] md:w-[75rem] m-auto p-3">
+    <div className="w-full lg:w-[90%] md:w-[75rem] m-auto p-3">
       <div className="lg:flex md:flex justify-between m-auto gap-4">
         <div className="w-full">
           {/* YouTube Video */}
-          <div className="h-[28rem] lg:w-[55rem] w-full bg-black rounded-lg overflow-hidden relative">
+          <div className="h-[28rem] lg:w-[40rem] w-full bg-black rounded-lg overflow-hidden relative">
             {video.map((video, i) => (
               <YouTube
                 key={i}
@@ -174,17 +189,35 @@ const Details = () => {
           </div>
 
           {/* Time Display */}
-          <div className="mb-10 items-center mt-2 text-xs text-gray-700 font-mono">
+          <div className="mb-4 items-center mt-2 text-xs text-gray-700 font-mono">
             <span>{formatTime(currentTime)}</span>
             <span>/</span>
             <span>{formatTime(duration)}</span>
           </div>
-
+          <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between border w-[9rem] p-4 rounded-md">
+              <button onClick={() => handlePostInteract(videoId, 'like')}>Like</button>
+              |
+              <button>Dislike</button>
+            </div>
+            <div className="flex">
+              <div className="flex gap-2 border p-2 rounded-l-md">
+                <img className="w-[3rem] h-[3rem] rounded-[10rem]" src={thumbnailUrl} alt="channel photo" />
+                <div className="grid grid-cols-1">
+                  <button>DIAMON RACER</button>
+                  <small>2.2k followers</small>
+                </div>
+              </div>
+              <button className="border-r border-t border-b p-2 rounded-r-lg">
+                Follow
+              </button>
+            </div>
+          </div>
           <AddNewComments />
         </div>
 
         {/* RIGHT: Sidebar  add preview*/}
-        <div className="w-full lg:w-[75rem] flex flex-col gap-4">
+        <div className="w-full lg:w-[80rem] flex flex-col gap-4">
           <AddPreview ads={ads} videoTitle={videoTitle} notes={showNote} />
 
           {/* Stats */}

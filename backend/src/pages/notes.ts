@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { getNotes, takeNotes } from "../controllers/takeNotes";
 import { ParamsReq } from "../types/interface";
+import { getNotes, takeNotes } from "../controllers/posts/takeNotes";
 
 export default async function Notes(fastify: FastifyInstance) {
 
