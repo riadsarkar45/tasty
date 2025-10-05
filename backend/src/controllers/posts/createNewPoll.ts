@@ -127,7 +127,7 @@ export async function getPolls(req: FastifyRequest, reply: FastifyReply) {
 
 export async function createNewVideo(req: FastifyRequest<{ Body: NewVideoBody }>, reply: FastifyReply) {
     console.log("Creating new video with data:", req.body);
-    const { videoId, videoUrl, createdBy, videoCategory } = req.body;
+    const { videoId, videoUrl, createdBy, videoCategory, videoTitle, videoDesc } = req.body;
 
     if (!videoId || !videoUrl || !createdBy) return reply.status(400).send({ error: "videoId, videoUrl, and createdBy are required" });
 
@@ -143,6 +143,8 @@ export async function createNewVideo(req: FastifyRequest<{ Body: NewVideoBody }>
             data: {
                 videoId,
                 videoUrl,
+                videoTitle,
+                videoDesc,
                 createdBy,
                 category: videoCategory
                     ? {
@@ -202,6 +204,8 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
         const formattedVideos = videos.map(video => ({ // merged to array questions and polls to one array
             videoId: video.videoId,
             videoUrl: video.videoUrl,
+            videoTitle: video.videoTitle,
+            videoDesc: video.videoDesc,
             createdBy: video.createdBy,
             createdAt: video.createdAt,
             likes: video.likes,

@@ -24,7 +24,7 @@ export default async function polls(fastify: FastifyInstance) {
             },
             imageUrl: { type: 'string' },
             textTitle: { type: 'string' },
-            textDesc: { type: 'string' }
+            textDesc: { type: 'string' },
           }
         }
       }
@@ -36,9 +36,14 @@ export default async function polls(fastify: FastifyInstance) {
     schema: {
       body: {
         type: 'object',
-
-        required: ['videoId', 'videoUrl', 'createdBy']
-
+          required: ['videoId', 'videoUrl', 'createdBy', 'videoTitle', 'videoDesc'],
+          properties: {
+            videoId: { type: 'string' },
+            videoUrl: { type: 'string' },
+            createdBy: { type: 'string' },
+            videoTitle: { type: 'string' },
+            videoDesc: { type: 'string' },
+          }
       }
     }
   }, createNewVideo)

@@ -26,6 +26,8 @@ model videos {
   id           Int         @id @default(autoincrement())
   videoId      String      @unique
   videoUrl     String
+  videoTitle   String      @default("NO-TITLE")
+  videoDesc    String      @default("NO-DESC")
   createdBy    String
   createdAt    DateTime    @default(now())
   userId       Int         @default(0)
@@ -35,7 +37,7 @@ model videos {
   polls        poll[]
   questions    questions[]
   likes        likes[]
-  comments     comments[] // ✅ back-relation
+  comments     comments[]
 }
 
 model comments {
