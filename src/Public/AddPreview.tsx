@@ -46,7 +46,6 @@ const AddPreview = ({ ads, videoTitle, notes }: AddPreviewProps) => {
   const [isLarge, setIsLarge] = useState(false);
   const axiosPublic = useAxiosPublic();
   const nodeRef = useRef<HTMLDivElement>(null); // 👈 FIX: attach nodeRef
-  console.log(notes, 'notes in add preview');
   useEffect(() => {
     const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
     checkScreen();

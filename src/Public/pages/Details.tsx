@@ -9,6 +9,7 @@ import AddPreview from "../AddPreview";
 import Progressbar from "../../components/Progressbar";
 import toast from "react-hot-toast";
 import useAxiosPrivate from "../../hooks/AxiosPrivate";
+import useLoggedInUser from "../../hooks/GetUserRole";
 
 // Define Ad Types
 type UpcomingAd = {
@@ -43,7 +44,10 @@ const Details = () => {
   const [notes, setNotes] = useState("");
   const axiosPublic = useAxiosPublic();
   const axiosPrivate = useAxiosPrivate();
+  const [totalLikes, setTotalLikes] = useState()
   const { videoId } = useParams();
+
+  const { user } = useLoggedInUser();
 
   useEffect(() => {
     axiosPublic
@@ -51,9 +55,11 @@ const Details = () => {
       .then((res) => {
         if (res?.data) {
           setVideo(res.data);
-          const extractAds = res.data.flatMap((video: any) => video.items || []);
+          const extractAds = res.data.flatMap((video: any) => {
+            setTotalLikes(video.likes);
+            return video.items || [];
+          });
           setUpComingAds(extractAds);
-          console.log(res.data);
         }
 
       })
@@ -62,14 +68,12 @@ const Details = () => {
     axiosPublic.get(`/get-notes/${videoId}`)
       .then((res) => {
         setGetNotes(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, [axiosPublic, videoId]);
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     playerRef.current = event.target;
-    console.log(playerRef.current);
     setVideoTitle(event.target.getVideoData().title); // ✅ Get title from API
     const dur = event.target.getDuration();
     setDuration(dur);
@@ -77,14 +81,12 @@ const Details = () => {
 
   const onPlayerStateChange: YouTubeProps["onStateChange"] = (event) => {
     const player = event.target;
-    console.log('playing');
     if (event.data === 1) {
       if (intervalRef.current) clearInterval(intervalRef.current);
 
       intervalRef.current = window.setInterval(() => {
         const time = player.getCurrentTime();
         setCurrentTime(time);
-        console.log(getNotes, 'line 84');
         const showingAd = upComingAds.find((ad) => {
           const start = Number(ad.startTime);
           const duration = Number(ad.duration);
@@ -127,7 +129,6 @@ const Details = () => {
       enablejsapi: 1,
     },
   };
-
   const takeNotes = async () => {
     const wordCount = notes.split(" ").length;
     const readingSpeed = 150;
@@ -140,11 +141,8 @@ const Details = () => {
       userId: "645+432"
     };
 
-    console.log(dataToSend);
-
     try {
-      const res = await axiosPublic.post('/take-notes', dataToSend);
-      console.log(res.data);
+      await axiosPublic.post('/take-notes', dataToSend);
       toast.success("Notes saved successfully");
     } catch (error) {
       console.error(error);
@@ -158,8 +156,8 @@ const Details = () => {
     if (!videoId) return toast.error('Something went wrong.');
 
     axiosPrivate.post(`/post-interact`, { type, videoId })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        toast.success("Thank for your feedback")
       })
       .catch((e) => {
         console.log(e);
@@ -167,8 +165,8 @@ const Details = () => {
 
   }
 
-  const videoIds = "RLzC55ai0eo";
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoIds}/mqdefault.jpg`;
+  const isLiked = totalLikes?.some(like => like.userId === user.userId);
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
   return (
     <div className="w-full lg:w-[90%] md:w-[75rem] m-auto p-3">
@@ -196,9 +194,37 @@ const Details = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex items-center justify-between border w-[9rem] p-4 rounded-md">
-              <button onClick={() => handlePostInteract(videoId, 'like')}>Like</button>
+              <button className="flex gap-2" onClick={() => handlePostInteract(videoId as string, 'like')}>
+
+                <svg
+                className="text-blue-500"
+                  width="25"
+                  height="25"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill={isLiked ? 'blue': 'black'}
+                >
+                  <path d="M2 21h2V9H2v12zm20-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L13.17 2 7.59 7.59C7.22 7.95 7 8.45 7 9v9c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1z" />
+                </svg>
+
+                {totalLikes?.length}
+
+              </button>
               |
-              <button>Dislike</button>
+              <button className="flex gap-2">
+                <svg
+                  width="25"
+                  height="25"
+                  viewBox="0 0 24 24"
+                  fill="black"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M2 3h2v12H2V3zm20 11c0 1.1-.9 2-2 2h-6.31l.95 4.57.03.32c0 .41-.17.79-.44 1.06L13.17 22l-5.58-5.59C7.22 16.05 7 15.55 7 15V6c0-1.1.9-2 2-2h9c.83 0 1.54.5 1.84 1.22l3.02 7.05c.09.23.14.47.14.73v1z" />
+
+
+                </svg>
+                {`0`}
+              </button>
             </div>
             <div className="flex">
               <div className="flex gap-2 border p-2 rounded-l-md">

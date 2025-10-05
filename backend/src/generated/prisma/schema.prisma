@@ -34,6 +34,16 @@ model videos {
   userRole     String      @default("user")
   polls        poll[]
   questions    questions[]
+  likes        likes[]
+}
+
+model likes {
+  id      Int    @id @default(autoincrement())
+  userId  Int
+  videoId String
+  video   videos @relation(fields: [videoId], references: [videoId])
+
+  @@unique([userId, videoId]) // user can like many videos, but only once per video
 }
 
 model poll {
@@ -94,6 +104,7 @@ model users {
   email      String   @unique
   password   String
   role       String   @default("user")
+  status     String   @default("active")
   profilePic String?
   createdAt  DateTime @default(now())
 }

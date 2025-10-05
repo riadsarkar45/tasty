@@ -137,6 +137,12 @@ exports.Prisma.VideosScalarFieldEnum = {
   userRole: 'userRole'
 };
 
+exports.Prisma.LikesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId'
+};
+
 exports.Prisma.PollScalarFieldEnum = {
   id: 'id',
   createdBy: 'createdBy',
@@ -189,6 +195,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
+  status: 'status',
   profilePic: 'profilePic',
   createdAt: 'createdAt'
 };
@@ -212,6 +219,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   categories: 'categories',
   videos: 'videos',
+  likes: 'likes',
   poll: 'poll',
   questions: 'questions',
   pollOption: 'pollOption',
