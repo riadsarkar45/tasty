@@ -24,6 +24,11 @@ export type categories = $Result.DefaultSelection<Prisma.$categoriesPayload>
  */
 export type videos = $Result.DefaultSelection<Prisma.$videosPayload>
 /**
+ * Model comments
+ * 
+ */
+export type comments = $Result.DefaultSelection<Prisma.$commentsPayload>
+/**
  * Model likes
  * 
  */
@@ -203,6 +208,16 @@ export class PrismaClient<
     * ```
     */
   get videos(): Prisma.videosDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.comments`: Exposes CRUD operations for the **comments** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Comments
+    * const comments = await prisma.comments.findMany()
+    * ```
+    */
+  get comments(): Prisma.commentsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.likes`: Exposes CRUD operations for the **likes** model.
@@ -715,6 +730,7 @@ export namespace Prisma {
   export const ModelName: {
     categories: 'categories',
     videos: 'videos',
+    comments: 'comments',
     likes: 'likes',
     poll: 'poll',
     questions: 'questions',
@@ -740,7 +756,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "categories" | "videos" | "likes" | "poll" | "questions" | "pollOption" | "pollResponses" | "notes" | "users"
+      modelProps: "categories" | "videos" | "comments" | "likes" | "poll" | "questions" | "pollOption" | "pollResponses" | "notes" | "users"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -889,6 +905,80 @@ export namespace Prisma {
           count: {
             args: Prisma.videosCountArgs<ExtArgs>
             result: $Utils.Optional<VideosCountAggregateOutputType> | number
+          }
+        }
+      }
+      comments: {
+        payload: Prisma.$commentsPayload<ExtArgs>
+        fields: Prisma.commentsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.commentsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.commentsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>
+          }
+          findFirst: {
+            args: Prisma.commentsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.commentsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>
+          }
+          findMany: {
+            args: Prisma.commentsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>[]
+          }
+          create: {
+            args: Prisma.commentsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>
+          }
+          createMany: {
+            args: Prisma.commentsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.commentsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>[]
+          }
+          delete: {
+            args: Prisma.commentsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>
+          }
+          update: {
+            args: Prisma.commentsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>
+          }
+          deleteMany: {
+            args: Prisma.commentsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.commentsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.commentsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>[]
+          }
+          upsert: {
+            args: Prisma.commentsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$commentsPayload>
+          }
+          aggregate: {
+            args: Prisma.CommentsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateComments>
+          }
+          groupBy: {
+            args: Prisma.commentsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CommentsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.commentsCountArgs<ExtArgs>
+            result: $Utils.Optional<CommentsCountAggregateOutputType> | number
           }
         }
       }
@@ -1504,6 +1594,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     categories?: categoriesOmit
     videos?: videosOmit
+    comments?: commentsOmit
     likes?: likesOmit
     poll?: pollOmit
     questions?: questionsOmit
@@ -1644,12 +1735,14 @@ export namespace Prisma {
     polls: number
     questions: number
     likes: number
+    comments: number
   }
 
   export type VideosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     polls?: boolean | VideosCountOutputTypeCountPollsArgs
     questions?: boolean | VideosCountOutputTypeCountQuestionsArgs
     likes?: boolean | VideosCountOutputTypeCountLikesArgs
+    comments?: boolean | VideosCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -1682,6 +1775,13 @@ export namespace Prisma {
    */
   export type VideosCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: likesWhereInput
+  }
+
+  /**
+   * VideosCountOutputType without action
+   */
+  export type VideosCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: commentsWhereInput
   }
 
 
@@ -3059,6 +3159,7 @@ export namespace Prisma {
     polls?: boolean | videos$pollsArgs<ExtArgs>
     questions?: boolean | videos$questionsArgs<ExtArgs>
     likes?: boolean | videos$likesArgs<ExtArgs>
+    comments?: boolean | videos$commentsArgs<ExtArgs>
     _count?: boolean | VideosCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["videos"]>
 
@@ -3103,6 +3204,7 @@ export namespace Prisma {
     polls?: boolean | videos$pollsArgs<ExtArgs>
     questions?: boolean | videos$questionsArgs<ExtArgs>
     likes?: boolean | videos$likesArgs<ExtArgs>
+    comments?: boolean | videos$commentsArgs<ExtArgs>
     _count?: boolean | VideosCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type videosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3119,6 +3221,7 @@ export namespace Prisma {
       polls: Prisma.$pollPayload<ExtArgs>[]
       questions: Prisma.$questionsPayload<ExtArgs>[]
       likes: Prisma.$likesPayload<ExtArgs>[]
+      comments: Prisma.$commentsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3527,6 +3630,7 @@ export namespace Prisma {
     polls<T extends videos$pollsArgs<ExtArgs> = {}>(args?: Subset<T, videos$pollsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     questions<T extends videos$questionsArgs<ExtArgs> = {}>(args?: Subset<T, videos$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$questionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     likes<T extends videos$likesArgs<ExtArgs> = {}>(args?: Subset<T, videos$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends videos$commentsArgs<ExtArgs> = {}>(args?: Subset<T, videos$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4051,6 +4155,30 @@ export namespace Prisma {
   }
 
   /**
+   * videos.comments
+   */
+  export type videos$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    where?: commentsWhereInput
+    orderBy?: commentsOrderByWithRelationInput | commentsOrderByWithRelationInput[]
+    cursor?: commentsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommentsScalarFieldEnum | CommentsScalarFieldEnum[]
+  }
+
+  /**
    * videos without action
    */
   export type videosDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4066,6 +4194,1147 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: videosInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model comments
+   */
+
+  export type AggregateComments = {
+    _count: CommentsCountAggregateOutputType | null
+    _avg: CommentsAvgAggregateOutputType | null
+    _sum: CommentsSumAggregateOutputType | null
+    _min: CommentsMinAggregateOutputType | null
+    _max: CommentsMaxAggregateOutputType | null
+  }
+
+  export type CommentsAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type CommentsSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type CommentsMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    userName: string | null
+    comment: string | null
+    createdAt: Date | null
+    isApproved: string | null
+    videoId: string | null
+  }
+
+  export type CommentsMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    userName: string | null
+    comment: string | null
+    createdAt: Date | null
+    isApproved: string | null
+    videoId: string | null
+  }
+
+  export type CommentsCountAggregateOutputType = {
+    id: number
+    userId: number
+    userName: number
+    comment: number
+    createdAt: number
+    isApproved: number
+    videoId: number
+    _all: number
+  }
+
+
+  export type CommentsAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type CommentsSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type CommentsMinAggregateInputType = {
+    id?: true
+    userId?: true
+    userName?: true
+    comment?: true
+    createdAt?: true
+    isApproved?: true
+    videoId?: true
+  }
+
+  export type CommentsMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    userName?: true
+    comment?: true
+    createdAt?: true
+    isApproved?: true
+    videoId?: true
+  }
+
+  export type CommentsCountAggregateInputType = {
+    id?: true
+    userId?: true
+    userName?: true
+    comment?: true
+    createdAt?: true
+    isApproved?: true
+    videoId?: true
+    _all?: true
+  }
+
+  export type CommentsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which comments to aggregate.
+     */
+    where?: commentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of comments to fetch.
+     */
+    orderBy?: commentsOrderByWithRelationInput | commentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: commentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` comments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` comments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned comments
+    **/
+    _count?: true | CommentsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CommentsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CommentsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CommentsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CommentsMaxAggregateInputType
+  }
+
+  export type GetCommentsAggregateType<T extends CommentsAggregateArgs> = {
+        [P in keyof T & keyof AggregateComments]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateComments[P]>
+      : GetScalarType<T[P], AggregateComments[P]>
+  }
+
+
+
+
+  export type commentsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: commentsWhereInput
+    orderBy?: commentsOrderByWithAggregationInput | commentsOrderByWithAggregationInput[]
+    by: CommentsScalarFieldEnum[] | CommentsScalarFieldEnum
+    having?: commentsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CommentsCountAggregateInputType | true
+    _avg?: CommentsAvgAggregateInputType
+    _sum?: CommentsSumAggregateInputType
+    _min?: CommentsMinAggregateInputType
+    _max?: CommentsMaxAggregateInputType
+  }
+
+  export type CommentsGroupByOutputType = {
+    id: number
+    userId: number
+    userName: string
+    comment: string
+    createdAt: Date
+    isApproved: string
+    videoId: string | null
+    _count: CommentsCountAggregateOutputType | null
+    _avg: CommentsAvgAggregateOutputType | null
+    _sum: CommentsSumAggregateOutputType | null
+    _min: CommentsMinAggregateOutputType | null
+    _max: CommentsMaxAggregateOutputType | null
+  }
+
+  type GetCommentsGroupByPayload<T extends commentsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CommentsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CommentsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommentsGroupByOutputType[P]>
+            : GetScalarType<T[P], CommentsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type commentsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    userName?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    isApproved?: boolean
+    videoId?: boolean
+    videos?: boolean | comments$videosArgs<ExtArgs>
+  }, ExtArgs["result"]["comments"]>
+
+  export type commentsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    userName?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    isApproved?: boolean
+    videoId?: boolean
+    videos?: boolean | comments$videosArgs<ExtArgs>
+  }, ExtArgs["result"]["comments"]>
+
+  export type commentsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    userName?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    isApproved?: boolean
+    videoId?: boolean
+    videos?: boolean | comments$videosArgs<ExtArgs>
+  }, ExtArgs["result"]["comments"]>
+
+  export type commentsSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    userName?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    isApproved?: boolean
+    videoId?: boolean
+  }
+
+  export type commentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "userName" | "comment" | "createdAt" | "isApproved" | "videoId", ExtArgs["result"]["comments"]>
+  export type commentsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    videos?: boolean | comments$videosArgs<ExtArgs>
+  }
+  export type commentsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    videos?: boolean | comments$videosArgs<ExtArgs>
+  }
+  export type commentsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    videos?: boolean | comments$videosArgs<ExtArgs>
+  }
+
+  export type $commentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "comments"
+    objects: {
+      videos: Prisma.$videosPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      userName: string
+      comment: string
+      createdAt: Date
+      isApproved: string
+      videoId: string | null
+    }, ExtArgs["result"]["comments"]>
+    composites: {}
+  }
+
+  type commentsGetPayload<S extends boolean | null | undefined | commentsDefaultArgs> = $Result.GetResult<Prisma.$commentsPayload, S>
+
+  type commentsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<commentsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CommentsCountAggregateInputType | true
+    }
+
+  export interface commentsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['comments'], meta: { name: 'comments' } }
+    /**
+     * Find zero or one Comments that matches the filter.
+     * @param {commentsFindUniqueArgs} args - Arguments to find a Comments
+     * @example
+     * // Get one Comments
+     * const comments = await prisma.comments.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends commentsFindUniqueArgs>(args: SelectSubset<T, commentsFindUniqueArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Comments that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {commentsFindUniqueOrThrowArgs} args - Arguments to find a Comments
+     * @example
+     * // Get one Comments
+     * const comments = await prisma.comments.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends commentsFindUniqueOrThrowArgs>(args: SelectSubset<T, commentsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Comments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {commentsFindFirstArgs} args - Arguments to find a Comments
+     * @example
+     * // Get one Comments
+     * const comments = await prisma.comments.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends commentsFindFirstArgs>(args?: SelectSubset<T, commentsFindFirstArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Comments that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {commentsFindFirstOrThrowArgs} args - Arguments to find a Comments
+     * @example
+     * // Get one Comments
+     * const comments = await prisma.comments.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends commentsFindFirstOrThrowArgs>(args?: SelectSubset<T, commentsFindFirstOrThrowArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Comments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {commentsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Comments
+     * const comments = await prisma.comments.findMany()
+     * 
+     * // Get first 10 Comments
+     * const comments = await prisma.comments.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const commentsWithIdOnly = await prisma.comments.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends commentsFindManyArgs>(args?: SelectSubset<T, commentsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Comments.
+     * @param {commentsCreateArgs} args - Arguments to create a Comments.
+     * @example
+     * // Create one Comments
+     * const Comments = await prisma.comments.create({
+     *   data: {
+     *     // ... data to create a Comments
+     *   }
+     * })
+     * 
+     */
+    create<T extends commentsCreateArgs>(args: SelectSubset<T, commentsCreateArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Comments.
+     * @param {commentsCreateManyArgs} args - Arguments to create many Comments.
+     * @example
+     * // Create many Comments
+     * const comments = await prisma.comments.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends commentsCreateManyArgs>(args?: SelectSubset<T, commentsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Comments and returns the data saved in the database.
+     * @param {commentsCreateManyAndReturnArgs} args - Arguments to create many Comments.
+     * @example
+     * // Create many Comments
+     * const comments = await prisma.comments.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Comments and only return the `id`
+     * const commentsWithIdOnly = await prisma.comments.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends commentsCreateManyAndReturnArgs>(args?: SelectSubset<T, commentsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Comments.
+     * @param {commentsDeleteArgs} args - Arguments to delete one Comments.
+     * @example
+     * // Delete one Comments
+     * const Comments = await prisma.comments.delete({
+     *   where: {
+     *     // ... filter to delete one Comments
+     *   }
+     * })
+     * 
+     */
+    delete<T extends commentsDeleteArgs>(args: SelectSubset<T, commentsDeleteArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Comments.
+     * @param {commentsUpdateArgs} args - Arguments to update one Comments.
+     * @example
+     * // Update one Comments
+     * const comments = await prisma.comments.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends commentsUpdateArgs>(args: SelectSubset<T, commentsUpdateArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Comments.
+     * @param {commentsDeleteManyArgs} args - Arguments to filter Comments to delete.
+     * @example
+     * // Delete a few Comments
+     * const { count } = await prisma.comments.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends commentsDeleteManyArgs>(args?: SelectSubset<T, commentsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Comments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {commentsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Comments
+     * const comments = await prisma.comments.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends commentsUpdateManyArgs>(args: SelectSubset<T, commentsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Comments and returns the data updated in the database.
+     * @param {commentsUpdateManyAndReturnArgs} args - Arguments to update many Comments.
+     * @example
+     * // Update many Comments
+     * const comments = await prisma.comments.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Comments and only return the `id`
+     * const commentsWithIdOnly = await prisma.comments.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends commentsUpdateManyAndReturnArgs>(args: SelectSubset<T, commentsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Comments.
+     * @param {commentsUpsertArgs} args - Arguments to update or create a Comments.
+     * @example
+     * // Update or create a Comments
+     * const comments = await prisma.comments.upsert({
+     *   create: {
+     *     // ... data to create a Comments
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Comments we want to update
+     *   }
+     * })
+     */
+    upsert<T extends commentsUpsertArgs>(args: SelectSubset<T, commentsUpsertArgs<ExtArgs>>): Prisma__commentsClient<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Comments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {commentsCountArgs} args - Arguments to filter Comments to count.
+     * @example
+     * // Count the number of Comments
+     * const count = await prisma.comments.count({
+     *   where: {
+     *     // ... the filter for the Comments we want to count
+     *   }
+     * })
+    **/
+    count<T extends commentsCountArgs>(
+      args?: Subset<T, commentsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CommentsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Comments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CommentsAggregateArgs>(args: Subset<T, CommentsAggregateArgs>): Prisma.PrismaPromise<GetCommentsAggregateType<T>>
+
+    /**
+     * Group by Comments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {commentsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends commentsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: commentsGroupByArgs['orderBy'] }
+        : { orderBy?: commentsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, commentsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the comments model
+   */
+  readonly fields: commentsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for comments.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__commentsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    videos<T extends comments$videosArgs<ExtArgs> = {}>(args?: Subset<T, comments$videosArgs<ExtArgs>>): Prisma__videosClient<$Result.GetResult<Prisma.$videosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the comments model
+   */
+  interface commentsFieldRefs {
+    readonly id: FieldRef<"comments", 'Int'>
+    readonly userId: FieldRef<"comments", 'Int'>
+    readonly userName: FieldRef<"comments", 'String'>
+    readonly comment: FieldRef<"comments", 'String'>
+    readonly createdAt: FieldRef<"comments", 'DateTime'>
+    readonly isApproved: FieldRef<"comments", 'String'>
+    readonly videoId: FieldRef<"comments", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * comments findUnique
+   */
+  export type commentsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * Filter, which comments to fetch.
+     */
+    where: commentsWhereUniqueInput
+  }
+
+  /**
+   * comments findUniqueOrThrow
+   */
+  export type commentsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * Filter, which comments to fetch.
+     */
+    where: commentsWhereUniqueInput
+  }
+
+  /**
+   * comments findFirst
+   */
+  export type commentsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * Filter, which comments to fetch.
+     */
+    where?: commentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of comments to fetch.
+     */
+    orderBy?: commentsOrderByWithRelationInput | commentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for comments.
+     */
+    cursor?: commentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` comments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` comments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of comments.
+     */
+    distinct?: CommentsScalarFieldEnum | CommentsScalarFieldEnum[]
+  }
+
+  /**
+   * comments findFirstOrThrow
+   */
+  export type commentsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * Filter, which comments to fetch.
+     */
+    where?: commentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of comments to fetch.
+     */
+    orderBy?: commentsOrderByWithRelationInput | commentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for comments.
+     */
+    cursor?: commentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` comments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` comments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of comments.
+     */
+    distinct?: CommentsScalarFieldEnum | CommentsScalarFieldEnum[]
+  }
+
+  /**
+   * comments findMany
+   */
+  export type commentsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * Filter, which comments to fetch.
+     */
+    where?: commentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of comments to fetch.
+     */
+    orderBy?: commentsOrderByWithRelationInput | commentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing comments.
+     */
+    cursor?: commentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` comments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` comments.
+     */
+    skip?: number
+    distinct?: CommentsScalarFieldEnum | CommentsScalarFieldEnum[]
+  }
+
+  /**
+   * comments create
+   */
+  export type commentsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a comments.
+     */
+    data: XOR<commentsCreateInput, commentsUncheckedCreateInput>
+  }
+
+  /**
+   * comments createMany
+   */
+  export type commentsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many comments.
+     */
+    data: commentsCreateManyInput | commentsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * comments createManyAndReturn
+   */
+  export type commentsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * The data used to create many comments.
+     */
+    data: commentsCreateManyInput | commentsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * comments update
+   */
+  export type commentsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a comments.
+     */
+    data: XOR<commentsUpdateInput, commentsUncheckedUpdateInput>
+    /**
+     * Choose, which comments to update.
+     */
+    where: commentsWhereUniqueInput
+  }
+
+  /**
+   * comments updateMany
+   */
+  export type commentsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update comments.
+     */
+    data: XOR<commentsUpdateManyMutationInput, commentsUncheckedUpdateManyInput>
+    /**
+     * Filter which comments to update
+     */
+    where?: commentsWhereInput
+    /**
+     * Limit how many comments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * comments updateManyAndReturn
+   */
+  export type commentsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * The data used to update comments.
+     */
+    data: XOR<commentsUpdateManyMutationInput, commentsUncheckedUpdateManyInput>
+    /**
+     * Filter which comments to update
+     */
+    where?: commentsWhereInput
+    /**
+     * Limit how many comments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * comments upsert
+   */
+  export type commentsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the comments to update in case it exists.
+     */
+    where: commentsWhereUniqueInput
+    /**
+     * In case the comments found by the `where` argument doesn't exist, create a new comments with this data.
+     */
+    create: XOR<commentsCreateInput, commentsUncheckedCreateInput>
+    /**
+     * In case the comments was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<commentsUpdateInput, commentsUncheckedUpdateInput>
+  }
+
+  /**
+   * comments delete
+   */
+  export type commentsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
+    /**
+     * Filter which comments to delete.
+     */
+    where: commentsWhereUniqueInput
+  }
+
+  /**
+   * comments deleteMany
+   */
+  export type commentsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which comments to delete
+     */
+    where?: commentsWhereInput
+    /**
+     * Limit how many comments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * comments.videos
+   */
+  export type comments$videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the videos
+     */
+    select?: videosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the videos
+     */
+    omit?: videosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: videosInclude<ExtArgs> | null
+    where?: videosWhereInput
+  }
+
+  /**
+   * comments without action
+   */
+  export type commentsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the comments
+     */
+    select?: commentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the comments
+     */
+    omit?: commentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: commentsInclude<ExtArgs> | null
   }
 
 
@@ -11871,6 +13140,19 @@ export namespace Prisma {
   export type VideosScalarFieldEnum = (typeof VideosScalarFieldEnum)[keyof typeof VideosScalarFieldEnum]
 
 
+  export const CommentsScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    userName: 'userName',
+    comment: 'comment',
+    createdAt: 'createdAt',
+    isApproved: 'isApproved',
+    videoId: 'videoId'
+  };
+
+  export type CommentsScalarFieldEnum = (typeof CommentsScalarFieldEnum)[keyof typeof CommentsScalarFieldEnum]
+
+
   export const LikesScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -12106,6 +13388,7 @@ export namespace Prisma {
     polls?: PollListRelationFilter
     questions?: QuestionsListRelationFilter
     likes?: LikesListRelationFilter
+    comments?: CommentsListRelationFilter
   }
 
   export type videosOrderByWithRelationInput = {
@@ -12121,6 +13404,7 @@ export namespace Prisma {
     polls?: pollOrderByRelationAggregateInput
     questions?: questionsOrderByRelationAggregateInput
     likes?: likesOrderByRelationAggregateInput
+    comments?: commentsOrderByRelationAggregateInput
   }
 
   export type videosWhereUniqueInput = Prisma.AtLeast<{
@@ -12139,6 +13423,7 @@ export namespace Prisma {
     polls?: PollListRelationFilter
     questions?: QuestionsListRelationFilter
     likes?: LikesListRelationFilter
+    comments?: CommentsListRelationFilter
   }, "id" | "videoId">
 
   export type videosOrderByWithAggregationInput = {
@@ -12169,6 +13454,73 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"videos"> | number
     categoryName?: StringNullableWithAggregatesFilter<"videos"> | string | null
     userRole?: StringWithAggregatesFilter<"videos"> | string
+  }
+
+  export type commentsWhereInput = {
+    AND?: commentsWhereInput | commentsWhereInput[]
+    OR?: commentsWhereInput[]
+    NOT?: commentsWhereInput | commentsWhereInput[]
+    id?: IntFilter<"comments"> | number
+    userId?: IntFilter<"comments"> | number
+    userName?: StringFilter<"comments"> | string
+    comment?: StringFilter<"comments"> | string
+    createdAt?: DateTimeFilter<"comments"> | Date | string
+    isApproved?: StringFilter<"comments"> | string
+    videoId?: StringNullableFilter<"comments"> | string | null
+    videos?: XOR<VideosNullableScalarRelationFilter, videosWhereInput> | null
+  }
+
+  export type commentsOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    isApproved?: SortOrder
+    videoId?: SortOrderInput | SortOrder
+    videos?: videosOrderByWithRelationInput
+  }
+
+  export type commentsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: commentsWhereInput | commentsWhereInput[]
+    OR?: commentsWhereInput[]
+    NOT?: commentsWhereInput | commentsWhereInput[]
+    userId?: IntFilter<"comments"> | number
+    userName?: StringFilter<"comments"> | string
+    comment?: StringFilter<"comments"> | string
+    createdAt?: DateTimeFilter<"comments"> | Date | string
+    isApproved?: StringFilter<"comments"> | string
+    videoId?: StringNullableFilter<"comments"> | string | null
+    videos?: XOR<VideosNullableScalarRelationFilter, videosWhereInput> | null
+  }, "id">
+
+  export type commentsOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    isApproved?: SortOrder
+    videoId?: SortOrderInput | SortOrder
+    _count?: commentsCountOrderByAggregateInput
+    _avg?: commentsAvgOrderByAggregateInput
+    _max?: commentsMaxOrderByAggregateInput
+    _min?: commentsMinOrderByAggregateInput
+    _sum?: commentsSumOrderByAggregateInput
+  }
+
+  export type commentsScalarWhereWithAggregatesInput = {
+    AND?: commentsScalarWhereWithAggregatesInput | commentsScalarWhereWithAggregatesInput[]
+    OR?: commentsScalarWhereWithAggregatesInput[]
+    NOT?: commentsScalarWhereWithAggregatesInput | commentsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"comments"> | number
+    userId?: IntWithAggregatesFilter<"comments"> | number
+    userName?: StringWithAggregatesFilter<"comments"> | string
+    comment?: StringWithAggregatesFilter<"comments"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"comments"> | Date | string
+    isApproved?: StringWithAggregatesFilter<"comments"> | string
+    videoId?: StringNullableWithAggregatesFilter<"comments"> | string | null
   }
 
   export type likesWhereInput = {
@@ -12660,6 +14012,7 @@ export namespace Prisma {
     polls?: pollCreateNestedManyWithoutVideoInput
     questions?: questionsCreateNestedManyWithoutVideoInput
     likes?: likesCreateNestedManyWithoutVideoInput
+    comments?: commentsCreateNestedManyWithoutVideosInput
   }
 
   export type videosUncheckedCreateInput = {
@@ -12674,6 +14027,7 @@ export namespace Prisma {
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
     likes?: likesUncheckedCreateNestedManyWithoutVideoInput
+    comments?: commentsUncheckedCreateNestedManyWithoutVideosInput
   }
 
   export type videosUpdateInput = {
@@ -12687,6 +14041,7 @@ export namespace Prisma {
     polls?: pollUpdateManyWithoutVideoNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
     likes?: likesUpdateManyWithoutVideoNestedInput
+    comments?: commentsUpdateManyWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateInput = {
@@ -12701,6 +14056,7 @@ export namespace Prisma {
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
     likes?: likesUncheckedUpdateManyWithoutVideoNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutVideosNestedInput
   }
 
   export type videosCreateManyInput = {
@@ -12732,6 +14088,72 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     categoryName?: NullableStringFieldUpdateOperationsInput | string | null
     userRole?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type commentsCreateInput = {
+    userId?: number
+    userName?: string
+    comment: string
+    createdAt?: Date | string
+    isApproved?: string
+    videos?: videosCreateNestedOneWithoutCommentsInput
+  }
+
+  export type commentsUncheckedCreateInput = {
+    id?: number
+    userId?: number
+    userName?: string
+    comment: string
+    createdAt?: Date | string
+    isApproved?: string
+    videoId?: string | null
+  }
+
+  export type commentsUpdateInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
+    videos?: videosUpdateOneWithoutCommentsNestedInput
+  }
+
+  export type commentsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
+    videoId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type commentsCreateManyInput = {
+    id?: number
+    userId?: number
+    userName?: string
+    comment: string
+    createdAt?: Date | string
+    isApproved?: string
+    videoId?: string | null
+  }
+
+  export type commentsUpdateManyMutationInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type commentsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
+    videoId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type likesCreateInput = {
@@ -13316,6 +14738,12 @@ export namespace Prisma {
     none?: likesWhereInput
   }
 
+  export type CommentsListRelationFilter = {
+    every?: commentsWhereInput
+    some?: commentsWhereInput
+    none?: commentsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -13330,6 +14758,10 @@ export namespace Prisma {
   }
 
   export type likesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type commentsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -13394,6 +14826,51 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type VideosNullableScalarRelationFilter = {
+    is?: videosWhereInput | null
+    isNot?: videosWhereInput | null
+  }
+
+  export type commentsCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    isApproved?: SortOrder
+    videoId?: SortOrder
+  }
+
+  export type commentsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type commentsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    isApproved?: SortOrder
+    videoId?: SortOrder
+  }
+
+  export type commentsMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    userName?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    isApproved?: SortOrder
+    videoId?: SortOrder
+  }
+
+  export type commentsSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
   export type VideosScalarRelationFilter = {
     is?: videosWhereInput
     isNot?: videosWhereInput
@@ -13436,11 +14913,6 @@ export namespace Prisma {
     every?: pollOptionWhereInput
     some?: pollOptionWhereInput
     none?: pollOptionWhereInput
-  }
-
-  export type VideosNullableScalarRelationFilter = {
-    is?: videosWhereInput | null
-    isNot?: videosWhereInput | null
   }
 
   export type pollOptionOrderByRelationAggregateInput = {
@@ -13833,6 +15305,13 @@ export namespace Prisma {
     connect?: likesWhereUniqueInput | likesWhereUniqueInput[]
   }
 
+  export type commentsCreateNestedManyWithoutVideosInput = {
+    create?: XOR<commentsCreateWithoutVideosInput, commentsUncheckedCreateWithoutVideosInput> | commentsCreateWithoutVideosInput[] | commentsUncheckedCreateWithoutVideosInput[]
+    connectOrCreate?: commentsCreateOrConnectWithoutVideosInput | commentsCreateOrConnectWithoutVideosInput[]
+    createMany?: commentsCreateManyVideosInputEnvelope
+    connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+  }
+
   export type pollUncheckedCreateNestedManyWithoutVideoInput = {
     create?: XOR<pollCreateWithoutVideoInput, pollUncheckedCreateWithoutVideoInput> | pollCreateWithoutVideoInput[] | pollUncheckedCreateWithoutVideoInput[]
     connectOrCreate?: pollCreateOrConnectWithoutVideoInput | pollCreateOrConnectWithoutVideoInput[]
@@ -13852,6 +15331,13 @@ export namespace Prisma {
     connectOrCreate?: likesCreateOrConnectWithoutVideoInput | likesCreateOrConnectWithoutVideoInput[]
     createMany?: likesCreateManyVideoInputEnvelope
     connect?: likesWhereUniqueInput | likesWhereUniqueInput[]
+  }
+
+  export type commentsUncheckedCreateNestedManyWithoutVideosInput = {
+    create?: XOR<commentsCreateWithoutVideosInput, commentsUncheckedCreateWithoutVideosInput> | commentsCreateWithoutVideosInput[] | commentsUncheckedCreateWithoutVideosInput[]
+    connectOrCreate?: commentsCreateOrConnectWithoutVideosInput | commentsCreateOrConnectWithoutVideosInput[]
+    createMany?: commentsCreateManyVideosInputEnvelope
+    connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
   }
 
   export type categoriesUpdateOneWithoutVideosNestedInput = {
@@ -13906,6 +15392,20 @@ export namespace Prisma {
     deleteMany?: likesScalarWhereInput | likesScalarWhereInput[]
   }
 
+  export type commentsUpdateManyWithoutVideosNestedInput = {
+    create?: XOR<commentsCreateWithoutVideosInput, commentsUncheckedCreateWithoutVideosInput> | commentsCreateWithoutVideosInput[] | commentsUncheckedCreateWithoutVideosInput[]
+    connectOrCreate?: commentsCreateOrConnectWithoutVideosInput | commentsCreateOrConnectWithoutVideosInput[]
+    upsert?: commentsUpsertWithWhereUniqueWithoutVideosInput | commentsUpsertWithWhereUniqueWithoutVideosInput[]
+    createMany?: commentsCreateManyVideosInputEnvelope
+    set?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    disconnect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    delete?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    update?: commentsUpdateWithWhereUniqueWithoutVideosInput | commentsUpdateWithWhereUniqueWithoutVideosInput[]
+    updateMany?: commentsUpdateManyWithWhereWithoutVideosInput | commentsUpdateManyWithWhereWithoutVideosInput[]
+    deleteMany?: commentsScalarWhereInput | commentsScalarWhereInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -13950,6 +15450,36 @@ export namespace Prisma {
     update?: likesUpdateWithWhereUniqueWithoutVideoInput | likesUpdateWithWhereUniqueWithoutVideoInput[]
     updateMany?: likesUpdateManyWithWhereWithoutVideoInput | likesUpdateManyWithWhereWithoutVideoInput[]
     deleteMany?: likesScalarWhereInput | likesScalarWhereInput[]
+  }
+
+  export type commentsUncheckedUpdateManyWithoutVideosNestedInput = {
+    create?: XOR<commentsCreateWithoutVideosInput, commentsUncheckedCreateWithoutVideosInput> | commentsCreateWithoutVideosInput[] | commentsUncheckedCreateWithoutVideosInput[]
+    connectOrCreate?: commentsCreateOrConnectWithoutVideosInput | commentsCreateOrConnectWithoutVideosInput[]
+    upsert?: commentsUpsertWithWhereUniqueWithoutVideosInput | commentsUpsertWithWhereUniqueWithoutVideosInput[]
+    createMany?: commentsCreateManyVideosInputEnvelope
+    set?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    disconnect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    delete?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
+    update?: commentsUpdateWithWhereUniqueWithoutVideosInput | commentsUpdateWithWhereUniqueWithoutVideosInput[]
+    updateMany?: commentsUpdateManyWithWhereWithoutVideosInput | commentsUpdateManyWithWhereWithoutVideosInput[]
+    deleteMany?: commentsScalarWhereInput | commentsScalarWhereInput[]
+  }
+
+  export type videosCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<videosCreateWithoutCommentsInput, videosUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: videosCreateOrConnectWithoutCommentsInput
+    connect?: videosWhereUniqueInput
+  }
+
+  export type videosUpdateOneWithoutCommentsNestedInput = {
+    create?: XOR<videosCreateWithoutCommentsInput, videosUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: videosCreateOrConnectWithoutCommentsInput
+    upsert?: videosUpsertWithoutCommentsInput
+    disconnect?: videosWhereInput | boolean
+    delete?: videosWhereInput | boolean
+    connect?: videosWhereUniqueInput
+    update?: XOR<XOR<videosUpdateToOneWithWhereWithoutCommentsInput, videosUpdateWithoutCommentsInput>, videosUncheckedUpdateWithoutCommentsInput>
   }
 
   export type videosCreateNestedOneWithoutLikesInput = {
@@ -14319,6 +15849,7 @@ export namespace Prisma {
     polls?: pollCreateNestedManyWithoutVideoInput
     questions?: questionsCreateNestedManyWithoutVideoInput
     likes?: likesCreateNestedManyWithoutVideoInput
+    comments?: commentsCreateNestedManyWithoutVideosInput
   }
 
   export type videosUncheckedCreateWithoutCategoryInput = {
@@ -14332,6 +15863,7 @@ export namespace Prisma {
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
     likes?: likesUncheckedCreateNestedManyWithoutVideoInput
+    comments?: commentsUncheckedCreateNestedManyWithoutVideosInput
   }
 
   export type videosCreateOrConnectWithoutCategoryInput = {
@@ -14469,6 +16001,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type commentsCreateWithoutVideosInput = {
+    userId?: number
+    userName?: string
+    comment: string
+    createdAt?: Date | string
+    isApproved?: string
+  }
+
+  export type commentsUncheckedCreateWithoutVideosInput = {
+    id?: number
+    userId?: number
+    userName?: string
+    comment: string
+    createdAt?: Date | string
+    isApproved?: string
+  }
+
+  export type commentsCreateOrConnectWithoutVideosInput = {
+    where: commentsWhereUniqueInput
+    create: XOR<commentsCreateWithoutVideosInput, commentsUncheckedCreateWithoutVideosInput>
+  }
+
+  export type commentsCreateManyVideosInputEnvelope = {
+    data: commentsCreateManyVideosInput | commentsCreateManyVideosInput[]
+    skipDuplicates?: boolean
+  }
+
   export type categoriesUpsertWithoutVideosInput = {
     update: XOR<categoriesUpdateWithoutVideosInput, categoriesUncheckedUpdateWithoutVideosInput>
     create: XOR<categoriesCreateWithoutVideosInput, categoriesUncheckedCreateWithoutVideosInput>
@@ -14576,6 +16135,105 @@ export namespace Prisma {
     videoId?: StringFilter<"likes"> | string
   }
 
+  export type commentsUpsertWithWhereUniqueWithoutVideosInput = {
+    where: commentsWhereUniqueInput
+    update: XOR<commentsUpdateWithoutVideosInput, commentsUncheckedUpdateWithoutVideosInput>
+    create: XOR<commentsCreateWithoutVideosInput, commentsUncheckedCreateWithoutVideosInput>
+  }
+
+  export type commentsUpdateWithWhereUniqueWithoutVideosInput = {
+    where: commentsWhereUniqueInput
+    data: XOR<commentsUpdateWithoutVideosInput, commentsUncheckedUpdateWithoutVideosInput>
+  }
+
+  export type commentsUpdateManyWithWhereWithoutVideosInput = {
+    where: commentsScalarWhereInput
+    data: XOR<commentsUpdateManyMutationInput, commentsUncheckedUpdateManyWithoutVideosInput>
+  }
+
+  export type commentsScalarWhereInput = {
+    AND?: commentsScalarWhereInput | commentsScalarWhereInput[]
+    OR?: commentsScalarWhereInput[]
+    NOT?: commentsScalarWhereInput | commentsScalarWhereInput[]
+    id?: IntFilter<"comments"> | number
+    userId?: IntFilter<"comments"> | number
+    userName?: StringFilter<"comments"> | string
+    comment?: StringFilter<"comments"> | string
+    createdAt?: DateTimeFilter<"comments"> | Date | string
+    isApproved?: StringFilter<"comments"> | string
+    videoId?: StringNullableFilter<"comments"> | string | null
+  }
+
+  export type videosCreateWithoutCommentsInput = {
+    videoId: string
+    videoUrl: string
+    createdBy: string
+    createdAt?: Date | string
+    userId?: number
+    userRole?: string
+    category?: categoriesCreateNestedOneWithoutVideosInput
+    polls?: pollCreateNestedManyWithoutVideoInput
+    questions?: questionsCreateNestedManyWithoutVideoInput
+    likes?: likesCreateNestedManyWithoutVideoInput
+  }
+
+  export type videosUncheckedCreateWithoutCommentsInput = {
+    id?: number
+    videoId: string
+    videoUrl: string
+    createdBy: string
+    createdAt?: Date | string
+    userId?: number
+    categoryName?: string | null
+    userRole?: string
+    polls?: pollUncheckedCreateNestedManyWithoutVideoInput
+    questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
+    likes?: likesUncheckedCreateNestedManyWithoutVideoInput
+  }
+
+  export type videosCreateOrConnectWithoutCommentsInput = {
+    where: videosWhereUniqueInput
+    create: XOR<videosCreateWithoutCommentsInput, videosUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type videosUpsertWithoutCommentsInput = {
+    update: XOR<videosUpdateWithoutCommentsInput, videosUncheckedUpdateWithoutCommentsInput>
+    create: XOR<videosCreateWithoutCommentsInput, videosUncheckedCreateWithoutCommentsInput>
+    where?: videosWhereInput
+  }
+
+  export type videosUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: videosWhereInput
+    data: XOR<videosUpdateWithoutCommentsInput, videosUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type videosUpdateWithoutCommentsInput = {
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    userRole?: StringFieldUpdateOperationsInput | string
+    category?: categoriesUpdateOneWithoutVideosNestedInput
+    polls?: pollUpdateManyWithoutVideoNestedInput
+    questions?: questionsUpdateManyWithoutVideoNestedInput
+    likes?: likesUpdateManyWithoutVideoNestedInput
+  }
+
+  export type videosUncheckedUpdateWithoutCommentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    videoId?: StringFieldUpdateOperationsInput | string
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+    categoryName?: NullableStringFieldUpdateOperationsInput | string | null
+    userRole?: StringFieldUpdateOperationsInput | string
+    polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
+    questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
+    likes?: likesUncheckedUpdateManyWithoutVideoNestedInput
+  }
+
   export type videosCreateWithoutLikesInput = {
     videoId: string
     videoUrl: string
@@ -14586,6 +16244,7 @@ export namespace Prisma {
     category?: categoriesCreateNestedOneWithoutVideosInput
     polls?: pollCreateNestedManyWithoutVideoInput
     questions?: questionsCreateNestedManyWithoutVideoInput
+    comments?: commentsCreateNestedManyWithoutVideosInput
   }
 
   export type videosUncheckedCreateWithoutLikesInput = {
@@ -14599,6 +16258,7 @@ export namespace Prisma {
     userRole?: string
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
+    comments?: commentsUncheckedCreateNestedManyWithoutVideosInput
   }
 
   export type videosCreateOrConnectWithoutLikesInput = {
@@ -14627,6 +16287,7 @@ export namespace Prisma {
     category?: categoriesUpdateOneWithoutVideosNestedInput
     polls?: pollUpdateManyWithoutVideoNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
+    comments?: commentsUpdateManyWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateWithoutLikesInput = {
@@ -14640,6 +16301,7 @@ export namespace Prisma {
     userRole?: StringFieldUpdateOperationsInput | string
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutVideosNestedInput
   }
 
   export type pollOptionCreateWithoutPollInput = {
@@ -14675,6 +16337,7 @@ export namespace Prisma {
     category?: categoriesCreateNestedOneWithoutVideosInput
     questions?: questionsCreateNestedManyWithoutVideoInput
     likes?: likesCreateNestedManyWithoutVideoInput
+    comments?: commentsCreateNestedManyWithoutVideosInput
   }
 
   export type videosUncheckedCreateWithoutPollsInput = {
@@ -14688,6 +16351,7 @@ export namespace Prisma {
     userRole?: string
     questions?: questionsUncheckedCreateNestedManyWithoutVideoInput
     likes?: likesUncheckedCreateNestedManyWithoutVideoInput
+    comments?: commentsUncheckedCreateNestedManyWithoutVideosInput
   }
 
   export type videosCreateOrConnectWithoutPollsInput = {
@@ -14742,6 +16406,7 @@ export namespace Prisma {
     category?: categoriesUpdateOneWithoutVideosNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
     likes?: likesUpdateManyWithoutVideoNestedInput
+    comments?: commentsUpdateManyWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateWithoutPollsInput = {
@@ -14755,6 +16420,7 @@ export namespace Prisma {
     userRole?: StringFieldUpdateOperationsInput | string
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
     likes?: likesUncheckedUpdateManyWithoutVideoNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutVideosNestedInput
   }
 
   export type videosCreateWithoutQuestionsInput = {
@@ -14767,6 +16433,7 @@ export namespace Prisma {
     category?: categoriesCreateNestedOneWithoutVideosInput
     polls?: pollCreateNestedManyWithoutVideoInput
     likes?: likesCreateNestedManyWithoutVideoInput
+    comments?: commentsCreateNestedManyWithoutVideosInput
   }
 
   export type videosUncheckedCreateWithoutQuestionsInput = {
@@ -14780,6 +16447,7 @@ export namespace Prisma {
     userRole?: string
     polls?: pollUncheckedCreateNestedManyWithoutVideoInput
     likes?: likesUncheckedCreateNestedManyWithoutVideoInput
+    comments?: commentsUncheckedCreateNestedManyWithoutVideosInput
   }
 
   export type videosCreateOrConnectWithoutQuestionsInput = {
@@ -14808,6 +16476,7 @@ export namespace Prisma {
     category?: categoriesUpdateOneWithoutVideosNestedInput
     polls?: pollUpdateManyWithoutVideoNestedInput
     likes?: likesUpdateManyWithoutVideoNestedInput
+    comments?: commentsUpdateManyWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateWithoutQuestionsInput = {
@@ -14821,6 +16490,7 @@ export namespace Prisma {
     userRole?: StringFieldUpdateOperationsInput | string
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
     likes?: likesUncheckedUpdateManyWithoutVideoNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutVideosNestedInput
   }
 
   export type pollCreateWithoutOptionsInput = {
@@ -14993,6 +16663,7 @@ export namespace Prisma {
     polls?: pollUpdateManyWithoutVideoNestedInput
     questions?: questionsUpdateManyWithoutVideoNestedInput
     likes?: likesUpdateManyWithoutVideoNestedInput
+    comments?: commentsUpdateManyWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateWithoutCategoryInput = {
@@ -15006,6 +16677,7 @@ export namespace Prisma {
     polls?: pollUncheckedUpdateManyWithoutVideoNestedInput
     questions?: questionsUncheckedUpdateManyWithoutVideoNestedInput
     likes?: likesUncheckedUpdateManyWithoutVideoNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateManyWithoutCategoryInput = {
@@ -15041,6 +16713,15 @@ export namespace Prisma {
   export type likesCreateManyVideoInput = {
     id?: number
     userId: number
+  }
+
+  export type commentsCreateManyVideosInput = {
+    id?: number
+    userId?: number
+    userName?: string
+    comment: string
+    createdAt?: Date | string
+    isApproved?: string
   }
 
   export type pollUpdateWithoutVideoInput = {
@@ -15115,6 +16796,32 @@ export namespace Prisma {
   export type likesUncheckedUpdateManyWithoutVideoInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type commentsUpdateWithoutVideosInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type commentsUncheckedUpdateWithoutVideosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type commentsUncheckedUpdateManyWithoutVideosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    userName?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isApproved?: StringFieldUpdateOperationsInput | string
   }
 
   export type pollOptionCreateManyPollInput = {

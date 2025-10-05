@@ -42,6 +42,7 @@ const Details = () => {
   const playerRef = useRef<any>(null);
   const intervalRef = useRef<number | null>(null);
   const [notes, setNotes] = useState("");
+  const [comments, setComments] = useState([])
   const axiosPublic = useAxiosPublic();
   const axiosPrivate = useAxiosPrivate();
   const [totalLikes, setTotalLikes] = useState()
@@ -54,9 +55,11 @@ const Details = () => {
       .get(`/videos/${videoId}`)
       .then((res) => {
         if (res?.data) {
+          console.log(res.data);
           setVideo(res.data);
           const extractAds = res.data.flatMap((video: any) => {
             setTotalLikes(video.likes);
+            setComments(video.comments)
             return video.items || [];
           });
           setUpComingAds(extractAds);
@@ -164,8 +167,8 @@ const Details = () => {
       })
 
   }
-
-  const isLiked = totalLikes?.some(like => like.userId === user.userId);
+  console.log(comments, 'comments from post');
+  const isLiked = totalLikes?.some(like => like.userId === user?.userId);
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
   return (
@@ -197,12 +200,12 @@ const Details = () => {
               <button className="flex gap-2" onClick={() => handlePostInteract(videoId as string, 'like')}>
 
                 <svg
-                className="text-blue-500"
+                  className="text-blue-500"
                   width="25"
                   height="25"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill={isLiked ? 'blue': 'black'}
+                  fill={isLiked ? 'blue' : 'black'}
                 >
                   <path d="M2 21h2V9H2v12zm20-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L13.17 2 7.59 7.59C7.22 7.95 7 8.45 7 9v9c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1z" />
                 </svg>
@@ -239,7 +242,7 @@ const Details = () => {
               </button>
             </div>
           </div>
-          <AddNewComments />
+          <AddNewComments comments={comments} />
         </div>
 
         {/* RIGHT: Sidebar  add preview*/}

@@ -52,6 +52,11 @@ export type LoginBody = {
   password: string;
 }
 
+export type comments = {
+  comment: string
+  videoId: string
+}
+
 export type UserId = {
   userId: number;
   role: string
@@ -66,5 +71,6 @@ export interface UserPayload {
   userId: number;
   email: string;
   userRole: string
+  userName: string
   userEmail: string
 }

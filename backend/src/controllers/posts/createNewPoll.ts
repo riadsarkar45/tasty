@@ -185,6 +185,7 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
                         },
                     },
                 },
+                comments: true,
                 likes: true,
                 questions: true,
             },
@@ -204,6 +205,7 @@ export async function getCreatedVideos(req: FastifyRequest<{ Params: VideoParams
             createdBy: video.createdBy,
             createdAt: video.createdAt,
             likes: video.likes,
+            comments: video.comments,
             items: [...video.polls, ...video.questions].sort(
                 (a, b) => parseFloat(a.startTime) - parseFloat(b.startTime)
             ),

@@ -137,6 +137,16 @@ exports.Prisma.VideosScalarFieldEnum = {
   userRole: 'userRole'
 };
 
+exports.Prisma.CommentsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  userName: 'userName',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  isApproved: 'isApproved',
+  videoId: 'videoId'
+};
+
 exports.Prisma.LikesScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -219,6 +229,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   categories: 'categories',
   videos: 'videos',
+  comments: 'comments',
   likes: 'likes',
   poll: 'poll',
   questions: 'questions',

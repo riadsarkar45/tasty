@@ -35,6 +35,18 @@ model videos {
   polls        poll[]
   questions    questions[]
   likes        likes[]
+  comments     comments[] // ✅ back-relation
+}
+
+model comments {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @default(0)
+  userName   String   @default("username")
+  comment    String
+  createdAt  DateTime @default(now())
+  isApproved String   @default("NO")
+  videoId    String? // ✅ foreign key
+  videos     videos?  @relation(fields: [videoId], references: [videoId]) // ✅ fixed relation
 }
 
 model likes {
