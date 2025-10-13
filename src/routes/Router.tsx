@@ -11,6 +11,7 @@ import Login from "../Public/pages/Login";
 import Users from "../Dashboard/Pages/Users";
 import CategoryPost from "../Public/pages/CategoryPost";
 import Dashboard from "../Dashboard/Dashboard";
+import ScoredBoard from "../Public/pages/ScoredBoard";
 
 const Routers = createBrowserRouter([
     {
@@ -28,6 +29,10 @@ const Routers = createBrowserRouter([
             {
                 path: "/watch/:videoId?",
                 element: <Details />
+            },
+            {
+                path: "/scoreboard",
+                element: <ScoredBoard/>
             }
         ]
     },
