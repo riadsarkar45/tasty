@@ -55,9 +55,9 @@ const AddNewVideo = () => {
                 console.error("Invalid URL:", videoUrl);
             }
         } else {
-            setVideoId(""); 
+            setVideoId("");
         }
-    }, [videoUrl]); 
+    }, [videoUrl]);
 
     return (
         <div className="bg-white w-full p-3">

@@ -23,7 +23,7 @@ const Routers = createBrowserRouter([
                 element: <PublicView />
             },
             {
-                path: "/category/:categoryId?",
+                path: "/category/:categoryName?",
                 element: <CategoryPost />
             },
             {
