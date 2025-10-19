@@ -33,7 +33,7 @@ const app = fastify({
 
 const allowedOrigins = [
   "http://localhost:5173", "http://localhost:5174",
-  "https://tasty-flax.vercel.app",
+  "https://tasty-flax.vercel.app", "https://learn-lovat-psi.vercel.app",
 ];
 
 app.register(cors, {
@@ -84,7 +84,7 @@ const start = async () => {
     app.log.info(`Server listening at ${address}`);
     const io = new SocketServer(app.server, {
       cors: {
-        origin: ["http://localhost:5173"], // your React dev server
+        origin: ["http://localhost:5173", "https://learn-lovat-psi.vercel.app"], // your React dev server
         methods: ["GET", "POST"],
         credentials: true,
       },

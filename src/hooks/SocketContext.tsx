@@ -27,7 +27,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
             clientId = crypto.randomUUID();
             localStorage.setItem("clientId", clientId);
         }
-        const newSocket = io("http://localhost:3000", {
+        const newSocket = io("https://tasty-server-2-2.onrender.com", {
             withCredentials: true,
             transports: ["websocket"],
             auth: { clientId }
