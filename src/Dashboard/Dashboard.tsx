@@ -1,19 +1,21 @@
+import { useSocket } from "../hooks/SocketContext";
 import Header from "./shared/Header";
 
 const Dashboard = () => {
-    
+    const { userCount } = useSocket();
+    console.log(userCount);
     return (
         <div>
             <div className="mt-2 p-1">
                 <Header heading="Dashboard" />
             </div>
             <div className="p-1 grid grid-cols-3">
-                <div className="w-[21.6rem] h-[10rem] border ">
+                <div className="w-[21.6rem] h-[10rem] border-l-8 border-l-red-500 bg-white">
                     <div className="border-b p-2">
-                        <h2>Total Videos</h2>
+                        <h2>Total Online Users</h2>
                     </div>
                     <div className="flex justify-center items-center text-[3rem] mt-[1rem]">
-                        <h2>13</h2>
+                        <h2>{userCount}</h2>
                     </div>
                 </div>
                 <div className="w-[21.6rem] h-[10rem] border">
@@ -43,7 +45,7 @@ const Dashboard = () => {
 
                     </div>
                 </div>
-                
+
             </div>
         </div>
     );

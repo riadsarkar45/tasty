@@ -13,12 +13,11 @@ const AddNewComments = ({ comments }) => {
 
     const { videoId } = useParams();
 
-    console.log(videoId, 'from add new comments');
 
     const handleSubmitComments = () => {
         console.log('clicked');
         axiosPrivate.post('/comment-video', { comment, videoId })
-            .then((res) => { console.log(res.data); })
+            .then(() => {  })
             .catch((e) => console.log(e))
     }
 

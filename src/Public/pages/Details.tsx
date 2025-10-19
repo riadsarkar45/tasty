@@ -10,6 +10,7 @@ import Progressbar from "../../components/Progressbar";
 import toast from "react-hot-toast";
 import useAxiosPrivate from "../../hooks/AxiosPrivate";
 import useLoggedInUser from "../../hooks/GetUserRole";
+import { useSocket } from "../../hooks/SocketContext";
 
 // Define Ad Types
 type UpcomingAd = {
@@ -46,16 +47,19 @@ const Details = () => {
   const axiosPublic = useAxiosPublic();
   const axiosPrivate = useAxiosPrivate();
   const [totalLikes, setTotalLikes] = useState()
+  const [liveViewers, setLiveViewers] = useState(0);
   const { videoId } = useParams();
+  const { socket } = useSocket();
 
   const { user } = useLoggedInUser();
 
   useEffect(() => {
+
+
     axiosPublic
       .get(`/videos/${videoId}`)
       .then((res) => {
         if (res?.data) {
-          console.log(res.data);
           setVideo(res.data);
           const extractAds = res.data.flatMap((video: any) => {
             setTotalLikes(video.likes);
@@ -72,8 +76,12 @@ const Details = () => {
       .then((res) => {
         setGetNotes(res.data);
       })
+
+
       .catch((err) => console.log(err));
-  }, [axiosPublic, videoId]);
+
+
+  }, [axiosPublic, videoId, socket]);
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     playerRef.current = event.target;
@@ -167,9 +175,28 @@ const Details = () => {
       })
 
   }
-  console.log(comments, 'comments from post');
   const isLiked = totalLikes?.some(like => like.userId === user?.userId);
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+
+  useEffect(() => {
+    if (!socket || !videoId) return;
+
+    socket.emit("joinPage", videoId);
+
+    const handlePageViewers = (count: number) => {
+      console.log(`👁 ${count} viewer(s) on video ${videoId}`);
+      setLiveViewers(count);
+    };
+
+    socket.on("pageViewers", handlePageViewers);
+
+    return () => {
+      socket.emit("leaveVideo", videoId);
+
+      socket.off("pageViewers", handlePageViewers);
+    };
+  }, [socket, videoId]);
+
 
   return (
     <div className="w-full lg:w-[90%] md:w-[75rem] m-auto p-3">
@@ -196,7 +223,7 @@ const Details = () => {
             <span>{formatTime(duration)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <div className="flex items-center justify-between border w-[9rem] p-4 rounded-md">
+            <div className="flex items-center justify-between border w-[13rem] items-center p-4 rounded-md">
               <button className="flex gap-2" onClick={() => handlePostInteract(videoId as string, 'like')}>
 
                 <svg
@@ -227,6 +254,11 @@ const Details = () => {
 
                 </svg>
                 {`0`}
+              </button>
+              |
+              <button className="flex gap-2">
+                <h2>👁</h2>
+                {liveViewers}
               </button>
             </div>
             <div className="flex">

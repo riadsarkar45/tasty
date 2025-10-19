@@ -14,6 +14,8 @@ import { getAllUsers } from "./pages/Users/PrivateRoutes/allUsers";
 import { getLoggedInUser } from "./pages/Users/PrivateRoutes/getLoggedInUser";
 import { routeUserVideo } from "./pages/Users/PrivateRoutes/route.userVideo";
 import { routeVideoInteractVideo } from "./pages/Users/routes.intreactVideo";
+import { Server as SocketServer } from 'socket.io';
+import { socketConnection } from "./socket.io/socket.io";
 
 const app = fastify({
   logger: {
@@ -30,7 +32,7 @@ const app = fastify({
 });
 
 const allowedOrigins = [
-  "http://localhost:5173","http://localhost:5174",
+  "http://localhost:5173", "http://localhost:5174",
   "https://tasty-flax.vercel.app",
 ];
 
@@ -50,7 +52,7 @@ app.register(fastifyJwt, {
   secret: jwtSecret,
   verify: {
     extractToken: (request) => {
-      return request.cookies?.token; 
+      return request.cookies?.token;
     }
   }
 });
@@ -80,6 +82,14 @@ const start = async () => {
     const port = parseInt(process.env.PORT || "3000", 10); // changed to 3000
     const address = await app.listen({ port, host: '0.0.0.0' }); // '0.0.0.0' listens on all interfaces
     app.log.info(`Server listening at ${address}`);
+    const io = new SocketServer(app.server, {
+      cors: {
+        origin: ["http://localhost:5173"], // your React dev server
+        methods: ["GET", "POST"],
+        credentials: true,
+      },
+    });
+    socketConnection(io)
   } catch (err) {
     app.log.error(err);
     process.exit(1);
