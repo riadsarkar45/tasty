@@ -1,24 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
 import { useParams } from "react-router-dom";
 import useAxiosPrivate from "../hooks/AxiosPrivate";
+import { useSocket } from "../hooks/SocketContext";
 
-const AddNewComments = ({ comments }) => {
+const AddNewComments = ({ comments, setComments }) => {
+    console.log(comments);
     const [comment, setComment] = useState("");
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const axiosPrivate = useAxiosPrivate();
+    const { socket } = useSocket();
+
     const handleEmojiClick = (emojiData: EmojiClickData) => {
         setComment((prev) => prev + emojiData.emoji);
     };
 
     const { videoId } = useParams();
 
+    useEffect(() => {
+        if (!socket) return;
+        socket?.on("newComment", (data) => {
+            setComments((prevComments) => [...prevComments, data]);
+            console.log("comment", data);
+        })
+
+        return () => {
+            socket.off("newComment");
+        }
+    }, [socket, setComments]);
+
 
     const handleSubmitComments = () => {
+        socket?.emit('newComment', { comment, videoId });
         console.log('clicked');
-        axiosPrivate.post('/comment-video', { comment, videoId })
-            .then(() => {  })
-            .catch((e) => console.log(e))
+        // axiosPrivate.post('/comment-video', { comment, videoId })
+        //     .then(() => {  })
+        //     .catch((e) => console.log(e))
     }
 
     return (
@@ -46,6 +63,7 @@ const AddNewComments = ({ comments }) => {
                 </div>
 
                 <div className="mt-10">
+                    <h2>{comments?.length} Comments</h2>
                     {
                         comments.length > 0 ? (
                             comments?.map((cmt, i) => (

@@ -20,7 +20,6 @@ export const socketConnection = (io: Server) => {
 
       if (prev && prev !== videoId) {
 
-        // leave previous video BEFORE joining new one
         const prevSet = videoViewers.get(prev);
 
         if (prevSet) {
@@ -65,6 +64,18 @@ export const socketConnection = (io: Server) => {
       console.log(`LEAVE video=${videoId} clientId=${clientId}`);
     });
 
+    socket.on("newComment", (data) => {
+      const { comment, videoId } = data;
+
+      if (!comment || !videoId) return;
+
+      if (videoViewers.has(videoId)) {
+
+        io.to(videoId).emit("newComment", { comment, userName: "Anonymous" });
+
+      }
+    })
+
     // disconnect (refresh/close)
     socket.on("disconnect", (reason) => {
 
@@ -88,7 +99,7 @@ export const socketConnection = (io: Server) => {
       connectedClientIds.delete(clientId);
 
       io.emit("userCount", connectedClientIds.size);
-      
+
       console.log("DISCONNECT", socket.id, "clientId:", clientId, "reason:", reason);
     });
   });

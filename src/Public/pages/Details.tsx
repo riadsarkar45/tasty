@@ -166,6 +166,8 @@ const Details = () => {
   const handlePostInteract = (videoId: string, type: string) => {
     if (!videoId) return toast.error('Something went wrong.');
 
+    socket?.emit("likeVideo", videoId);
+
     axiosPrivate.post(`/post-interact`, { type, videoId })
       .then(() => {
         toast.success("Thank for your feedback")
@@ -274,7 +276,7 @@ const Details = () => {
               </button>
             </div>
           </div>
-          <AddNewComments comments={comments} />
+          <AddNewComments comments={comments} setComments ={setComments} />
         </div>
 
         {/* RIGHT: Sidebar  add preview*/}

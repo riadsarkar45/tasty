@@ -36,7 +36,7 @@ export const Login = async (req: FastifyRequest<{ Body: LoginBody }>, reply: Fas
                     secure: false, // set to true in production
                     sameSite: 'lax',
                     path: '/',
-                    maxAge: 60 * 60 * 24 // 1 day in seconds
+                    maxAge: 60 * 60 * 24 // 1 day in seconds    
                 })
                 .send({ message: "Login Successful", type: "success" })
         } else {
