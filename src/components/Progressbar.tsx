@@ -30,7 +30,7 @@ const Progressbar: React.FC<ProgressProps> = ({
   const [hoverPercent, setHoverPercent] = useState<number>(0); // in percentage (0-100)
   return (
     <div>
-      <div className="bg-white p-3 rounded-md shadow mt-2">
+      <div className="rounded-md mt-2 w-full">
         {duration > 0 ? (
           <div
             ref={progressBarRef}
@@ -107,7 +107,7 @@ const Progressbar: React.FC<ProgressProps> = ({
             )}
           </div>
         ) : (
-          <div className="w-full h-3 bg-gray-300 rounded-full flex items-center justify-center text-xs text-gray-500">
+          <div className=" h-3 bg-gray-300 rounded-full flex items-center justify-center text-xs text-gray-500">
             Loading...
           </div>
         )}

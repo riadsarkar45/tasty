@@ -40,11 +40,10 @@ const AddNewComments = ({ comments, setComments }) => {
 
     return (
         <div className="relative w-full">
-            <div className="w-full items-center">
-                <input
-                    type="text"
+            <div className="w-full items-center bg-white mt-5 p-4">
+                <textarea
                     placeholder="Comment as Riad Sarkar"
-                    className="p-2 w-full outline-none border-b"
+                    className="p-5 rounded-md w-full outline-none border"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                 />

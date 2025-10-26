@@ -181,6 +181,9 @@ const Details = () => {
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 
   useEffect(() => {
+
+
+
     if (!socket || !videoId) return;
 
     socket.emit("joinPage", videoId);
@@ -199,13 +202,15 @@ const Details = () => {
     };
   }, [socket, videoId]);
 
+  const remainingTime = duration - currentTime; // both are numbers (in seconds)
+
 
   return (
     <div className="w-full lg:w-[90%] md:w-[75rem] m-auto p-3">
       <div className="lg:flex md:flex justify-between m-auto gap-4">
         <div className="w-full">
           {/* YouTube Video */}
-          <div className="h-[28rem] lg:w-[40rem] w-full bg-black rounded-lg overflow-hidden relative">
+          <div className="h-[28rem] lg:w-[60rem] w-full shadow-md bg-black rounded-t-lg overflow-hidden relative">
             {video.map((video, i) => (
               <YouTube
                 key={i}
@@ -216,16 +221,42 @@ const Details = () => {
                 className="w-full h-full"
               />
             ))}
+
           </div>
 
           {/* Time Display */}
-          <div className="mb-4 items-center mt-2 text-xs text-gray-700 font-mono">
-            <span>{formatTime(currentTime)}</span>
-            <span>/</span>
-            <span>{formatTime(duration)}</span>
+          <div className="mb-1 items-center text-xs text-gray-700 font-mono shadow-sm bg-white p-2 rounded-b-md">
+            <div>
+              <span>{formatTime(currentTime)}</span>
+              <span>/</span>
+              <span>{formatTime(duration)}</span>
+
+              {
+                Number(remainingTime.toFixed(0)) === 0 && (
+                  <span className="ml-4 text-red-500 p-1 rounded-md bg-opacity-15 bg-red-800 font-extrabold">Video Ended</span>
+                )
+              }
+            </div>
+            <div className="">
+              <Progressbar
+                duration={duration}
+                currentTime={currentTime}
+                upcomingUpAd={upComingAds}
+                videoTitle={videoTitle}
+                playerRef={playerRef}
+                setCurrentTime={setCurrentTime}
+              />
+            </div>
+          </div>
+
+
+
+
+          <div className="text-[2rem] mb-3">
+            <h2>Most scariest place in the world | You better stay away of it</h2>
           </div>
           <div className="flex justify-between items-center">
-            <div className="flex items-center justify-between border w-[13rem] items-center p-4 rounded-md">
+            <div className="flex items-center justify-between border w-[13rem] bg-gray-50 p-4 rounded-md">
               <button className="flex gap-2" onClick={() => handlePostInteract(videoId as string, 'like')}>
 
                 <svg
@@ -263,7 +294,7 @@ const Details = () => {
                 {liveViewers}
               </button>
             </div>
-            <div className="flex">
+            <div className="flex bg-gray-50">
               <div className="flex gap-2 border p-2 rounded-l-md">
                 <img className="w-[3rem] h-[3rem] rounded-[10rem]" src={thumbnailUrl} alt="channel photo" />
                 <div className="grid grid-cols-1">
@@ -276,7 +307,7 @@ const Details = () => {
               </button>
             </div>
           </div>
-          <AddNewComments comments={comments} setComments ={setComments} />
+          <AddNewComments comments={comments} setComments={setComments} />
         </div>
 
         {/* RIGHT: Sidebar  add preview*/}
@@ -284,23 +315,22 @@ const Details = () => {
           <AddPreview ads={ads} videoTitle={videoTitle} notes={showNote} />
 
           {/* Stats */}
-          <div className="flex">
-            <input onChange={(e) => setNotes(e.target.value)} value={notes} className="w-full outline-none p-2 border-b rounded-l-md" type="text" placeholder="Takes Notes" />
-            {/* <input className="w-full outline-none p-2 border-b rounded" type="text" placeholder="Takes Notes" /> */}
-            <button onClick={takeNotes} className="border bg-gray-500 bg-opacity-25 rounded-r-md text-gray-500 w-[4rem]">Save</button>
+          <div className="bg-white p-3">
+            <div className="border-b-gray">
+              <h2>Take Notes</h2>
+            </div>
+            <div className="">
+              <textarea onChange={(e) => setNotes(e.target.value)} value={notes} className="w-full outline-none p-2 h-[10rem] border rounded-md" type="text" placeholder="Takes Notes" />
+              <div className="flex justify-end gap-2">
+                <button onClick={takeNotes} className="border-red-500  bg-red-500 bg-opacity-40 rounded p-2 text-red-500 w-[4rem]">Cancel</button>
+
+                <button onClick={takeNotes} className="border-green-500  bg-green-500 bg-opacity-40 rounded p-2 text-green-600 w-[4rem]">Save</button>
+              </div>
+            </div>
           </div>
 
           {/* Progress Bar */}
-          <div>
-            <Progressbar
-              duration={duration}
-              currentTime={currentTime}
-              upcomingUpAd={upComingAds}
-              videoTitle={videoTitle}
-              playerRef={playerRef}
-              setCurrentTime={setCurrentTime}
-            />
-          </div>
+
         </div>
       </div>
     </div>
