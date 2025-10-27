@@ -4,7 +4,7 @@ import type { YouTubeProps } from "react-youtube";
 import YouTube from "react-youtube";
 import AddNewComments from "../../features/AddNewComments";
 import useAxiosPublic from "../../hooks/AxiosPublic";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AddPreview from "../AddPreview";
 import Progressbar from "../../components/Progressbar";
 import toast from "react-hot-toast";
@@ -48,7 +48,10 @@ const Details = () => {
   const axiosPrivate = useAxiosPrivate();
   const [totalLikes, setTotalLikes] = useState()
   const [liveViewers, setLiveViewers] = useState(0);
-  const { videoId } = useParams();
+  const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
+  // more videos state will be visible after video is ended
+  const [moreVideos, setMoreVideos] = useState([]);
+  const { videoId, userId } = useParams();
   const { socket } = useSocket();
 
   const { user } = useLoggedInUser();
@@ -90,7 +93,7 @@ const Details = () => {
     setDuration(dur);
   };
 
-  const onPlayerStateChange: YouTubeProps["onStateChange"] = (event) => {
+  const onPlayerStateChange: YouTubeProps["onStateChange"] = async (event) => {
     const player = event.target;
     if (event.data === 1) {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -121,6 +124,15 @@ const Details = () => {
         setAds(showingAd);
       }, 100);
     } else {
+      if (event.data === 0) {
+        setIsVideoEnded(true);
+        const moreVideos = await axiosPublic.get(`/api/v1/public/more_videos/${userId}`)
+        console.log(moreVideos.data.videos);
+        setMoreVideos(moreVideos.data.videos);
+
+      } else {
+        setIsVideoEnded(false);
+      }
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
   };
@@ -183,7 +195,6 @@ const Details = () => {
   useEffect(() => {
 
 
-
     if (!socket || !videoId) return;
 
     socket.emit("joinPage", videoId);
@@ -202,25 +213,48 @@ const Details = () => {
     };
   }, [socket, videoId]);
 
-  const remainingTime = duration - currentTime; // both are numbers (in seconds)
-
+  const seeNewVideo = async (videoId) => {
+    console.log(videoId);
+    setCurrentTime(0);
+    setDuration(0);
+    const video = await axiosPublic.get(`/videos/${videoId}`);
+    setVideo(video.data);
+    console.log(video.data);
+    setIsVideoEnded(false);
+  }
 
   return (
     <div className="w-full lg:w-[90%] md:w-[75rem] m-auto p-3">
       <div className="lg:flex md:flex justify-between m-auto gap-4">
         <div className="w-full">
           {/* YouTube Video */}
-          <div className="h-[28rem] lg:w-[60rem] w-full shadow-md bg-black rounded-t-lg overflow-hidden relative">
-            {video.map((video, i) => (
-              <YouTube
-                key={i}
-                videoId={video.videoId}
-                opts={opts}
-                onReady={onPlayerReady}
-                onStateChange={onPlayerStateChange}
-                className="w-full h-full"
-              />
-            ))}
+          <div className="h-[28rem] lg:w-[60rem] w-full shadow-md rounded-t-lg overflow-hidden relative">
+            {
+              isVideoEnded ? (
+                <div>
+                  <h2 className="text-2xl font-bold mb-4">More videos from this uploader</h2>
+                  <div className="grid grid-cols-4 gap-1">
+                    {
+                      moreVideos?.map((video, i) =>
+                        <div className="p-1" key={i}>
+                          <img onClick={() => seeNewVideo(video.videoId)} className="w-[30rem]" src={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt="" />
+
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              ) : video.map((video, i) => (
+                <YouTube
+                  key={i}
+                  videoId={video.videoId}
+                  opts={opts}
+                  onReady={onPlayerReady}
+                  onStateChange={onPlayerStateChange}
+                  className="w-full h-full"
+                />
+              ))
+            }
 
           </div>
 
@@ -232,7 +266,7 @@ const Details = () => {
               <span>{formatTime(duration)}</span>
 
               {
-                Number(remainingTime.toFixed(0)) === 0 && (
+                isVideoEnded && (
                   <span className="ml-4 text-red-500 p-1 rounded-md bg-opacity-15 bg-red-800 font-extrabold">Video Ended</span>
                 )
               }

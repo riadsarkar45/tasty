@@ -22,7 +22,7 @@ const CategoryItems = ({ videos }) => {
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                             {video?.videos.map((item, index) => (
                                 <div key={index}>
-                                    <Link to={`/watch/${item.videoId}`}>
+                                    <Link to={`/watch/${item.videoId}/${item.userId}`}>
                                         <img
                                             src={`https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`}
                                             alt=""

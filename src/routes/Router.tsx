@@ -27,7 +27,7 @@ const Routers = createBrowserRouter([
                 element: <CategoryPost />
             },
             {
-                path: "/watch/:videoId?",
+                path: "/watch/:videoId?/:userId?",
                 element: <Details />
             },
             {

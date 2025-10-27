@@ -26,6 +26,7 @@ export interface ParamsReq {
 
 export interface VideoParams {
   videoId: string;
+  userId: number;
   categoryName?: string;
 }
 export type Users = {

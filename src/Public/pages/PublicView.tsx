@@ -19,6 +19,7 @@ const PublicView = () => {
       .then((res) => {
         if (res.data) {
           setVideos(res?.data?.videos);
+          console.log(res?.data?.videos);
 
         }
       }).catch((err) => {
