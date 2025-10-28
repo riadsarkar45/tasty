@@ -232,18 +232,33 @@ const Details = () => {
             {
               isVideoEnded ? (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">More videos from this uploader</h2>
-                  <div className="grid grid-cols-4 gap-1">
-                    {
-                      moreVideos?.map((video, i) =>
-                        <div className="p-1" key={i}>
-                          <img onClick={() => seeNewVideo(video.videoId)} className="w-[30rem]" src={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt="" />
+                  <h2 className="text-md border-b border-b-blue-300 text-blue-600 font-extralight mb-4 bg-blue-500 bg-opacity-20 p-2">
+                    More videos from this uploader
+                  </h2>
 
-                        </div>
-                      )
-                    }
+                  <div className="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-4 gap-2 max-h-[25rem] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent p-1">
+                    {moreVideos?.map((video, i) => (
+                      <div
+                        key={i}
+                        className={`p-1 rounded-lg ${videoId === video.videoId ? 'bg-blue-500 text-blue-600 bg-opacity-20' : ''
+                          }`}
+                      >
+                        <Link to={`../watch/${video.videoId}`}>
+                          <img
+                            onClick={() => seeNewVideo(video.videoId)}
+                            className="w-full rounded-lg cursor-pointer hover:opacity-80 transition"
+                            src={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+                            alt=""
+                          />
+                          <h6>{videoId === video.videoId ? 'Just Played' : ''}</h6>
+                        </Link>
+                      </div>
+                    ))}
                   </div>
                 </div>
+
+
+
               ) : video.map((video, i) => (
                 <YouTube
                   key={i}

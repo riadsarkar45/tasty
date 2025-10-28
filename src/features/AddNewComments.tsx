@@ -41,6 +41,7 @@ const AddNewComments = ({ comments, setComments }) => {
     return (
         <div className="relative w-full">
             <div className="w-full items-center bg-white mt-5 p-4">
+                <h2 className="mb-4">{comments?.length} Comments</h2>
                 <textarea
                     placeholder="Comment as Riad Sarkar"
                     className="p-5 rounded-md w-full outline-none border"
@@ -62,7 +63,7 @@ const AddNewComments = ({ comments, setComments }) => {
                 </div>
 
                 <div className="mt-10">
-                    <h2>{comments?.length} Comments</h2>
+                    
                     {
                         comments.length > 0 ? (
                             comments?.map((cmt, i) => (
